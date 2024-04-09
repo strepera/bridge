@@ -1,0 +1,24 @@
+{
+  "name": "snail-bridge",
+  "version": "1.0.0",
+  "description": "snail's chat bridge",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/snailifyxd/snail-bridge.git"
+  },
+  "author": "snailify",
+  "license": "GPL-3.0",
+  "bugs": {
+    "url": "https://github.com/snailifyxd/snail-bridge/issues"
+  },
+  "homepage": "https://github.com/snailifyxd/snail-bridge#readme",
+  "dependencies": {
+    "discord.js": "^13.17.1",
+    "mineflayer": "^4.20.0"
+  }
+}
