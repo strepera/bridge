@@ -1,4 +1,5 @@
 {
+  "type": "module",
   "name": "snail-bridge",
   "version": "1.0.0",
   "description": "snail's chat bridge",
@@ -19,6 +20,10 @@
   "homepage": "https://github.com/snailifyxd/snail-bridge#readme",
   "dependencies": {
     "discord.js": "^13.17.1",
-    "mineflayer": "^4.20.0"
+    "emoji-regex": "^10.3.0",
+    "mathjs": "^12.4.1",
+    "mineflayer": "^4.20.0",
+    "node-emoji": "^2.1.3",
+    "skyhelper-networth": "^1.18.5"
   }
 }
