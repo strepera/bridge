@@ -19,7 +19,8 @@ export async function minecraft(bot, client, bridgeWebhook, logWebhook, punishWe
       bot.chat(global.lastMessage + ' \\\\\\\\');
       return;
     }
-    if (jsonMsg.match(/Guild > (?:\[(.+)\] )?TheNoobCode \[(.+)\]: (.+): (.+)/)) return; //replace this
+    const regexPattern = new RegExp("Guild > (?:\\[(.+)\\] )?" + process.env.botUsername + " \\[(.+)\\]: (.+): (.+)");
+    if (jsonMsg.match(regexPattern)) return;
     let match;
     for (const { regex, func } of regexes) {
       if (match = jsonMsg.match(regex)) {
