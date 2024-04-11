@@ -1,9 +1,14 @@
 import regexes from './regexes.js';
 import commands from './commandHandler.js';
 import { gameHandler, checkAnswer } from './gameHandler.js';
+import { onlineHandler } from './onlineHandler.js';
 
 export async function minecraft(bot, client, bridgeWebhook, logWebhook, punishWebhook) {
+  //initialize game handler
   gameHandler(bot);
+
+  let onlineMessage = false;
+  let onlineArray = [];
 
   //check for patch notes
   let lastPatchNotes = '';
@@ -44,7 +49,10 @@ export async function minecraft(bot, client, bridgeWebhook, logWebhook, punishWe
 
     //log messages
     console.log(jsonMsg);
-    logWebhook.send(jsonMsg)
+    logWebhook.send(jsonMsg);
+
+    //check if the message is from the /g online command
+    onlineHandler(jsonMsg);
     
     //check for commands
     commands(bot, jsonMsg, match);
