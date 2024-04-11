@@ -29,7 +29,8 @@ export default async function(bot, requestedPlayer) {
             bot.chat(`/g setrank ${requestedUsername} ${newRank}`);
           }
          }
-         const json1 = await fetchJson(`https://api.hypixel.net/v2/skyblock/profiles?key=${process.env.apiKey}&uuid=${member.uuid}`);
+         const response1 = await fetch(`https://api.hypixel.net/v2/skyblock/profiles?key=${process.env.apiKey}&uuid=${member.uuid}`);
+         const json1 = await response1.json();
          if (json1.success == true) {
            for (profile in json1.profiles) {
              if (profile.game_mode == 'ironman') {
