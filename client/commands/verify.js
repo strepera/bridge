@@ -13,6 +13,7 @@ export async function verifyCommand(interaction, username) {
 
       if (hypixelData.success == true) {
           if (hypixelData.player) {
+            if (hypixelData.player.socialMedia) {
             const dcuser = interaction.user.username
               if (dcuser == hypixelData.player.socialMedia.links.DISCORD) {
                 await updateGist(uuid, interaction, username);
@@ -65,6 +66,14 @@ export async function verifyCommand(interaction, username) {
                     .setDescription(`Your minecraft linked discord username did not match.\nTry this tutorial and link with \`\`${interaction.user.username}\`\`:\nhttps://www.youtube.com/watch?v=UresIQdoQHk`)]});
                   return;
               }
+            } else {
+                await interaction.editReply({embeds: [new MessageEmbed()
+                    .setColor('#FF0000')
+                    .setTitle('Error Linking')
+                    .setThumbnail('https://cdn.discordapp.com/avatars/1183752068490612796/f127b318f4429579fa0082e287c901fd.png?size=256?size=512')
+                    .setDescription(`Your minecraft linked discord username did not match.\nTry this tutorial and link with \`\`${interaction.user.username}\`\`:\nhttps://www.youtube.com/watch?v=UresIQdoQHk`)]});
+                  return;
+            }
           } else {
               await interaction.editReply({
                   embeds: [invalidEmbed]
