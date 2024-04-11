@@ -71,8 +71,8 @@ export default async function(bot, requestedPlayer, match) {
       requestedFloor = playerMatch[3];
       calculating = true;
       if (!requestedLevel) {
-        bot.chat('Invalid syntax. (cata {player} calc {level} {floor} (hecatomb or ring)');
-        return;
+        bot.chat('/gc Invalid syntax. (cata {player} calc {level} {floor} (hecatomb or ring)');
+        global.lastMessage = ('/gc Invalid syntax. (cata {player} calc {level} {floor} (hecatomb or ring)');
       }
     } 
     if (requestedPlayer.split(" ")[0] == 'calc') {
@@ -82,7 +82,8 @@ export default async function(bot, requestedPlayer, match) {
       requestedFloor = playerMatch[2];
       calculating = true;
       if (!requestedLevel) {
-        bot.chat('Invalid syntax. (cata {player} calc {level} {floor} (hecatomb or ring)');
+        bot.chat('/gc Invalid syntax. (cata {player} calc {level} {floor} (hecatomb or ring)');
+        global.lastMessage = ('/gc Invalid syntax. (cata {player} calc {level} {floor} (hecatomb or ring)')
         return;
      }
     }
