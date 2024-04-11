@@ -26,7 +26,8 @@ export async function getMathProblem(bot, message) {
   global.mathAnswerTimestamp = Date.now();
   setTimeout(() => {
     if (global.mathAnswer != null) {
-     bot.chat('No one answered in time! The answer was "' + global.mathAnswer + '"');
+     bot.chat('/gc No one answered in time! The answer was "' + global.mathAnswer + '"');
+     global.lastMessage = ('/gc No one answered in time! The answer was "' + global.mathAnswer + '"');
      global.mathAnswer = null;
     }
   }, 30 * 1000);
