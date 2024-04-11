@@ -12,13 +12,14 @@ export async function getScrambledWord(bot) {
   global.randomItemName = randomItemId.name;
   const shuffledItemName = global.randomItemName.shuffleWords();
   console.log("Answer: " + global.randomItemName);
-  bot.chat("Unscramble! | " + shuffledItemName);
-  global.lastMessage = ("Unscramble! | " + shuffledItemName);
+  bot.chat("/gc Unscramble! | " + shuffledItemName);
+  global.lastMessage = ("/gc Unscramble! | " + shuffledItemName);
   global.randomItemName = global.randomItemName.toLowerCase();
   global.randomItemNameTimestamp = Date.now();
   setTimeout(() => {
    if (global.randomItemName != null) {
-    bot.chat('No one answered in time! The answer was "' + global.randomItemName + '"');
+    bot.chat('/gc No one answered in time! The answer was "' + global.randomItemName + '"');
+    global.lastMessage = ('/gc No one answered in time! The answer was "' + global.randomItemName + '"');
     global.randomItemId = null;
    }
    }, 30 * 1000);
