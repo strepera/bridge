@@ -48,6 +48,6 @@ export default async function(bot, requestedPlayer) {
           }
       }
   }
-  bot.chat(`${requestedPlayer}'s MP is ${totalValue} | ${message}`);
-  global.lastMessage = (`${requestedPlayer}'s MP is ${totalValue} | ${message}`);
+  bot.chat(`/gc ${requestedPlayer}'s MP is ${totalValue} | ${message}`);
+  global.lastMessage = (`/gc ${requestedPlayer}'s MP is ${totalValue} | ${message}`);
 }
