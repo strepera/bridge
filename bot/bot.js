@@ -1,69 +1,41 @@
-const { MessageEmbed } = require('discord.js');
+import regexes from './regexes.js';
+import commands from './commandHandler.js';
+import { gameHandler, checkAnswer } from './gameHandler.js';
 
-const regexes = [
-  {
-     regex: /Guild > (.+) joined./,
-     func: (match, bridgeWebhook) => {
-       return bridgeWebhook.send({
-        embeds: [
-          new MessageEmbed()
-          .setColor('#00ff00')
-          .setTitle(match[1] + ' joined!')
-          .setDescription('Welcome!')
-          .setThumbnail(`https://minotar.net/helm/${match[1]}/32`)
-        ],
-        username: match[1],
-        avatarURL: `https://minotar.net/helm/${match[1]}/32`
-       })
-     }
-  },
-  {
-     regex: /Guild > (.+) left./,
-     func: (match, bridgeWebhook) => {
-      return bridgeWebhook.send({
-        embeds: [
-          new MessageEmbed()
-          .setColor('#ff0000')
-          .setTitle(match[1] + ' left.')
-          .setDescription('Goodbye.')
-          .setThumbnail(`https://minotar.net/helm/${match[1]}/32`)
-        ],
-        username: match[1],
-        avatarURL: `https://minotar.net/helm/${match[1]}/32`
-       })
-     }
-  },
-  {
-     regex: /Guild > (?:\[(.+)\] )?(.+) \[(.+)\]: (.+)/,
-     func: (match, bridgeWebhook) => {
-       return bridgeWebhook.send({
-         content: match[4],
-         username: match[2],
-         avatarURL: `https://minotar.net/helm/${match[2]}/32`
-       });
-     }
-  }
-];
-
-async function minecraft(bot, client, bridgeWebhook, logWebhook) {
+export async function minecraft(bot, client, bridgeWebhook, logWebhook, punishWebhook) {
+  gameHandler(bot);
   bot.on('login', () => {
     console.log('Joined as ' + bot.username);
-    bot.chat("§");
+    bot.chat("§"); // send self to limbo
+    bot.chat("/g online");
   })
   bot.on('messagestr', async (jsonMsg) => {
+    //minecraft -> discord handling
     if (jsonMsg.trim() == '') return;
-    if (jsonMsg.match(/Guild > (?:\[(.+)\] )?snailify \[(.+)\]: (.+): (.+)/)) return; //replace this
+    if (jsonMsg.match(/You cannot say the same message twice!/)) {
+      if (global.lastMessage.includes('\\')) {
+        return bridgeWebhook.send({content: 'You cannot say the same message twice!'})
+      }
+      bot.chat(global.lastMessage + ' \\\\\\\\');
+      return;
+    }
+    if (jsonMsg.match(/Guild > (?:\[(.+)\] )?TheNoobCode \[(.+)\]: (.+): (.+)/)) return; //replace this
+    let match;
     for (const { regex, func } of regexes) {
       if (match = jsonMsg.match(regex)) {
-        func(match, bridgeWebhook, bot);
+        func(match, bridgeWebhook, punishWebhook);
         break;
       }
     };
-  })
-  bot.on('messagestr', async (jsonMsg) => {
-    if (jsonMsg.trim() == '') return;
+
+    //check for commands
+    commands(bot, jsonMsg, match);
+
+    //check for chat games answers
+    checkAnswer(bot, jsonMsg);
+
+    //log messages
+    console.log(jsonMsg);
     return logWebhook.send(jsonMsg)
   })
 }
-
-module.exports = { minecraft };
