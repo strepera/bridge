@@ -94,6 +94,7 @@ export async function discord(bot, client, welcomeChannel, bridgeChannelId) {
   client.on('interactionCreate', async interaction => {
     if (!interaction.isCommand()) return;
     const { commandName, options } = interaction;
+    try {
     if (commandName == 'say') {
       if (interaction.user.id != process.env.ownerId) return;
       bot.chat(options.getString('message'));
@@ -101,6 +102,10 @@ export async function discord(bot, client, welcomeChannel, bridgeChannelId) {
     }
     else {
       commands[commandName](interaction, options.getString('username'));
+    }
+    }
+    catch(e) {
+      console.error(e)
     }
   })
   client.on('guildMemberAdd', async(member) => {
