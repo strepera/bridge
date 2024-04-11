@@ -10,18 +10,26 @@ export async function minecraft(bot, client, bridgeWebhook, logWebhook, punishWe
     bot.chat("/g online");
   })
   bot.on('messagestr', async (jsonMsg) => {
-    //minecraft -> discord handling
     if (jsonMsg.trim() == '') return;
+    let match;
+    //log messages
+    console.log(jsonMsg);
+    logWebhook.send(jsonMsg)
+    
+    //check for commands
+    commands(bot, jsonMsg, match);
+
+    //check for chat games answers
+    checkAnswer(bot, jsonMsg);
+
+    //minecraft -> discord handling
     if (jsonMsg.match(/You cannot say the same message twice!/)) {
-      if (global.lastMessage.includes('\\')) {
-        return bridgeWebhook.send({content: 'You cannot say the same message twice!'})
-      }
       bot.chat(global.lastMessage + ' \\\\\\\\');
+      global.lastMessage = (global.lastMessage + ' \\\\\\\\');
       return;
     }
     const regexPattern = new RegExp("Guild > (?:\\[(.+)\\] )?" + process.env.botUsername + " \\[(.+)\\]: (.+): (.+)");
     if (jsonMsg.match(regexPattern)) return;
-    let match;
     for (const { regex, func } of regexes) {
       if (match = jsonMsg.match(regex)) {
         func(match, bridgeWebhook, punishWebhook);
@@ -29,15 +37,8 @@ export async function minecraft(bot, client, bridgeWebhook, logWebhook, punishWe
       }
     };
   bot.on('messagestr', async (jsonMsg) => {
-    //check for commands
-    commands(bot, jsonMsg, match);
+    if (jsonMsg.trim() == '') return;
 
-    //check for chat games answers
-    checkAnswer(bot, jsonMsg);
-
-    //log messages
-    console.log(jsonMsg);
-    return logWebhook.send(jsonMsg)
   }) 
   })
 }
