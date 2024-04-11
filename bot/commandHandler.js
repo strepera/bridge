@@ -10,9 +10,9 @@ async function importCommand(commandName) {
 }
 
 export default async function commands(bot, jsonMsg, match) {
-if (match = jsonMsg.match(/Guild > (?:\[(\w+\+?)\] )?(\w+) \[(\w+)\]: \.(\w+) (.*)/)) {
+if (match = jsonMsg.match(/Guild > (?:\[(\w+\+?)\] )?(\w+) \[(\w+)\]: \.(\w+)( .*)?/)) {
     let command = match[4];
-    const requestedPlayer = match[5] ? match[5] : match[2];
+    const requestedPlayer = match[5] || match[2];
     if (command.includes('/')) {
         const commandSplit = command.split('/');
         for (i in commandSplit) {
@@ -23,9 +23,9 @@ if (match = jsonMsg.match(/Guild > (?:\[(\w+\+?)\] )?(\w+) \[(\w+)\]: \.(\w+) (.
         const executed = command == 'nw' ? await importCommand('networth') : await importCommand(command);
         if (executed) executed(bot, requestedPlayer);
     }
-} else if (match = jsonMsg.match(/Guild > (?:\[(\w+\+?)\] )?(\w+) \[(\w+)\]: (.+): \.(\w+) (.*)/)) {
+} else if (match = jsonMsg.match(/Guild > (?:\[(\w+\+?)\] )?(\w+) \[(\w+)\]: (.+): \.(\w+)( .*)?/)) {
     let command = match[5];
-    const requestedPlayer = match[6] ? match[6] : match[4];
+    const requestedPlayer = match[6] || match[4];
     if (command.includes('/')) {
         const commandSplit = command.split('/');
         for (i in commandSplit) {
