@@ -45,6 +45,10 @@ export async function discord(bot, client, welcomeChannel, bridgeChannelId) {
     await guild.commands.create(verifyCommandData);
     await guild.commands.create(unverifyCommandData);
     await guild.commands.create({
+      name: "online",
+      description: "Shows you who's online ingame!"
+    });
+    await guild.commands.create({
       name: "say",
       description: "for snail",
       options: [{
@@ -99,6 +103,12 @@ export async function discord(bot, client, welcomeChannel, bridgeChannelId) {
       if (interaction.user.id != process.env.ownerId) return;
       bot.chat(options.getString('message'));
       interaction.reply(options.getString('message') + ' sent!');
+    }
+    else if (commandName == 'online') {
+      bot.chat('/g online');
+      setTimeout(() => {
+        interaction.reply({embeds: [global.onlineEmbed]});
+      }, 500);
     }
     else {
       commands[commandName](interaction, options.getString('username'));
