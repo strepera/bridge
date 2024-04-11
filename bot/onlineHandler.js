@@ -1,0 +1,35 @@
+import { MessageEmbed } from 'discord.js';
+
+export async function onlineHandler(jsonMsg) {
+    if (jsonMsg.match(/Guild Name: (.+)/)) {
+        onlineMessage = true;
+    }
+    if (onlineMessage == true) {
+        onlineArray.push(jsonMsg.replaceAll('●', ' '));
+        for (let i in onlineArray) {
+          if (onlineArray[i].match(/Offline Members: \d+/)) {
+            onlineMessage = false;
+            for (let arrayLine in onlineArray) {
+              const line = onlineArray[arrayLine];
+              for (let message in boldMessages) {
+                if (line == boldMessages[message]) {
+                  onlineArray[arrayLine] = '**' + onlineArray[arrayLine] + '**';
+                }
+              }
+              for (let character in line) {
+                if (line[character] == '-') {
+                  onlineArray[arrayLine] = '**' + onlineArray[arrayLine] + '**';
+                  break;
+                }
+              }
+              if (line.split('')[2] == '-') line = '**' + line + '**'
+            }
+            global.onlineEmbed = new MessageEmbed()
+            .setTitle('Online Members')
+            .setDescription(onlineArray.join('\n'))
+            .setColor('#00ff00')
+            onlineArray = [];
+          }
+        }
+    } 
+}
