@@ -14,7 +14,9 @@ export async function gameHandler(bot) {
 
 export async function checkAnswer(bot, jsonMsg) {
     let match;
-    if (jsonMsg.match(/Guild > (?:\[(\w+\+?)\] )?TheNoobCode \[(\w+)\]: .*/) && !jsonMsg.match(/Guild > (?:\[(\w+\+?)\] )?TheNoobCode \[(\w+)\]: (.+) .*/)) return; // change
+    const regexPattern = new RegExp("Guild > (?:\\[(\\w+\\+?)\\] )?" + process.env.botUsername + " \\[(\\w+)\\]: .*");
+    const regexPatternWithoutMessage = new RegExp("Guild > (?:\\[(\\w+\\+?)\\] )?" + process.env.botUsername + " \\[(\\w+)\\]: (.+) .*");
+    if (jsonMsg.match(regexPattern) && !jsonMsg.match(regexPatternWithoutMessage)) return;
     if (match = jsonMsg.match(/Guild > (?:\[(\w+\+?)\] )?(\w+) \[(\w+)\]: (.+): (.*)/)) {
       if (match[5] == global.mathAnswer) {
         const elapsedTime = Date.now() - global.mathAnswerTimestamp;
