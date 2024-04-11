@@ -58,7 +58,7 @@ export async function verifyCommand(interaction, username) {
                 }
                 return;
               } else {
-                await interaction.reply({embeds: [new MessageEmbed()
+                await interaction.editReply({embeds: [new MessageEmbed()
                     .setColor('#FF0000')
                     .setTitle('Error Linking')
                     .setThumbnail('https://cdn.discordapp.com/avatars/1183752068490612796/f127b318f4429579fa0082e287c901fd.png?size=256?size=512')
@@ -66,13 +66,13 @@ export async function verifyCommand(interaction, username) {
                   return;
               }
           } else {
-              await interaction.reply({
+              await interaction.editReply({
                   embeds: [invalidEmbed]
               });
               return;
           }
       } else {
-          await interaction.reply({
+          await interaction.editReply({
               embeds: [invalidEmbed]
           });
           return;
