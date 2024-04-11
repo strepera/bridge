@@ -7,9 +7,6 @@ export async function minecraft(bot, client, bridgeWebhook, logWebhook, punishWe
   //initialize game handler
   gameHandler(bot);
 
-  let onlineMessage = false;
-  let onlineArray = [];
-
   //check for patch notes
   let lastPatchNotes = '';
   setInterval(async () => {
