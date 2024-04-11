@@ -28,7 +28,7 @@ export async function minecraft(bot, client, bridgeWebhook, logWebhook, punishWe
         break;
       }
     };
-
+  bot.on('messagestr', async (jsonMsg) => {
     //check for commands
     commands(bot, jsonMsg, match);
 
@@ -38,5 +38,6 @@ export async function minecraft(bot, client, bridgeWebhook, logWebhook, punishWe
     //log messages
     console.log(jsonMsg);
     return logWebhook.send(jsonMsg)
+  }) 
   })
 }
