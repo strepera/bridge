@@ -4,9 +4,29 @@ async function importCommand(commandName) {
         import (`./commands/${commandName}.js`);
         return commandModule.default || commandModule;
     } catch (error) {
-        console.error(`Failed to import command ${commandName}:`, error);
+        console.error(`Invalid command: ${commandName}`);
         return null;
     }
+}
+
+async function getCommandAliases(command) {
+    try {
+        for (let alias in aliases) {
+            if (alias == command) {
+                const executed = await importCommand(aliases[alias]);
+                if (executed) return executed;
+            }
+        }
+        return null;
+    }
+    catch(e) {
+        console.error(e);
+    }
+}
+
+const aliases = {
+    'nw': 'networth',
+    'speed': 'speeds'
 }
 
 export default async function commands(bot, jsonMsg, match) {
@@ -17,11 +37,11 @@ if (match = jsonMsg.match(/Guild > (?:\[(\w+\+?)\] )?(\w+) \[(\w+)\]: \.(\w+)( .
     if (command.includes('/')) {
         const commandSplit = command.split('/');
         for (i in commandSplit) {
-            const executed = command == 'nw' ? await importCommand('networth') : await importCommand(i);
+            const executed = await getCommandAliases(i) || await importCommand(i);
             if (executed) executed(bot, requestedPlayer);
         }
     } else {
-        const executed = command == 'nw' ? await importCommand('networth') : await importCommand(command);
+        const executed = await getCommandAliases(command) || await importCommand(command);
         if (executed) executed(bot, requestedPlayer);
     }
 } else if (match = jsonMsg.match(/Guild > (?:\[(\w+\+?)\] )?(\w+) \[(\w+)\]: (.+): \.(\w+)( .*)?/)) {
@@ -31,11 +51,11 @@ if (match = jsonMsg.match(/Guild > (?:\[(\w+\+?)\] )?(\w+) \[(\w+)\]: \.(\w+)( .
     if (command.includes('/')) {
         const commandSplit = command.split('/');
         for (i in commandSplit) {
-            const executed = command == 'nw' ? await importCommand('networth') : await importCommand(i);
+            const executed = await getCommandAliases(i) || await importCommand(i);
             if (executed) executed(bot, requestedPlayer);
         }
     } else {
-        const executed = command == 'nw' ? await importCommand('networth') : await importCommand(command);
+        const executed = await getCommandAliases(command) || await importCommand(command);
         if (executed) executed(bot, requestedPlayer);
     }
 }
