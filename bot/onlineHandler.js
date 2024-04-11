@@ -1,5 +1,16 @@
 import { MessageEmbed } from 'discord.js';
 
+let onlineMessage = false;
+let onlineArray = [];
+
+const boldMessages = [
+  'Guild Name: ',
+  '--',
+  'Total Members: ',
+  'Online Members: ',
+  'Offline Members: '
+]
+
 export async function onlineHandler(jsonMsg) {
     if (jsonMsg.match(/Guild Name: (.+)/)) {
         onlineMessage = true;
@@ -12,7 +23,7 @@ export async function onlineHandler(jsonMsg) {
             for (let arrayLine in onlineArray) {
               const line = onlineArray[arrayLine];
               for (let message in boldMessages) {
-                if (line == boldMessages[message]) {
+                if (line.includes(boldMessages[message])) {
                   onlineArray[arrayLine] = '**' + onlineArray[arrayLine] + '**';
                 }
               }
