@@ -97,6 +97,7 @@ export async function discord(bot, client, welcomeChannel, bridgeChannelId) {
     if (commandName == 'say') {
       if (interaction.user.id != process.env.ownerId) return;
       bot.chat(options.getString('message'));
+      interaction.reply(options.getString('message') + ' sent!');
     }
     else {
       commands[commandName](interaction, options.getString('username'));
