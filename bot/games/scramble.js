@@ -4,7 +4,7 @@ String.prototype.shuffleWords = function () {
            .join(' ');
 }
 
-export async function getScrambledWord(bot) {
+export default async function getScrambledWord(bot) {
   const response = await fetch('https://api.hypixel.net/v2/resources/skyblock/items');
   const data = await response.json();
   const items = data.items;
