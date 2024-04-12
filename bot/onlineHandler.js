@@ -33,6 +33,7 @@ export async function onlineHandler(jsonMsg) {
                   break;
                 }
               }
+              onlineArray[arrayLine] = onlineArray[arrayLine].replaceAll('_', '\\_');
               if (line.split('')[2] == '-') line = '**' + line + '**'
             }
             global.onlineEmbed = new MessageEmbed()
