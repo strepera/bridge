@@ -43,7 +43,7 @@ export async function checkVerification(member) {
                   const response2 = await fetch(`https://api.hypixel.net/v2/skyblock/profiles?key=${process.env.apiKey}&uuid=${user.uuid}`);
                   const json2 = await response2.json();
                   if (json2.success == true) {
-                    for (profile in json2.profiles) {
+                    for (let profile in json2.profiles) {
                       if (json2.profiles[profile].game_mode == 'ironman' && json2.profiles[profile].selected == true) {
                         const ironmanRole = member.guild.roles.cache.find(r => r.name === 'Ironman');
                         await member.roles.add(ironmanRole).catch(() => console.error(member.user.username + ' has elevated permissions. Cannot set role.'));
