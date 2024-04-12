@@ -1,3 +1,15 @@
+const givenRoles = [
+  'VIP',
+  'VIP+',
+  'MVP',
+  'MVP+',
+  'Verified',
+  'Member',
+  'Danger Noodle',
+  'Elite',
+  'Ironman'
+]
+
 export async function checkVerification(member) {
   let checkedRoles = [];
   let ironman = false;
