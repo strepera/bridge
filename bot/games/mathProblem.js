@@ -1,4 +1,4 @@
-export async function getMathProblem(bot, message) {
+export default async function getMathProblem(bot, message) {
   const chosenOperator = Math.random() < 0.5 ? '+' : '*';
   if (chosenOperator == '+') {
     let num1 = Math.floor(Math.random() * 100);
