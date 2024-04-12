@@ -4,6 +4,7 @@ const regexes = [
   {
     regex: /Guild > (\w+) joined./,
     func: (match, bridgeWebhook) => {
+      match[1] = match[1].replaceAll('_', '\\_');
       global.onlinePlayers += 1;
       const embed = new MessageEmbed()
       .setColor('#00ff00')
@@ -21,6 +22,7 @@ const regexes = [
   {
     regex: /Guild > (\w+) left./,
     func: (match, bridgeWebhook) => {
+      match[1] = match[1].replaceAll('_', '\\_');
       global.onlinePlayers -= 1;
       const embed = new MessageEmbed()
       .setColor('#ff0000')
@@ -38,12 +40,13 @@ const regexes = [
   {
     regex: /(?:\[(\w+\+?)\] )?(\w+) joined the guild!/,
     func: (match, bridgeWebhook, punishWebhook) => {
+      match[2] = match[2].replaceAll('_', '\\_');
       global.totalPlayers += 1;
       const embed = new MessageEmbed()
       .setColor('#00ff00')
       .setTitle('New Guild Member!')
       .setDescription(`${match[2]} joined the guild!`)
-      .setThumbnail(`https://minotar.net/helm/${match[1]}/32`)
+      .setThumbnail(`https://minotar.net/helm/${match[2]}/32`)
       punishWebhook.send({
         embeds: [embed],
         username: match[2],
@@ -60,12 +63,13 @@ const regexes = [
   {
     regex: /(?:\[(\w+\+?)\] )?(\w+) left the guild!/,
     func: (match, bridgeWebhook, punishWebhook) => {
+      match[2] = match[2].replaceAll('_', '\\_');
       global.totalPlayers -= 1;
       const embed = new MessageEmbed()
       .setColor('#ff0000')
       .setTitle('Guild Member Left.')
       .setDescription(`${match[2]} left the guild!`)
-      .setThumbnail(`https://minotar.net/helm/${match[1]}/32`)
+      .setThumbnail(`https://minotar.net/helm/${match[2]}/32`)
       punishWebhook.send({
         embeds: [embed],
         username: match[2],
@@ -82,7 +86,8 @@ const regexes = [
   {
     regex: /Guild > (?:\[(\w+\+?)\] )?(\w+) \[(\w+\+?)\]: (.+)/,
     func: (match, bridgeWebhook) => {
-      let content = match[4].replaceAll('@everyone', 'everyone').replaceAll('@here', 'here');
+      match[2] = match[2].replaceAll('_', '\\_');
+      let content = match[4].replaceAll('@everyone', 'everyone').replaceAll('@here', 'here').replaceAll('_', '\\_');
       bridgeWebhook.send({
          content: content,
          username: match[2],
@@ -126,6 +131,7 @@ const regexes = [
   {
     regex: /(?:\[(\w+\+?)\] )?(\w+) was promoted from (.+) to (.+)/,
     func: (match, bridgeWebhook, punishWebhook) => {
+      match[2] = match[2].replaceAll('_', '\\_');
       const embed = new MessageEmbed()
       .setColor('#00ff00')
       .setTitle(`${match[2]} was promoted!`)
@@ -147,6 +153,7 @@ const regexes = [
   {
     regex: /(?:\[(\w+\+?)\] )?(\w+) was demoted from (.+) to (.+)/,
     func: (match, bridgeWebhook, punishWebhook) => {
+      match[2] = match[2].replaceAll('_', '\\_');
       const embed = new MessageEmbed()
       .setColor('#ff0000')
       .setTitle(`${match[2]} was demoted!`)
@@ -168,6 +175,7 @@ const regexes = [
   {
     regex: /(?:\[(\w+\+?)\] )?(\w+) has muted the guild chat for (.+)/,
     func: (match, bridgeWebhook, punishWebhook) => {
+      match[2] = match[2].replaceAll('_', '\\_');
       const embed = new MessageEmbed()
       .setColor('#ff0000')
       .setTitle(`${match[2]} muted the guild chat!`)
@@ -189,6 +197,7 @@ const regexes = [
   {
     regex: /(?:\[(\w+\+?)\] )?(\w+) has unmuted the guild chat!/,
     func: (match, bridgeWebhook, punishWebhook) => {
+      match[2] = match[2].replaceAll('_', '\\_');
       const embed = new MessageEmbed()
       .setColor('#00ff00')
       .setTitle(`The guild chat has been unmuted!`)
@@ -209,6 +218,8 @@ const regexes = [
   {
     regex: /(?:\[(\w+\+?)\] )?(\w+) has muted (?:\[(\w+\+?)\] )?(\w+) for (.+)/,
     func: (match, bridgeWebhook, punishWebhook) => {
+      match[2] = match[2].replaceAll('_', '\\_');
+      match[4] = match[4].replaceAll('_', '\\_');
       const embed = new MessageEmbed()
       .setColor('#ff0000')
       .setTitle(`${match[4]} was muted!`)
@@ -230,6 +241,8 @@ const regexes = [
   {
     regex: /(?:\[(\w+\+?)\] )?(\w+) has unmuted (?:\[(\w+\+?)\] )?(\w+)/,
     func: (match, bridgeWebhook, punishWebhook) => {
+      match[2] = match[2].replaceAll('_', '\\_');
+      match[4] = match[4].replaceAll('_', '\\_');
       const embed = new MessageEmbed()
       .setColor('#ff0000')
       .setTitle(`${match[4]} was unmuted!`)
@@ -251,6 +264,8 @@ const regexes = [
   {
     regex: /(?:\[(\w+\+?)\] )?(\w+) was kicked from the guild by (?:\[(\w+\+?)\] )?(\w+)/,
     func: (match, bridgeWebhook, punishWebhook) => {
+      match[2] = match[2].replaceAll('_', '\\_');
+      match[4] = match[4].replaceAll('_', '\\_');
       const embed = new MessageEmbed()
       .setColor('#ff0000')
       .setTitle(`${match[2]} has been kicked from the guild!`)
