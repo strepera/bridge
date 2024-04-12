@@ -122,7 +122,7 @@ export default async function(bot, requestedPlayer, match) {
             completionBonus = profile.members[uuid].dungeons.dungeon_types.catacombs.tier_completions[0] * 2;
             }
             else if (floorType == 'f') {
-            floor = requestedFloor.split('f');
+            const floor = requestedFloor.split('f');
             if (!profile.members[uuid].dungeons.dungeon_types.catacombs.tier_completions[floor[1]] == NaN) {
             completionBonus = profile.members[uuid].dungeons.dungeon_types.catacombs.tier_completions[floor[1]] * 2;
             }
@@ -131,7 +131,7 @@ export default async function(bot, requestedPlayer, match) {
             }
             }
             else if (floorType == 'm') {
-            floor = requestedFloor.split('m');
+            const floor = requestedFloor.split('m');
             if (!profile.members[uuid].dungeons.dungeon_types.master_catacombs.tier_completions[floor[1]] == NaN) {
             completionBonus = profile.members[uuid].dungeons.dungeon_types.master_catacombs.tier_completions[floor[1]] * 2;
             }
@@ -166,15 +166,15 @@ export default async function(bot, requestedPlayer, match) {
           if (completionBonus > 50) {
             completionBonus = 50;
           }
-          bonus = 1 + (completionBonus / 100);
+          let bonus = 1 + (completionBonus / 100);
           if (ring == true) {
             bonus += 0.02;
           }
           if (hecatomb == true) {
             bonus += 0.1;
           }
-          expDifference = experienceToLevel[requestedLevel] - cataExperience;
-          requiredFloors = Math.floor(expDifference / (baseExp[requestedFloor] * bonus));
+          const expDifference = experienceToLevel[requestedLevel] - cataExperience;
+          const requiredFloors = Math.floor(expDifference / (baseExp[requestedFloor] * bonus));
           bot.chat(`/gc ${requestedPlayer} needs ${requiredFloors} ${requestedFloor} runs to get from cata ${cataLevel} to ${requestedLevel}.`);
           global.lastMessage = (`/gc ${requestedPlayer} needs ${requiredFloors} ${requestedFloor} runs to get from cata ${cataLevel} to ${requestedLevel}.`);
           calculating = false;
