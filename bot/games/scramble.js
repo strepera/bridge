@@ -24,3 +24,12 @@ export default async function getScrambledWord(bot) {
    }
    }, 30 * 1000);
 }
+
+export async function check(answer, player, bot) {
+  if (answer.toLowerCase().includes(global.randomItemName)) {
+    const elapsedTime = Date.now() - global.randomItemNameTimestamp;
+    bot.chat(`/gc ${player} got it correct in ${elapsedTime} ms!`);
+    global.lastMessage = (`/gc ${player} got it correct in ${elapsedTime} ms!`);
+    global.randomItemName = null;
+  }
+}
