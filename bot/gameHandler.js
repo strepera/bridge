@@ -1,15 +1,26 @@
-import { getMathProblem } from "./games/mathProblem.js";
-import { getScrambledWord } from "./games/scramble.js";
+import * as fs from 'fs';
 
 export async function gameHandler(bot) {
-  setInterval(() => {
-    getMathProblem(bot);
-  }, process.env.gameFrequency * 60 * 1000);
-  setTimeout(() => {
-    setInterval(() => {
-      getScrambledWord(bot);
-    }, process.env.gameFrequency * 60 * 1000);
-  }, process.env.gameFrequency / 2 * 60 * 1000);
+  fs.readdir('bot/games', async (err, files) => {
+    if (err) {
+      console.error(err);
+      return;
+    }
+    const commands = [];
+    for (const file of files) {
+      const imported = await import (`./games/${file}`)
+      commands.push(imported.default || imported);
+    }
+    for (const command of commands) {
+      const frequency = process.env.gameFrequency * 60 * 1000;
+      setTimeout(() => {
+        setInterval(() => {
+          command(bot);
+        }, frequency);
+      }, frequency * commands.indexOf(command) / commands.length );
+      console.log(command, frequency, commands.length)
+    }
+  })
 }
 
 export async function checkAnswer(bot, jsonMsg) {
