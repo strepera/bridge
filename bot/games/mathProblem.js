@@ -31,4 +31,13 @@ export default async function getMathProblem(bot, message) {
      global.mathAnswer = null;
     }
   }, 30 * 1000);
- }
+}
+
+export async function check(answer, player, bot) {
+  if (answer == global.mathAnswer) {
+    const elapsedTime = Date.now() - global.mathAnswerTimestamp;
+    bot.chat(`/gc ${player} got it correct in ${elapsedTime} ms!`);
+    global.lastMessage = (`/gc ${player} got it correct in ${elapsedTime} ms!`);
+    global.mathAnswer = null;
+  }
+}
