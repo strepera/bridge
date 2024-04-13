@@ -38,7 +38,7 @@ const regexes = [
     }
   },
   {
-    regex: /(?:\[(\w+(?:\+{1,2})\w*)\] )?(\w+) joined the guild!/,
+    regex: /(?:\[(\w+\+?)\] )?(\w+) joined the guild!/,
     func: (match, bridgeWebhook, punishWebhook) => {
       const player = match[2].replaceAll('_', '\\_');
       global.totalPlayers += 1;
@@ -61,7 +61,7 @@ const regexes = [
     }
   },
   {
-    regex: /(?:\[(\w+(?:\+{1,2})\w*)\] )?(\w+) left the guild!/,
+    regex: /(?:\[(\w+\+?)\] )?(\w+) left the guild!/,
     func: (match, bridgeWebhook, punishWebhook) => {
       const player = match[2].replaceAll('_', '\\_');
       global.totalPlayers -= 1;
@@ -84,7 +84,7 @@ const regexes = [
     }
   },
   {
-    regex: /Guild > (?:\[(\w+(?:\+{1,2})\w*)\] )?(\w+) \[(\w+\+?)\]: (.+)/,
+    regex: /Guild > (?:\[(\w+\+?)\] )?(\w+) \[(\w+\+?)\]: (.+)/,
     func: (match, bridgeWebhook) => {
       let content = match[4].replaceAll('@everyone', 'everyone').replaceAll('@here', 'here').replaceAll('_', '\\_');
       bridgeWebhook.send({
@@ -124,7 +124,7 @@ const regexes = [
     }
   },
   {
-    regex: /(?:\[(\w+(?:\+{1,2})\w*)\] )?(\w+) was promoted from (.+) to (.+)/,
+    regex: /(?:\[(\w+\+?)\] )?(\w+) was promoted from (.+) to (.+)/,
     func: (match, bridgeWebhook, punishWebhook) => {
       const player = match[2].replaceAll('_', '\\_');
       const embed = new MessageEmbed()
@@ -146,7 +146,7 @@ const regexes = [
     }
   },
   {
-    regex: /(?:\[(\w+(?:\+{1,2})\w*)\] )?(\w+) was demoted from (.+) to (.+)/,
+    regex: /(?:\[(\w+\+?)\] )?(\w+) was demoted from (.+) to (.+)/,
     func: (match, bridgeWebhook, punishWebhook) => {
       const player = match[2].replaceAll('_', '\\_');
       const embed = new MessageEmbed()
@@ -168,7 +168,7 @@ const regexes = [
     }
   },
   {
-    regex: /(?:\[(\w+(?:\+{1,2})\w*)\] )?(\w+) has muted the guild chat for (.+)/,
+    regex: /(?:\[(\w+\+?)\] )?(\w+) has muted the guild chat for (.+)/,
     func: (match, bridgeWebhook, punishWebhook) => {
       const player = match[2].replaceAll('_', '\\_');
       const embed = new MessageEmbed()
@@ -190,7 +190,7 @@ const regexes = [
     }
   },
   {
-    regex: /(?:\[(\w+(?:\+{1,2})\w*)\] )?(\w+) has unmuted the guild chat!/,
+    regex: /(?:\[(\w+\+?)\] )?(\w+) has unmuted the guild chat!/,
     func: (match, bridgeWebhook, punishWebhook) => {
       const player = match[2].replaceAll('_', '\\_');
       const embed = new MessageEmbed()
@@ -211,7 +211,7 @@ const regexes = [
     }
   },
   {
-    regex: /(?:\[(\w+(?:\+{1,2})\w*)\] )?(\w+) has muted (?:\[(\w+\+?)\] )?(\w+) for (.+)/,
+    regex: /(?:\[(\w+\+?)\] )?(\w+) has muted (?:\[(\w+\+?)\] )?(\w+) for (.+)/,
     func: (match, bridgeWebhook, punishWebhook) => {
       const player1 = match[2].replaceAll('_', '\\_');
       const player2 = match[4].replaceAll('_', '\\_');
@@ -234,7 +234,7 @@ const regexes = [
     }
   },
   {
-    regex: /(?:\[(\w+(?:\+{1,2})\w*)\] )?(\w+) has unmuted (?:\[(\w+\+?)\] )?(\w+)/,
+    regex: /(?:\[(\w+\+?)\] )?(\w+) has unmuted (?:\[(\w+\+?)\] )?(\w+)/,
     func: (match, bridgeWebhook, punishWebhook) => {
       const player1 = match[2].replaceAll('_', '\\_');
       const player2 = match[4].replaceAll('_', '\\_');
@@ -257,7 +257,7 @@ const regexes = [
     }
   },
   {
-    regex: /(?:\[(\w+(?:\+{1,2})\w*)\] )?(\w+) was kicked from the guild by (?:\[(\w+\+?)\] )?(\w+)/,
+    regex: /(?:\[(\w+\+?)\] )?(\w+) was kicked from the guild by (?:\[(\w+\+?)\] )?(\w+)/,
     func: (match, bridgeWebhook, punishWebhook) => {
       const player1 = match[2].replaceAll('_', '\\_');
       const player2 = match[4].replaceAll('_', '\\_');
