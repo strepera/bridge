@@ -15,14 +15,14 @@ export default async function(bot, requestedPlayer) {
       }
       if (rank != 'Ironman') {
         let newRank;
-        if (totalGEXP >= 125000) {
-          if (totalGEXP >= 250000) {
+        if (totalGEXP >= 100000) {
+          if (totalGEXP >= 200000) {
             newRank = 'Elite';
           }
           else {
             newRank = 'Danger Noodle';
           }
-          if (ranks.indexOf(newRank) > ranks.indexOf(rank)) {
+          if (newRank != rank) {
             const response0 = await fetch(`https://api.mojang.com/user/profile/${member.uuid}`);
             const json0 = await response0.json();
             let requestedUsername = json0.name;
@@ -67,8 +67,8 @@ export default async function(bot, requestedPlayer) {
   }
   if (rank !== 'Ironman') {
   let newRank;
-  if (totalGEXP >= 125000) {
-    if (totalGEXP >= 250000) {
+  if (totalGEXP >= 100000) {
+    if (totalGEXP >= 200000) {
       newRank = 'Elite';
     }
     else {
@@ -80,8 +80,8 @@ export default async function(bot, requestedPlayer) {
    }
   }
   setTimeout(() => {
-    bot.chat(`/gc  ${requestedPlayer} joined ${joinDate}. 125k gexp for danger noodle, 250k for elite. Their gexp this week is ${totalGEXP.toLocaleString()}.`);
-    global.lastMessage = (`/gc  ${requestedPlayer} joined ${joinDate}. 125k gexp for danger noodle, 250k for elite. Their gexp this week is ${totalGEXP.toLocaleString()}.`);
+    bot.chat(`/gc  ${requestedPlayer} joined ${joinDate}. 100k gexp for danger noodle, 200k for elite. Their gexp this week is ${totalGEXP.toLocaleString()}.`);
+    global.lastMessage = (`/gc  ${requestedPlayer} joined ${joinDate}. 100k gexp for danger noodle, 200k for elite. Their gexp this week is ${totalGEXP.toLocaleString()}.`);
   }, 250);
  }
 }
