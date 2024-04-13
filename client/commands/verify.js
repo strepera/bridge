@@ -96,13 +96,14 @@ async function updateGist(uuid, interaction, username, guild = false, guildRank 
     const users = await getGist();
     for (let user in users) {
         if (users[user].dcuser == dcuser) {
-            interaction.editReply({embeds:[embed = 
-                new MessageEmbed()
-                .setColor('FF0000')
-                .setTitle('Error')
-                .setThumbnail('https://cdn.discordapp.com/avatars/1183752068490612796/f127b318f4429579fa0082e287c901fd.png?size=256?size=512')
-                .setDescription('You are already verified.')]});
-                return;
+            const embed =
+            new MessageEmbed()
+            .setColor('FF0000')
+            .setTitle('Error')
+            .setThumbnail('https://cdn.discordapp.com/avatars/1183752068490612796/f127b318f4429579fa0082e287c901fd.png?size=256?size=512')
+            .setDescription('You are already verified.');
+            interaction.editReply({embeds:[embed]});
+            return;
         }
     }
     const guildResponse = await fetch(`https://api.hypixel.net/v2/guild?key=${process.env.apiKey}&name=${process.env.guildName.replaceAll(' ', '%20')}`);
