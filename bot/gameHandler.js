@@ -27,15 +27,15 @@ export async function gameHandler(bot) {
 
 export async function checkAnswer(bot, jsonMsg) {
     let match;
-    const mcRegex = new RegExp("Guild > (?:\\[(\\w+(?:\\+{1,2})\\w*)\\] )?" + process.env.botUsername + " \\[(\\w+)\\]: .*");
-    const dcRegex = new RegExp("Guild > (?:\\[(\\w+(?:\\+{1,2})\\w*)\\] )?" + process.env.botUsername + " \\[(\\w+)\\]: (.+) .*");
+    const mcRegex = new RegExp("Guild > (?:\\[(\\w+\\+?)\\] )?" + process.env.botUsername + " \\[(\\w+)\\]: .*");
+    const dcRegex = new RegExp("Guild > (?:\\[(\\w+\\+?)\\] )?" + process.env.botUsername + " \\[(\\w+)\\]: (.+) .*");
     if (jsonMsg.match(mcRegex) && !jsonMsg.match(dcRegex)) return;
-    if (match = jsonMsg.match(/Guild > (?:\[(\w+(?:\+{1,2})\w*)\] )?(\w+) \[(\w+)\]: (.+): (.*)/)) {
+    if (match = jsonMsg.match(/Guild > (?:\[(\w+\+?)\] )?(\w+) \[(\w+)\]: (.+): (.*)/)) {
       for (const command of commands) {
         command.check(match[5], match[4], bot);
       }
     }
-    else if (match = jsonMsg.match(/Guild > (?:\[(\w+(?:\+{1,2})\w*)\] )?(\w+) \[(\w+)\]: (.*)/)) {
+    else if (match = jsonMsg.match(/Guild > (?:\[(\w+\+?)\] )?(\w+) \[(\w+)\]: (.*)/)) {
       for (const command of commands) {
         command.check(match[4], match[2], bot);
       }
