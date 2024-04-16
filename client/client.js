@@ -33,6 +33,18 @@ async function formatMessage(message) {
   return newMsg;
 }
 
+function checkOnlineEmbed(interaction) {
+  if (global.onlineEmbed) {
+    interaction.reply({embeds: [global.onlineEmbed]});
+    global.onlineEmbed = null;
+  }
+  else {
+    setTimeout(() => {
+      checkOnlineEmbed(interaction);
+    }, 500);
+  }
+}
+
 const commands = {
   'verify': verifyCommand,
   'unverify': unverifyCommand
@@ -106,9 +118,7 @@ export async function discord(bot, client, welcomeChannel, bridgeChannelId) {
     }
     else if (commandName == 'online') {
       bot.chat('/g online');
-      setTimeout(() => {
-        interaction.reply({embeds: [global.onlineEmbed]});
-      }, 500);
+      checkOnlineEmbed(interaction);
     }
     else {
       commands[commandName](interaction, options.getString('username'));
