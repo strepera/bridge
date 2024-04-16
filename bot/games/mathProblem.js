@@ -34,7 +34,7 @@ export default async function getMathProblem(bot, message) {
 }
 
 export async function check(answer, player, bot) {
-  if (answer == 'undefined') return;
+  answer = answer.replaceAll('undefined', ' ');
   if (answer == global.mathAnswer) {
     const elapsedTime = Date.now() - global.mathAnswerTimestamp;
     bot.chat(`/gc ${player} got it correct in ${elapsedTime} ms!`);
