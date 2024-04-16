@@ -108,7 +108,7 @@ const regexes = [
     }
   },
   {
-    regex: /The Guild has reached Level \d+!/,
+    regex: /The Guild has reached Level (\d+)!/,
     func: (match, bridgeWebhook, punishWebhook) => {
       const embed = new MessageEmbed()
       .setColor('#00ff00')
