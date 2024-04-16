@@ -25,10 +25,10 @@ export default async function getMathProblem(bot, message) {
   global.lastMessage = (message);
   global.mathAnswerTimestamp = Date.now();
   setTimeout(() => {
-    if (global.mathAnswer != null) {
+    if (global.mathAnswer) {
      bot.chat('/gc No one answered in time! The answer was "' + global.mathAnswer + '"');
      global.lastMessage = ('/gc No one answered in time! The answer was "' + global.mathAnswer + '"');
-     global.mathAnswer = null;
+     delete global.mathAnswer;
     }
   }, 30 * 1000);
 }
@@ -38,6 +38,6 @@ export async function check(answer, player, bot) {
     const elapsedTime = Date.now() - global.mathAnswerTimestamp;
     bot.chat(`/gc ${player} got it correct in ${elapsedTime} ms!`);
     global.lastMessage = (`/gc ${player} got it correct in ${elapsedTime} ms!`);
-    global.mathAnswer = null;
+    delete global.mathAnswer;
   }
 }
