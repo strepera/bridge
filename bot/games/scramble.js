@@ -17,10 +17,10 @@ export default async function getScrambledWord(bot) {
   global.randomItemName = global.randomItemName.toLowerCase();
   global.randomItemNameTimestamp = Date.now();
   setTimeout(() => {
-   if (global.randomItemName != null) {
+   if (global.randomItemName) {
     bot.chat('/gc No one answered in time! The answer was "' + global.randomItemName + '"');
     global.lastMessage = ('/gc No one answered in time! The answer was "' + global.randomItemName + '"');
-    global.randomItemId = null;
+    delete global.randomItemName;
    }
    }, 30 * 1000);
 }
@@ -30,6 +30,6 @@ export async function check(answer, player, bot) {
     const elapsedTime = Date.now() - global.randomItemNameTimestamp;
     bot.chat(`/gc ${player} got it correct in ${elapsedTime} ms!`);
     global.lastMessage = (`/gc ${player} got it correct in ${elapsedTime} ms!`);
-    global.randomItemName = null;
+    delete global.randomItemName;
   }
 }
