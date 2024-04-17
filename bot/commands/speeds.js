@@ -5,9 +5,9 @@ export default function speeds(bot, requestedCategory) {
     "sugarcane": ["cane", "sugar cane"],
     "cocoa": ["cocoa", "bean", "beans", "cocoa bean", "cocoa beans"],
     "cactus": ["cactus"],
-    "mushroom": ["mushroom", "shroom"],
+    "mushroom": ["mushroom", "shroom", "mush"],
     "melon": ["melon"],
-    "pumpkin": ["pumpkin"]
+    "pumpkin": ["pumpkin", "pump"]
   };
 
   const category = Object.keys(aliases).find(key => aliases[key].includes(requestedCategory.toLowerCase()));
@@ -26,7 +26,7 @@ export default function speeds(bot, requestedCategory) {
       message = "/gc Cactus (✦478) (⇄90/180) (⇅0)";
       break;
     case "mushroom":
-      message = "/gc Sugar Cane (✦233) (⇄120/60) (⇅0)";
+      message = "/gc Mushroom (✦233) (⇄120/60) (⇅0)";
       break;
     case "melon":
       message = "/gc Melon (✦290) (⇄90/180) (⇅58/-58)";
