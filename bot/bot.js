@@ -46,7 +46,7 @@ export async function minecraft(bot, client, bridgeWebhook, logWebhook, punishWe
       return;
     }
     if (jsonMsg.match(/Advertising is against the rules. You will receive a punishment on the server if you attempt to advertise./)) {
-      bridgeWebhook.send(jsonMsg);
+      bridgeWebhook.send('Hypixel Message: ' + jsonMsg);
       return;
     }
 
