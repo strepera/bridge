@@ -26,8 +26,9 @@ async function getCommandAliases(command) {
 
 const aliases = {
     'nw': 'networth',
-    'speed': 'speeds'
-}
+    'speed': 'speeds',
+    'spd': 'speeds'
+};
 
 export default async function commands(bot, jsonMsg, match) {
 if (match = jsonMsg.match(/Guild > (?:\[(.+\+?)\] )?(\w+) \[(\w+)\]: \.(\w+)( .*)?/)) {
