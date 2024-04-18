@@ -29,8 +29,14 @@ export async function minecraft(bot, client, bridgeWebhook, logWebhook, punishWe
     bot.chat("/g online");
   })
 
+  bot.on('message', (message) => {
+    console.log(message.toAnsi()); //make message colourful!!!
+
+  })
+
   bot.on('messagestr', async (jsonMsg) => {
     if (jsonMsg.trim() == '') return;
+    logWebhook.send(jsonMsg);
     let match;
 
     //check if the message was blocked
@@ -44,9 +50,6 @@ export async function minecraft(bot, client, bridgeWebhook, logWebhook, punishWe
       return;
     }
 
-    //log messages
-    console.log(jsonMsg);
-    logWebhook.send(jsonMsg);
 
     //check if the message is from the /g online command
     onlineHandler(jsonMsg);
