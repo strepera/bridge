@@ -40,7 +40,7 @@ export async function minecraft(bot, client, bridgeWebhook, logWebhook, punishWe
     let match;
 
     //check if the message was blocked
-    if (jsonMsg.match(/You cannot say the same message twice!/)) {
+    if (jsonMsg.match(/You cannot say the same message twice!/) || jsonMsg.match(/You are sending commands too fast! Please slow down./)) {
       bot.chat(global.lastMessage + ' \\\\\\\\');
       global.lastMessage = (global.lastMessage + ' \\\\\\\\');
       return;
