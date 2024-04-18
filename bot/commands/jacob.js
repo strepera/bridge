@@ -5,6 +5,7 @@ export default async function(bot, requestedPlayer) {
   let uuid = json.id;
   requestedPlayer = json.name;
 
+  try {
   const response1 = await fetch(`https://api.elitebot.dev/Weight/${uuid}`);
   const json1 = await response1.json();
   let profileId = json1.selectedProfileId;
@@ -33,6 +34,8 @@ export default async function(bot, requestedPlayer) {
         break;
       }
     }
+  }} catch(e) {
+    console.error(e);
   }
 
   bot.chat(`/gc Stats for ${requestedPlayer} | Weight; ${totalWeight} | Unique Golds; ${uniqueGolds}/10`)
