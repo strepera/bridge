@@ -40,6 +40,9 @@ export async function onlineHandler(jsonMsg) {
             .setTitle('Online Members')
             .setDescription(onlineArray.join('\n'))
             .setColor('#00ff00')
+            setTimeout(() => {
+              delete global.onlineEmbed;
+            }, 30 * 1000);
             onlineArray = [];
           }
         }

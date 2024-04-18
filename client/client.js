@@ -34,9 +34,9 @@ async function formatMessage(message) {
 }
 
 function checkOnlineEmbed(interaction) {
-  if (global.onlineEmbed) {
+  if (global.onlineEmbed != undefined) {
     interaction.reply({embeds: [global.onlineEmbed]});
-    global.onlineEmbed = null;
+    delete global.onlineEmbed;
   }
   else {
     setTimeout(() => {
