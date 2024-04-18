@@ -10,11 +10,7 @@ export default function speeds(bot, requestedCategory) {
     "pumpkin": ["pumpkin", "pump"]
   };
 
-  console.log("[fuzionDebug] Requested category:", requestedCategory);
-
   const category = Object.keys(aliases).find(key => aliases[key].includes(requestedCategory.toLowerCase()));
-
-  console.log("[fuzionDebug] Matched category:", category);
 
   switch (category) {
     case "crops":
@@ -42,7 +38,6 @@ export default function speeds(bot, requestedCategory) {
       message = "/gc Invalid category. Use .speeds {crops/cane/cocoa/cactus/mushroom/melon/pumpkin}.";
       break;
   }
-  console.log("[fuzionDebug] Kinda-Useless Output:", message);
   bot.chat(message);
   global.lastMessage = message;
 }
