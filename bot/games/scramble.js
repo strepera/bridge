@@ -1,3 +1,5 @@
+import fs from 'fs';
+
 String.prototype.shuffleWords = function () {
   return this.split(' ')
            .map(word => word.split('').sort(() => 0.5 - Math.random()).join(''))
@@ -12,8 +14,8 @@ export default async function getScrambledWord(bot) {
   global.randomItemName = randomItemId.name;
   const shuffledItemName = global.randomItemName.shuffleWords();
   console.log("Answer: " + global.randomItemName);
-  bot.chat("/gc Unscramble! | " + shuffledItemName);
-  global.lastMessage = ("/gc Unscramble! | " + shuffledItemName);
+  bot.chat("/gc Unscramble for 250 coins! | " + shuffledItemName);
+  global.lastMessage = ("/gc Unscramble for 250 coins! | " + shuffledItemName);
   global.randomItemName = global.randomItemName.toLowerCase();
   global.randomItemNameTimestamp = Date.now();
   setTimeout(() => {
@@ -31,6 +33,13 @@ export async function check(answer, player, bot) {
     const elapsedTime = Date.now() - global.randomItemNameTimestamp;
     bot.chat(`/gc ${player} got it correct in ${elapsedTime} ms!`);
     global.lastMessage = (`/gc ${player} got it correct in ${elapsedTime} ms!`);
+    let playerObj;
+    const data = await fs.promises.readFile('bot/playerData.json', 'utf8');
+    let json = JSON.parse(data);
+    playerObj = json[player.toLowerCase()];
+    playerObj.coins += 250;
+    json[player.toLowerCase()] = playerObj;
+    fs.writeFileSync('bot/playerData.json', JSON.stringify(json, null, 2));
     delete global.randomItemName;
   }
 }

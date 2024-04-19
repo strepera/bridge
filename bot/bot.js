@@ -2,6 +2,7 @@ import regexes from './regexes.js';
 import commands from './commandHandler.js';
 import { gameHandler, checkAnswer } from './gameHandler.js';
 import { onlineHandler } from './onlineHandler.js';
+import { levelHandler } from './levelHandler.js';
 
 export async function minecraft(bot, client, bridgeWebhook, logWebhook, punishWebhook) {
   //initialize game handler
@@ -31,13 +32,23 @@ export async function minecraft(bot, client, bridgeWebhook, logWebhook, punishWe
 
   bot.on('message', (message) => {
     console.log(message.toAnsi()); //make message colourful!!!
-
   })
 
   bot.on('messagestr', async (jsonMsg) => {
     if (jsonMsg.trim() == '') return;
     logWebhook.send(jsonMsg);
+
     let match;
+
+    //levels
+    if (match = jsonMsg.match(new RegExp("Guild > (?:\\[(.+)\\] )?" + process.env.botUsername + " \\[(.+)\\]: \\b(\\w+)\\b \\S (.+)"))) {
+      const player = match[3];
+      levelHandler(bot, player)
+    }
+    else if (match = jsonMsg.match(/Guild > (?:\[(\w+\+?)\] )?(\w+) \[(\w+\+?)\]: (.+)/)) {
+      const player = match[2];
+      if (player != process.env.botUsername) levelHandler(bot, player);
+    }
 
     //check if the message was blocked
     if (jsonMsg.match(/You cannot say the same message twice!/) || jsonMsg.match(/You are sending commands too fast! Please slow down./)) {
@@ -49,7 +60,6 @@ export async function minecraft(bot, client, bridgeWebhook, logWebhook, punishWe
       bridgeWebhook.send('Hypixel Message: ' + jsonMsg);
       return;
     }
-
 
     //check if the message is from the /g online command
     onlineHandler(jsonMsg);

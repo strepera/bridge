@@ -26,6 +26,7 @@ async function getCommandAliases(command) {
 
 const aliases = {
     'nw': 'networth',
+    'nw': 'networth',
     'speed': 'speeds',
     'spd': 'speeds',
     'plrs': 'players'
@@ -40,11 +41,11 @@ if (match = jsonMsg.match(/Guild > (?:\[(.+\+?)\] )?(\w+) \[(\w+)\]: \.(\w+)( .*
         const commandSplit = command.split('/');
         for (i in commandSplit) {
             const executed = await getCommandAliases(i) || await importCommand(i);
-            if (executed) executed(bot, requestedPlayer);
+            if (executed) executed(bot, requestedPlayer, match[2]);
         }
     } else {
         const executed = await getCommandAliases(command) || await importCommand(command);
-        if (executed) executed(bot, requestedPlayer);
+        if (executed) executed(bot, requestedPlayer, match[2]);
     }
 } else if (match = jsonMsg.match(/Guild > (?:\[(.+\+?)\] )?(\w+) \[(\w+)\]: (.+) \S \.(\w+)( .*)?/)) {
     let command = match[5];
@@ -54,11 +55,11 @@ if (match = jsonMsg.match(/Guild > (?:\[(.+\+?)\] )?(\w+) \[(\w+)\]: \.(\w+)( .*
         const commandSplit = command.split('/');
         for (i in commandSplit) {
             const executed = await getCommandAliases(i) || await importCommand(i);
-            if (executed) executed(bot, requestedPlayer);
+            if (executed) executed(bot, requestedPlayer, match[4]);
         }
     } else {
         const executed = await getCommandAliases(command) || await importCommand(command);
-        if (executed) executed(bot, requestedPlayer);
+        if (executed) executed(bot, requestedPlayer, match[4]);
     }
 }
 }
