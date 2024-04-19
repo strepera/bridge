@@ -26,10 +26,11 @@ async function getCommandAliases(command) {
 
 const aliases = {
     'nw': 'networth',
-    'nw': 'networth',
     'speed': 'speeds',
     'spd': 'speeds',
     'plrs': 'players'
+    'i': 'info'
+    'd': 'dice'
 };
 
 export default async function commands(bot, jsonMsg, match) {
