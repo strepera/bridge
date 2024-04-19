@@ -28,8 +28,8 @@ const aliases = {
     'nw': 'networth',
     'speed': 'speeds',
     'spd': 'speeds',
-    'plrs': 'players'
-    'i': 'info'
+    'plrs': 'players',
+    'i': 'info',
     'd': 'dice'
 };
 
