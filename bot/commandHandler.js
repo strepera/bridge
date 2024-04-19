@@ -46,7 +46,7 @@ if (match = jsonMsg.match(/Guild > (?:\[(.+\+?)\] )?(\w+) \[(\w+)\]: \.(\w+)( .*
         const executed = await getCommandAliases(command) || await importCommand(command);
         if (executed) executed(bot, requestedPlayer);
     }
-} else if (match = jsonMsg.match(/Guild > (?:\[(.+\+?)\] )?(\w+) \[(\w+)\]: (.+): \.(\w+)( .*)?/)) {
+} else if (match = jsonMsg.match(/Guild > (?:\[(.+\+?)\] )?(\w+) \[(\w+)\]: (.+) \S \.(\w+)( .*)?/)) {
     let command = match[5];
     let requestedPlayer = match[6] || match[4];
     if (requestedPlayer.split('')[0] == ' ') requestedPlayer = requestedPlayer.substring(1);

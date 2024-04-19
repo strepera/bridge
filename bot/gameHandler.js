@@ -30,7 +30,7 @@ export async function checkAnswer(bot, jsonMsg) {
     const mcRegex = new RegExp("Guild > (?:\\[(\\w+\\+?)\\] )?" + process.env.botUsername + " \\[(\\w+)\\]: .*");
     const dcRegex = new RegExp("Guild > (?:\\[(\\w+\\+?)\\] )?" + process.env.botUsername + " \\[(\\w+)\\]: (.+) .*");
     if (jsonMsg.match(mcRegex) && !jsonMsg.match(dcRegex)) return;
-    if (match = jsonMsg.match(/Guild > (?:\[(\w+\+?)\] )?(\w+) \[(\w+)\]: (.+): (.*)/)) {
+    if (match = jsonMsg.match(/Guild > (?:\[(\w+\+?)\] )?(\w+) \[(\w+)\]: (.+) \S (.*)/)) {
       for (const command of commands) {
         command.check(match[5], match[4], bot);
       }
