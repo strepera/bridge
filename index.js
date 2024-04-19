@@ -6,7 +6,7 @@ dotenv.config({ path: './.env' });
 
 const bot = mineflayer.createBot({
   host: "mc.hypixel.net",
-  username: "micahkoritz666@gmail.com",
+  username: process.env.username,
   auth: "microsoft",
   port: "25565",
   version: "1.8.9"
