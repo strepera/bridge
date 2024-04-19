@@ -21,6 +21,7 @@ export async function checkVerification(member) {
       }
   });
   const gistData = await response.json();
+  global.usersData = JSON.parse(gistData.files['users.json'].content);
   const users = JSON.parse(gistData.files['users.json'].content);
   const user = users.find(user => user.dcuser === member.user.username);
   if (user) {

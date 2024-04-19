@@ -61,7 +61,7 @@ export async function minecraft(bot, client, bridgeWebhook, logWebhook, punishWe
     checkAnswer(bot, jsonMsg);
 
     //minecraft -> discord handling
-    const regexPattern = new RegExp("Guild > (?:\\[(.+)\\] )?" + process.env.botUsername + " \\[(.+)\\]: \\b(\\w+)\\b: (.+)");
+    const regexPattern = new RegExp("Guild > (?:\\[(.+)\\] )?" + process.env.botUsername + " \\[(.+)\\]: \\b(\\w+)\\b \\S (.+)");
     if (jsonMsg.match(regexPattern)) return;
     for (const { regex, func } of regexes) {
       if (match = jsonMsg.match(regex)) {

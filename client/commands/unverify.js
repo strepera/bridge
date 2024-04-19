@@ -10,6 +10,7 @@ export async function unverifyCommand(interaction) {
             }
         });
         const gistData = await response.json();
+        global.usersData = JSON.parse(gistData.files['users.json'].content);
         let users = JSON.parse(gistData.files['users.json'].content);
         users = users.filter(user => user.dcuser !== interaction.user.username);
         const updatedContent = JSON.stringify(users, null, 2);

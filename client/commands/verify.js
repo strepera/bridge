@@ -138,6 +138,7 @@ async function getGist(patch) {
             }
         });
         const gistData = await response.json();
+        global.usersData = JSON.parse(gistData.files['users.json'].content);
         const users = JSON.parse(gistData.files['users.json'].content);
         return users;
     }
