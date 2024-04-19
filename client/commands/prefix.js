@@ -15,42 +15,42 @@ const dropdown = new MessageSelectMenu()
     .addOptions([
         {
             label: '~',
-            description: '200 coins',
+            description: '10,000 SnakeCoins',
             value: '~'
         },
         {
             label: '♀',
-            description: '350 coins',
+            description: '25,000 SnakeCoins',
             value: '♀'
         },
         {
             label: '♂',
-            description: '350 coins',
+            description: '25,000 SnakeCoins',
             value: '♂'
         },
         {
             label: '™',
-            description: '1000 coins',
+            description: '50,000 SnakeCoins',
             value: '™'
         },
         {
             label: '✎',
-            description: '1250 coins',
+            description: '65,000 SnakeCoins',
             value: '✎'
         },
         {
             label: 'ツ',
-            description: '1500 coins',
+            description: '100,000 SnakeCoins',
             value: 'ツ'
         },
         {
             label: '✿',
-            description: '1750 coins',
+            description: '125,000 SnakeCoins',
             value: '✿'
         },
         {
             label: '☠',
-            description: '2000 coins',
+            description: '250,000 SnakeCoins',
             value: '☠'
         }
     ])
