@@ -1,3 +1,5 @@
+import fs from 'fs'
+
 export default async function getMathProblem(bot, message) {
   const chosenOperator = Math.random() < 0.5 ? '+' : '*';
   if (chosenOperator == '+') {
