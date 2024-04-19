@@ -4,7 +4,19 @@ import { verifyCommand, verifyCommandData } from './commands/verify.js';
 import { unverifyCommand, unverifyCommandData } from './commands/unverify.js';
 import { prefixCommand, prefixCommandData } from './commands/prefix.js'; 
 import { checkVerification } from './checkVerification.js';
-import { MessageActionRow, MessageEmbed, MessageSelectMenu } from 'discord.js';
+import { MessageActionRow, MessageEmbed, MessageButton } from 'discord.js';
+import fs from 'fs';
+
+const prices = {
+  '~': 10000,
+  '♀': 25000,
+  '♂': 25000,
+  '™': 50000,
+  '✎': 65000,
+  'ツ': 100000,
+  '✿': 125000,
+  '☠': 250000
+}
 
 function replaceEmojisWithNames(str) {
   const regex = emojiRegex();
@@ -129,10 +141,112 @@ export async function discord(bot, client, welcomeChannel, bridgeChannelId) {
     global.lastMessage = (`/gc ${combined}`);
   });
   client.on('interactionCreate', async interaction => {
-    if (interaction.isSelectMenu()) {
-      if (interaction.customId == 'prefixSelection') {
-        prefixBuy(interaction, interaction.values[0]);
+    if (interaction.customId == 'prefixSelection') {
+      prefixBuy(interaction, interaction.values[0]);
+    }
+
+    if (interaction.customId == 'prefixBuy') {
+      const prefix = interaction.message.embeds[0].title.split(' ')[1];
+      const dcuser = interaction.user.username;
+
+      const response = await fetch(`https://api.github.com/gists/${process.env.gistId}`, {
+        method: 'GET',
+        headers: {
+            'Authorization': `token ${process.env.gistKey}`,
+            'Accept': 'application/vnd.github.v3+json'
+        }
+      });
+      const gistData = await response.json();
+      const users = JSON.parse(gistData.files['users.json'].content);
+
+      for (const user in users) {
+        if (users[user].dcuser == dcuser) {
+          const player = users[user].username;
+          if (users[user].prefixes) {
+            users[user].prefixes.push(prefix);
+          }
+          else {
+            users[user].prefixes = [];
+            users[user].prefixes.push(prefix);
+          }
+          let playerObj;
+          const data = await fs.promises.readFile('bot/playerData.json', 'utf8');
+          let json = JSON.parse(data);
+          playerObj = json[player.toLowerCase()];
+          if (playerObj.coins >= prices[prefix]) {
+            playerObj.coins -= prices[prefix];
+          }
+          else {
+            interaction.reply({content: 'You cannot afford this prefix!', ephemeral: true});
+            return;
+          }
+          json[player.toLowerCase()] = playerObj;
+          fs.writeFileSync('bot/playerData.json', JSON.stringify(json, null, 2));
+          interaction.reply({content: 'Bought the prefix " ' + prefix + ' " for ' + prices[prefix].toLocaleString() + '!', ephemeral: true});
+        }
       }
+ 
+      await fetch(`https://api.github.com/gists/${process.env.gistId}`, {
+        method: 'PATCH',
+        headers: {
+            'Authorization': `token ${process.env.gistKey}`,
+            'Accept': 'application/vnd.github.v3+json',
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            files: {
+                'users.json': {
+                    content: JSON.stringify(users, null, 2)
+                }
+            }
+        })
+    });
+    }
+    if (interaction.customId == 'prefixEquip') {
+      const prefix = interaction.message.embeds[0].title.split(' ')[1];
+      const dcuser = interaction.user.username;
+
+      const response = await fetch(`https://api.github.com/gists/${process.env.gistId}`, {
+        method: 'GET',
+        headers: {
+            'Authorization': `token ${process.env.gistKey}`,
+            'Accept': 'application/vnd.github.v3+json'
+        }
+      });
+      const gistData = await response.json();
+      const users = JSON.parse(gistData.files['users.json'].content);
+
+      for (const user in users) {
+        if (users[user].dcuser == dcuser) {
+          users[user].prefix = prefix;
+          interaction.reply({content: 'Set your prefix to " ' + prefix + ' "!', ephemeral: true});
+        }
+      }
+ 
+      await fetch(`https://api.github.com/gists/${process.env.gistId}`, {
+        method: 'PATCH',
+        headers: {
+            'Authorization': `token ${process.env.gistKey}`,
+            'Accept': 'application/vnd.github.v3+json',
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            files: {
+                'users.json': {
+                    content: JSON.stringify(users, null, 2)
+                }
+            }
+        })
+    });
+    const response0 = await fetch(`https://api.github.com/gists/${process.env.gistId}`, {
+      method: 'GET',
+      headers: {
+          'Authorization': `token ${process.env.gistKey}`,
+          'Accept': 'application/vnd.github.v3+json'
+      }
+    });
+    const gistData0 = await response0.json();
+    global.usersData = JSON.parse(gistData0.files['users.json'].content);
     }
     if (!interaction.isCommand()) return;
     const { commandName, options } = interaction;
@@ -167,20 +281,44 @@ export async function discord(bot, client, welcomeChannel, bridgeChannelId) {
   });
 }
 
-async function prefixBuy(interaction, prefix) {
-  const embed = new MessageEmbed()
-    .setDescription('not finished')
-  const select = new MessageSelectMenu()
-    .setCustomId('placeholder')
-    .setPlaceholder('placeholder')
-    .addOptions([
-      {
-        label: 'Option 1',
-        description: 'This is option 1',
-        value: 'option1',
-      },
-    ])
+async function prefixBuy(interaction, prefix, prefixes) {
+  let button;
+  let embed;
+  
+  for (const user in global.usersData) {
+    if (global.usersData[user].dcuser == interaction.user.username) {
+      if (global.usersData[user].prefixes) prefixes = global.usersData[user].prefixes;
+      let prefixOwned = false;
+      for (const entry in global.usersData[user].prefixes) {
+        if (global.usersData[user].prefixes[entry] == prefix) {
+          prefixOwned = true;
+          break;
+        }
+      }
+      if (prefixOwned == true) {
+        button = new MessageButton()
+          .setCustomId('prefixEquip')
+          .setLabel('Select Prefix')
+          .setStyle('PRIMARY')
+
+        embed = new MessageEmbed()
+          .setTitle('Prefix: ' + prefix)
+          .setDescription('This will select the prefix for use.')
+      }
+      else {
+        button = new MessageButton()
+          .setCustomId('prefixBuy')
+          .setLabel('Confirm Purchase')
+          .setStyle('PRIMARY')
+        
+        embed = new MessageEmbed()
+          .setTitle('Prefix: ' + prefix)
+          .setDescription('This will deduct coins from your account and add the prefix to your inventory.')
+      }
+    }
+  }
+
   const row = new MessageActionRow()
-    .addComponents(select)
+    .addComponents(button)
   interaction.reply({embeds: [embed], components: [row], ephemeral: true});
 }
