@@ -8,7 +8,7 @@ export default async function getMathProblem(bot, message) {
       num2 = Math.floor(Math.random() * 100);
     }
     global.mathAnswer = (num1 + num2).toString();
-    message = `/gc QUICK MATH! | What is ${num1} + ${num2}?`;
+    message = `/gc QUICK MATH for 2.5k coins! | What is ${num1} + ${num2}?`;
   }
   else {
     let num1 = Math.floor(Math.random() * 100);
@@ -18,7 +18,7 @@ export default async function getMathProblem(bot, message) {
       num2 = Math.floor(Math.random() * 10);
     }
     global.mathAnswer = (num1 * num2).toString();
-    message = `/gc QUICK MATH! | What is ${num1} * ${num2}?`;
+    message = `/gc QUICK MATH for 2.5k coins! | What is ${num1} * ${num2}?`;
   }
   console.log('Answer:', global.mathAnswer);
   bot.chat(message);
@@ -39,6 +39,13 @@ export async function check(answer, player, bot) {
     const elapsedTime = Date.now() - global.mathAnswerTimestamp;
     bot.chat(`/gc ${player} got it correct in ${elapsedTime} ms!`);
     global.lastMessage = (`/gc ${player} got it correct in ${elapsedTime} ms!`);
+    let playerObj;
+    const data = await fs.promises.readFile('bot/playerData.json', 'utf8');
+    let json = JSON.parse(data);
+    playerObj = json[player.toLowerCase()];
+    playerObj.coins += 2500;
+    json[player.toLowerCase()] = playerObj;
+    fs.writeFileSync('bot/playerData.json', JSON.stringify(json, null, 2));
     delete global.mathAnswer;
   }
 }
