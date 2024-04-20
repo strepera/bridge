@@ -37,7 +37,10 @@ export async function check(answer, player, bot) {
     const data = await fs.promises.readFile('bot/playerData.json', 'utf8');
     let json = JSON.parse(data);
     playerObj = json[player.toLowerCase()];
-    playerObj.coins += 2500 * (elapsedTime / 30000);
+    if (playerObj) {
+      playerObj.coins += 2500 * (elapsedTime / 30000);
+      playerObj.messageCount += 1;
+    } else playerObj = { "coins": 2500 * (elapsedTime / 30000), "messageCount": 1, "username": player }
     json[player.toLowerCase()] = playerObj;
     fs.writeFileSync('bot/playerData.json', JSON.stringify(json, null, 2));
     delete global.randomItemName;
