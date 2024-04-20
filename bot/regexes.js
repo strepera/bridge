@@ -284,8 +284,23 @@ const regexes = [
     regex: /(\[.+\] )?(.+) has invited you to join their party!/,
     func: (match, bridgeWebhook, punishWebhook, bot) => {
       const player = match[2];
-      bot.chat('/p invite ' + player);
+      bot.chat('/p ' + player);
+      if (global.inParty != true) {
+      setTimeout(() => {
+        bot.chat('/p leave');
+      }, 1000);
+      setTimeout(() => {
+        bot.chat('/p invite ' + player);
+        global.inParty = true;
+      }, 3000);
+    }
       return;
+    }
+  },
+  {
+    regex: /The party was disbanded because all invites expired and the party was empty./,
+    func: (match, bridgeWebhook, punishWebhook, bot) => {
+      global.inParty = false;
     }
   }
 ];
