@@ -1,5 +1,7 @@
 import { MessageEmbed, MessageActionRow, MessageSelectMenu } from "discord.js";
 
+import { prices } from '../prices.js';
+
 export async function prefixCommand(interaction) {
     interaction.reply({embeds: [prefixEmbed], components: [row]});
 }
@@ -9,51 +11,20 @@ export const prefixCommandData = {
     description: "Your discord to minecraft chat separator!"
 }
 
+let options = [];
+
+for (const symbol in prices) {
+    options.push({
+        label: symbol,
+        description: `${prices[symbol].toLocaleString()} SnakeCoins`,
+        value: symbol
+    })
+}
+
 const dropdown = new MessageSelectMenu()
     .setCustomId('prefixSelection')
     .setPlaceholder('Choose a prefix')
-    .addOptions([
-        {
-            label: '~',
-            description: '10,000 SnakeCoins',
-            value: '~'
-        },
-        {
-            label: '♀',
-            description: '25,000 SnakeCoins',
-            value: '♀'
-        },
-        {
-            label: '♂',
-            description: '25,000 SnakeCoins',
-            value: '♂'
-        },
-        {
-            label: '™',
-            description: '50,000 SnakeCoins',
-            value: '™'
-        },
-        {
-            label: '✎',
-            description: '65,000 SnakeCoins',
-            value: '✎'
-        },
-        {
-            label: 'ツ',
-            description: '100,000 SnakeCoins',
-            value: 'ツ'
-        },
-        {
-            label: '✿',
-            description: '125,000 SnakeCoins',
-            value: '✿'
-        },
-        {
-            label: '☠',
-            description: '250,000 SnakeCoins',
-            value: '☠'
-        }
-    ])
+    .addOptions(options)
 
 const row = new MessageActionRow()
     .addComponents(dropdown)

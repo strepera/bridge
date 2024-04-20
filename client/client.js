@@ -4,19 +4,9 @@ import { verifyCommand, verifyCommandData } from './commands/verify.js';
 import { unverifyCommand, unverifyCommandData } from './commands/unverify.js';
 import { prefixCommand, prefixCommandData } from './commands/prefix.js'; 
 import { checkVerification } from './checkVerification.js';
+import { prices } from './prices.js';
 import { MessageActionRow, MessageEmbed, MessageButton } from 'discord.js';
 import fs from 'fs';
-
-const prices = {
-  '~': 10000,
-  '♀': 25000,
-  '♂': 25000,
-  '™': 50000,
-  '✎': 65000,
-  'ツ': 100000,
-  '✿': 125000,
-  '☠': 250000
-}
 
 function replaceEmojisWithNames(str) {
   const regex = emojiRegex();
