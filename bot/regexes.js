@@ -84,7 +84,7 @@ const regexes = [
     }
   },
   {
-    regex: /Guild > (?:\[(\w+\+?)\] )?(\w+) \[(\w+\+?)\]: (.+)/,
+    regex: /Guild > (?:\[(.+\+?)\] )?(\w+) \[(\w+\+?)\]: (.+)/,
     func: (match, bridgeWebhook) => {
       let content = match[4].replaceAll('@everyone', 'everyone').replaceAll('@here', 'here');
       if (!content.includes('https:')) content = content.replaceAll('_', '\\_');
