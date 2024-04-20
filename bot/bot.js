@@ -76,7 +76,7 @@ export async function minecraft(bot, client, bridgeWebhook, logWebhook, punishWe
     if (jsonMsg.match(regex1) || jsonMsg.match(regex2)) return;
     for (const { regex, func } of regexes) {
       if (match = jsonMsg.match(regex)) {
-        func(match, bridgeWebhook, punishWebhook);
+        func(match, bridgeWebhook, punishWebhook, bot);
         break;
       }
     };

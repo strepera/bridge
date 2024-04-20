@@ -1,4 +1,5 @@
 export default async function(bot, requestedPlayer) {
+    try {
   requestedPlayer = requestedPlayer.split(" ")[0];
   const response0 = await fetch(`https://api.mojang.com/users/profiles/minecraft/${requestedPlayer}`)
   const json0 = await response0.json();
@@ -50,4 +51,8 @@ export default async function(bot, requestedPlayer) {
   }
   bot.chat(`/gc ${requestedPlayer}'s MP is ${totalValue} | ${message}`);
   global.lastMessage = (`/gc ${requestedPlayer}'s MP is ${totalValue} | ${message}`);
+}
+catch(e) {
+    console.error(e);
+}
 }

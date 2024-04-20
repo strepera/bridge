@@ -158,6 +158,7 @@ export async function discord(bot, client, welcomeChannel, bridgeChannelId) {
           else {
             users[user].prefixes = [];
             users[user].prefixes.push(prefix);
+            users[user].prefix = prefix;
           }
           let playerObj;
           const data = await fs.promises.readFile('bot/playerData.json', 'utf8');
@@ -191,6 +192,15 @@ export async function discord(bot, client, welcomeChannel, bridgeChannelId) {
             }
         })
     });
+    const response0 = await fetch(`https://api.github.com/gists/${process.env.gistId}`, {
+      method: 'GET',
+      headers: {
+          'Authorization': `token ${process.env.gistKey}`,
+          'Accept': 'application/vnd.github.v3+json'
+      }
+    });
+    const gistData0 = await response0.json();
+    global.usersData = JSON.parse(gistData0.files['users.json'].content);
     }
     if (interaction.customId == 'prefixEquip') {
       const prefix = interaction.message.embeds[0].title.split(' ')[1];

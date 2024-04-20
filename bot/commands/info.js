@@ -1,6 +1,6 @@
 import fs from 'fs';
 
-export default async function info(bot, player) {
+export default async function info(bot, player, placeholder, chat) {
     if (player == 'top') {
         fs.readFile('bot/playerData.json', 'utf8', function (err, data) {
             if (err) throw err;
@@ -26,12 +26,12 @@ export default async function info(bot, player) {
         let json = JSON.parse(data);
 
         if (!json[player.toLowerCase()]) { 
-            bot.chat('Invalid player.');
-            global.lastMessage =('Invalid player.');
+            bot.chat(chat + 'Invalid player.');
+            global.lastMessage =(chat + 'Invalid player.');
             return;
         }
 
-        bot.chat(`${json[player.toLowerCase()].username} has ${json[player.toLowerCase()].coins.toLocaleString()} coins and has sent ${json[player.toLowerCase()].messageCount.toLocaleString()} messages`);
-        global.lastMessage = (`${json[player.toLowerCase()].username} has ${json[player.toLowerCase()].coins.toLocaleString()} coins and has sent ${json[player.toLowerCase()].messageCount.toLocaleString()} messages`);
+        bot.chat(`${chat}${json[player.toLowerCase()].username} has ${json[player.toLowerCase()].coins.toLocaleString()} coins and has sent ${json[player.toLowerCase()].messageCount.toLocaleString()} messages`);
+        global.lastMessage = (`${chat}${json[player.toLowerCase()].username} has ${json[player.toLowerCase()].coins.toLocaleString()} coins and has sent ${json[player.toLowerCase()].messageCount.toLocaleString()} messages`);
     });
 }

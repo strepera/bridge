@@ -279,6 +279,14 @@ const regexes = [
       })
       return;
     }
+  },
+  {
+    regex: /(\[.+\] )?(.+) has invited you to join their party!/,
+    func: (match, bridgeWebhook, punishWebhook, bot) => {
+      const player = match[2];
+      bot.chat('/p invite ' + player);
+      return;
+    }
   }
 ];
 
