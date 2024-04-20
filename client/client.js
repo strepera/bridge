@@ -20,20 +20,20 @@ async function formatMessage(message) {
   if (message.stickers.size > 0) {
     return newMsg = `:${message.stickers.first().name}:`;
   }
-
+ 
   let newMsg = message.content.replace(/<@(\d+)>/g, (match, userId) => {
     const mention = message.guild.members.cache.get(userId);
     return mention ? `@${mention.displayName}` : match;
-  }).replace(/\n/g, ' ').replaceAll(" ez ", " e.z ");
-
+  }).replace(/\n/g, ' ').replace(/\bez\b/g, "e.z");
+ 
   newMsg = replaceEmojisWithNames(newMsg);
-
+ 
   if (message.attachments) {
     message.attachments.forEach(attachment => {
       newMsg += ` ${attachment.url}`;
     })
   }
-
+ 
   return newMsg;
 }
 
