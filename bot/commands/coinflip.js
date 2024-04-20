@@ -3,8 +3,8 @@ import fs from 'fs';
 export default async function(bot, bet, player, chat) {
     const side = bet.split(' ')[1];
     if (!side) {
-        bot.chat(chat + 'You need to pick a side! e.g. ".cf 100 tails');
-        global.lastMessage = (chat + 'You need to pick a side! e.g. ".cf 100 tails');
+        bot.chat(chat + 'You need to pick a side! e.g. ".cf 100 tails"');
+        global.lastMessage = (chat + 'You need to pick a side! e.g. ".cf 100 tails"');
         return;
     }
     bet = bet.split(' ')[0].replace(/[^0-9]/g, '');
