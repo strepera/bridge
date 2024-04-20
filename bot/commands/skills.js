@@ -43,7 +43,8 @@ async function convertXPtoLevel(xpAmount, checkSkill) {
  }
 let skillStarted = false;
 
-export default async function(bot, requestedPlayer, requestedProfile) {
+export default async function(bot, requestedPlayer) {
+  let requestedProfile;
   if (requestedPlayer.split(" ")[1]) requestedProfile = requestedPlayer.split(" ")[1];
   requestedPlayer = requestedPlayer.split(" ")[0];
   let playerSkills = {
