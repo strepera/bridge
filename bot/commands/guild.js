@@ -13,6 +13,11 @@ export default async function getGuildData(bot, requestedPlayer, level) {
             global.lastMessage = ('/gc Invalid guild/player');
             return;
         }
+        if (json.guild == null) {
+            bot.chat('/gc Player is not in a guild');
+            global.lastMessage = ('/gc Player is not in a guild');
+            return;
+        }
         const name = json.guild.name;
         const tag = json.guild.tag;
         const created = new Date(json.guild.created).toLocaleDateString({});
