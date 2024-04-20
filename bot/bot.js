@@ -41,7 +41,7 @@ export async function minecraft(bot, client, bridgeWebhook, logWebhook, punishWe
     let match;
 
     //levels
-    if (match = jsonMsg.match(new RegExp("Guild > (?:\[(.+\+?)\] )?" + process.env.botUsername + " \\[(.+)\\]: \\b(\\w+)\\b \\S (.+)"))) {
+    if (match = jsonMsg.match(new RegExp("Guild > (?:\\[(.+\\+?)\\] )?" + process.env.botUsername + " \\[(.+)\\]: \\b(\\w+)\\b \\S (.+)"))) {
       const player = match[3];
       levelHandler(bot, player)
     }

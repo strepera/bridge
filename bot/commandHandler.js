@@ -30,7 +30,9 @@ const aliases = {
     'spd': 'speeds',
     'plrs': 'players',
     'i': 'info',
-    'd': 'dice'
+    'd': 'dice',
+    'cf': 'coinflip',
+    'dono': 'donate'
 };
 
 export default async function commands(bot, jsonMsg, match) {
