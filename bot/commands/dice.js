@@ -1,10 +1,10 @@
 import fs from 'fs';
 
 export default async function(bot, bet, player) {
-  bet = bet.split(' ')[0];
-  if (!bet) {
-    bot.chat('You need to bet an amount!');
-    global.lastMessage = ('You need to bet an amount!');
+  bet = bet.split(' ')[0].replace(/[^0-9]/g, '');
+  if (bet.trim() == '') {
+    bot.chat('You need to bet an amount! e.g. ".dice 100"');
+    global.lastMessage = ('You need to bet an amount! e.g. ".dice 100"');
     return;
   }
   if (Number(bet) < 100) {
@@ -19,6 +19,7 @@ export default async function(bot, bet, player) {
   if (Number(bet) > playerObj.coins) {
     bot.chat('You cannot bet more coins than you have!');
     global.lastMessage = ('You cannot bet more coins than you have!');
+    return;
   }
 
   const dice1 = Math.round(Math.random() * (6-1) + 1);

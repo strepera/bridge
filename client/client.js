@@ -127,9 +127,9 @@ export async function discord(bot, client, welcomeChannel, bridgeChannelId) {
       const repliedMessage = await repliedChannel.messages.fetch(message.reference.messageId);
       const repliedContent = await formatMessage(repliedMessage);
       if (repliedMessage.webhookId) {
-        user += `${repliedMessage.author.username} ${separator} ${repliedContent} ⤷ `;
+        user += `${repliedMessage.author.username}: ${repliedContent} ⤷ `;
       }
-      else user += `${repliedMessage.member.displayName} ${separator} ${repliedContent} ⤷ `;
+      else user += `${repliedMessage.member.displayName}: ${repliedContent} ⤷ `;
     }
     user += member.displayName;
     const msg = await formatMessage(message);
