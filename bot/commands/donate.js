@@ -30,8 +30,8 @@ export default async function(bot, requestedPlayer, player) {
       return;
     }
   
-    playerObj.coins -= payment;
-    requestedPlayerObj.coins += payment;
+    playerObj.coins -= Math.floor(payment);
+    requestedPlayerObj.coins += Math.floor(payment);
     json[player.toLowerCase()] = playerObj;
     json[requestedPlayer.toLowerCase()] = requestedPlayerObj;
     fs.writeFileSync('bot/playerData.json', JSON.stringify(json, null, 2));
