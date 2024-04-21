@@ -25,7 +25,8 @@ export async function func(interaction) {
     }
   }
   else {
-    interaction.reply({embeds: [new MessageEmbed().setTitle('Command Failed').setDescription('Please verify to use this command.').setColor('FF0000')], ephemeral: true})
+    interaction.reply({embeds: [new MessageEmbed().setTitle('Command Failed').setDescription('Please verify to use this command.').setColor('FF0000')]});
+    return;
   }
   const prefixEmbed = new MessageEmbed()
     .setColor('#1ea863')
@@ -33,6 +34,7 @@ export async function func(interaction) {
     .setDescription('You can select your prefix for discord to minecraft chat messages with this command.\nSelect a prefix from the dropdown below to view its info!\n**Prefixes: ' + prefixes + '**')
     .setThumbnail('https://cdn.discordapp.com/avatars/1183752068490612796/f127b318f4429579fa0082e287c901fd.png?size=256?size=512')
   interaction.reply({embeds: [prefixEmbed], components: [row]});
+  return;
 }
 
 export const data = {
@@ -101,9 +103,11 @@ export async function prefixSelect(interaction, prefix, prefixes) {
     const row = new MessageActionRow()
       .addComponents(button)
     interaction.reply({embeds: [embed], components: [row], ephemeral: true});
+    return;
   }
   else {
-    interaction.reply({embeds: [new MessageEmbed().setTitle('Command Failed').setDescription('Please verify to use this command.').setColor('FF0000')], ephemeral: true})
+    interaction.reply({embeds: [new MessageEmbed().setTitle('Command Failed').setDescription('Please verify to use this command.').setColor('FF0000')]})
+    return;
   }
 }
 
