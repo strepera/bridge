@@ -151,22 +151,24 @@ export async function colorBuy(interaction) {
     for (const user in users) {
       if (users[user].dcuser == dcuser) {
         const player = users[user].username;
+        if (users[user].colors) {
+          if (!users[user].colors[color]) {
+            users[user].colors.push(color);
+          }
+          users[user].color = color;
+          updateRole(interaction, color);
+        }
+        else {
+          users[user].colors = [];
+          users[user].colors.push(color);
+          users[user].color = color;
+          updateRole(interaction, color);
+        }
         const data = await fs.promises.readFile('bot/playerData.json', 'utf8');
         let json = JSON.parse(data);
         const playerObj = json[player.toLowerCase()];
         if (playerObj.coins >= prices[color]) {
           playerObj.coins -= prices[color];
-          if (users[user].colors) {
-            users[user].colors.push(color);
-            users[user].color = color;
-            updateRole(interaction, color);
-          }
-          else {
-            users[user].colors = [];
-            users[user].colors.push(color);
-            users[user].color = color;
-            updateRole(interaction, color);
-          }
         }
         else {
           interaction.reply({content: 'You cannot afford this color!', ephemeral: true});
@@ -175,7 +177,6 @@ export async function colorBuy(interaction) {
         json[player.toLowerCase()] = playerObj;
         fs.writeFileSync('bot/playerData.json', JSON.stringify(json, null, 2));
         interaction.reply({content: 'Bought the color " ' + color + ' " for ' + prices[color].toLocaleString() + '!'});
-        return;
       }
     }
 
