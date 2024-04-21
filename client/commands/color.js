@@ -47,8 +47,9 @@ export async function func(interaction) {
       return;
     }
     const role = interaction.guild.roles.cache.find(role => role.name === color);
+    const roleColor = role ? role.color : '#00ff00';
     const colorEmbed = new MessageEmbed()
-      .setColor(role.color)
+      .setColor(roleColor)
       .setTitle('Colors')
       .setDescription('You can select your role color with this command.\nSelect a color from the dropdown below to view its info!\n**Colors: ' + colors + '\nSelected Color: ' + color + '**')
       .setThumbnail('https://cdn.discordapp.com/avatars/1183752068490612796/f127b318f4429579fa0082e287c901fd.png?size=256?size=512')
@@ -98,6 +99,7 @@ export async function colorSelect(interaction, color, colors) {
       }
       if (colorOwned == true) {
         const role = interaction.guild.roles.cache.find(role => role.name === color);
+        const roleColor = role ? role.color : '#00ff00';
 
         button = new MessageButton()
           .setCustomId('colorEquip')
@@ -106,12 +108,13 @@ export async function colorSelect(interaction, color, colors) {
 
         embed = new MessageEmbed()
           .setTitle('Color: ' + color)
-          .setColor(role.color)
+          .setColor(roleColor)
           .setDescription('This will select the color for use.')
           .setFooter('The embed color is the role color')
       }
       else {
         const role = interaction.guild.roles.cache.find(role => role.name === color);
+        const roleColor = role ? role.color : '#00ff00';
 
         button = new MessageButton()
           .setCustomId('colorBuy')
@@ -120,7 +123,7 @@ export async function colorSelect(interaction, color, colors) {
         
         embed = new MessageEmbed()
           .setTitle('Color: ' + color)
-          .setColor(role.color)
+          .setColor(roleColor)
           .setDescription('This will deduct coins from your account, add the color to your inventory and equip it.')
           .setFooter('The embed color is the role color')
       }
@@ -148,22 +151,22 @@ export async function colorBuy(interaction) {
     for (const user in users) {
       if (users[user].dcuser == dcuser) {
         const player = users[user].username;
-        if (users[user].colors) {
-          users[user].colors.push(color);
-          users[user].color = color;
-          updateRole(interaction, color);
-        }
-        else {
-          users[user].colors = [];
-          users[user].colors.push(color);
-          users[user].color = color;
-          updateRole(interaction, color);
-        }
         const data = await fs.promises.readFile('bot/playerData.json', 'utf8');
         let json = JSON.parse(data);
         const playerObj = json[player.toLowerCase()];
         if (playerObj.coins >= prices[color]) {
           playerObj.coins -= prices[color];
+          if (users[user].colors) {
+            users[user].colors.push(color);
+            users[user].color = color;
+            updateRole(interaction, color);
+          }
+          else {
+            users[user].colors = [];
+            users[user].colors.push(color);
+            users[user].color = color;
+            updateRole(interaction, color);
+          }
         }
         else {
           interaction.reply({content: 'You cannot afford this color!', ephemeral: true});
@@ -172,6 +175,7 @@ export async function colorBuy(interaction) {
         json[player.toLowerCase()] = playerObj;
         fs.writeFileSync('bot/playerData.json', JSON.stringify(json, null, 2));
         interaction.reply({content: 'Bought the color " ' + color + ' " for ' + prices[color].toLocaleString() + '!'});
+        return;
       }
     }
 

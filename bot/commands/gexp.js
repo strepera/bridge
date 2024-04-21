@@ -2,6 +2,7 @@ const ranks = ['Member', 'Danger Noodle', 'Elite', 'Ironman', 'Bot', 'Guild Mast
 
 export default async function(bot, requestedPlayer) {
   requestedPlayer = requestedPlayer.split(" ")[0];
+  let inactiveList = [];
   if (requestedPlayer == 'all') {
     const response = await fetch(`https://api.hypixel.net/v2/guild?key=${process.env.apiKey}&name=Nope%20Ropes`);
     const json = await response.json();
@@ -22,13 +23,21 @@ export default async function(bot, requestedPlayer) {
           else {
             newRank = 'Danger Noodle';
           }
-          if (newRank != rank) {
+         }
+         else {
+          newRank = 'Member';
+          if (totalGEXP == 0) {
             const response0 = await fetch(`https://api.mojang.com/user/profile/${member.uuid}`);
             const json0 = await response0.json();
-            let requestedUsername = json0.name;
-            bot.chat(`/g setrank ${requestedUsername} ${newRank}`);
+            inactiveList.push(json0.name);
           }
          }
+         if (newRank != rank) {
+          const response0 = await fetch(`https://api.mojang.com/user/profile/${member.uuid}`);
+          const json0 = await response0.json();
+          let requestedUsername = json0.name;
+          bot.chat(`/g setrank ${requestedUsername} ${newRank}`);
+        }
          const response1 = await fetch(`https://api.hypixel.net/v2/skyblock/profiles?key=${process.env.apiKey}&uuid=${member.uuid}`);
          const json1 = await response1.json();
          if (json1.success == true) {
@@ -43,6 +52,8 @@ export default async function(bot, requestedPlayer) {
          }
         }
     }
+    bot.chat('Inactive members: ' + inactiveList.join(' '));
+    global.lastMessage = ('Inactive members: ' + inactiveList.join(' '));
   }
   else {
   const response0 = await fetch(`https://api.mojang.com/users/profiles/minecraft/${requestedPlayer}`);
