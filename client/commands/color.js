@@ -152,7 +152,7 @@ export async function colorBuy(interaction) {
       if (users[user].dcuser == dcuser) {
         const player = users[user].username;
         if (users[user].colors) {
-          if (!users[user].colors[color]) {
+          if (!users[user].colors.includes(color)) {
             users[user].colors.push(color);
           }
           users[user].color = color;
