@@ -50,15 +50,16 @@ if (match = jsonMsg.match(/Guild > (?:\[(.+\+?)\] )?(\w+) \[(\w+)\]: \.(\w+)( .*
         const executed = await getCommandAliases(command) || await importCommand(command);
         if (executed) executed(bot, requestedPlayer, match[2], '/gc ');
     }
+} else if (match = jsonMsg.match(new RegExp("Guild > (?:\\[(.+\\+?)\\] )?" + process.env.botUsername + " \\[(.+)\\]: \\b(\\w+)\\b \\S \\.(\\w+)( .*)?"))) {
 } else if (match = jsonMsg.match(/Guild > (?:\[(.+\+?)\] )?(\w+) \[(\w+)\]: (.+) \S \.(\w+)( .*)?/)) {
-    let command = match[5];
-    let requestedPlayer = match[6] || match[4];
+    let command = match[4];
+    let requestedPlayer = match[5] || match[3];
     if (requestedPlayer.split('')[0] == ' ') requestedPlayer = requestedPlayer.substring(1);
     if (command.includes('/')) {
         const commandSplit = command.split('/');
         for (i in commandSplit) {
             const executed = await getCommandAliases(i) || await importCommand(i);
-            if (executed) executed(bot, requestedPlayer, match[4], chat = '/gc ');
+            if (executed) executed(bot, requestedPlayer, match[3], chat = '/gc ');
         }
     } else {
         const executed = await getCommandAliases(command) || await importCommand(command);
