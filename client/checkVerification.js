@@ -1,3 +1,5 @@
+import getGist from './getGist.js'
+
 const givenRoles = [
   'VIP',
   'VIP+',
@@ -13,16 +15,7 @@ const givenRoles = [
 export async function checkVerification(member) {
   let checkedRoles = [];
   let ironman = false;
-  const response = await fetch(`https://api.github.com/gists/${process.env.gistId}`, {
-      method: 'GET',
-      headers: {
-          'Authorization': `token ${process.env.gistKey}`,
-          'Accept': 'application/vnd.github.v3+json'
-      }
-  });
-  const gistData = await response.json();
-  global.usersData = JSON.parse(gistData.files['users.json'].content);
-  const users = JSON.parse(gistData.files['users.json'].content);
+  const users = await getGist();
   const user = users.find(user => user.dcuser === member.user.username);
   if (user) {
       const response0 = await fetch('https://api.mojang.com/user/profile/' + user.uuid);

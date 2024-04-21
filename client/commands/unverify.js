@@ -1,34 +1,12 @@
 import { MessageEmbed } from "discord.js";
+import getGist from '../getGist.js'
 
 export async function unverifyCommand(interaction) {
     try {
-        const response = await fetch(`https://api.github.com/gists/${process.env.gistId}`, {
-            method: 'GET',
-            headers: {
-                'Authorization': `token ${process.env.gistKey}`,
-                'Accept': 'application/vnd.github.v3+json'
-            }
-        });
-        const gistData = await response.json();
-        global.usersData = JSON.parse(gistData.files['users.json'].content);
-        let users = JSON.parse(gistData.files['users.json'].content);
+        let users = await getGist();
         users = users.filter(user => user.dcuser !== interaction.user.username);
         const updatedContent = JSON.stringify(users, null, 2);
-        await fetch(`https://api.github.com/gists/${process.env.gistId}`, {
-            method: 'PATCH',
-            headers: {
-                'Authorization': `token ${process.env.gistKey}`,
-                'Accept': 'application/vnd.github.v3+json',
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                files: {
-                    'users.json': {
-                        content: updatedContent
-                    }
-                }
-            })
-        });
+        await getGist(updatedContent);
         interaction.reply({embeds: [unverifiedEmbed]});
         interaction.member.roles.cache.forEach(async(role) => {
         if (givenRoles.includes(role.name)) {

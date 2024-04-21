@@ -1,4 +1,5 @@
 import { MessageEmbed } from "discord.js";
+import getGist from '../getGist.js'
 
 export async function verifyCommand(interaction, username) {
   try {
@@ -91,7 +92,7 @@ export async function verifyCommand(interaction, username) {
   }
 }
 
-async function updateGist(uuid, interaction, username, guild = false, guildRank = '') {
+async function updateGist(uuid, interaction, username) {
     const dcuser = interaction.user.username
     const users = await getGist();
     for (let user in users) {
@@ -106,59 +107,14 @@ async function updateGist(uuid, interaction, username, guild = false, guildRank 
             return;
         }
     }
-    const guildResponse = await fetch(`https://api.hypixel.net/v2/guild?key=${process.env.apiKey}&name=${process.env.guildName.replaceAll(' ', '%20')}`);
-    const guildJson = await guildResponse.json();
-    if (guildJson.success == true) {
-        for (let player in guildJson.guild.members) {
-            if (player.uuid == uuid) {
-                guild = true;
-                guildRank = player.rank;
-                break;
-            }
-        }
-    }
+
     users.push({
       uuid: uuid,
       dcuser: dcuser,
-      username: username,
-      guild: guild,
-      rank: guildRank
+      username: username
     })
     const updatedContent = JSON.stringify(users, null, 2);
     await getGist(updatedContent);
-}
-
-async function getGist(patch) {
-    if (!patch) {
-        const response = await fetch(`https://api.github.com/gists/${process.env.gistId}`, {
-            method: 'GET',
-            headers: {
-                'Authorization': `token ${process.env.gistKey}`,
-                'Accept': 'application/vnd.github.v3+json'
-            }
-        });
-        const gistData = await response.json();
-        global.usersData = JSON.parse(gistData.files['users.json'].content);
-        const users = JSON.parse(gistData.files['users.json'].content);
-        return users;
-    }
-    else {
-        await fetch(`https://api.github.com/gists/${process.env.gistId}`, {
-            method: 'PATCH',
-            headers: {
-                'Authorization': `token ${process.env.gistKey}`,
-                'Accept': 'application/vnd.github.v3+json',
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                files: {
-                    'users.json': {
-                        content: patch
-                    }
-                }
-            })
-        });
-    }
 }
 
 export const verifyCommandData = {
