@@ -46,11 +46,13 @@ export async function func(interaction) {
       interaction.reply({embeds: [new MessageEmbed().setTitle('Command Failed').setDescription('Please verify to use this command.').setColor('FF0000')]});
       return;
     }
+    const role = interaction.guild.roles.cache.find(role => role.name === color);
     const colorEmbed = new MessageEmbed()
-      .setColor('#1ea863')
+      .setColor(role.color)
       .setTitle('Colors')
       .setDescription('You can select your role color with this command.\nSelect a color from the dropdown below to view its info!\n**Colors: ' + colors + '\nSelected Color: ' + color + '**')
       .setThumbnail('https://cdn.discordapp.com/avatars/1183752068490612796/f127b318f4429579fa0082e287c901fd.png?size=256?size=512')
+      .setFooter('The embed color is the role color')
     interaction.reply({embeds: [colorEmbed], components: [row]});
     return;
 }
@@ -95,6 +97,8 @@ export async function colorSelect(interaction, color, colors) {
         }
       }
       if (colorOwned == true) {
+        const role = interaction.guild.roles.cache.find(role => role.name === color);
+
         button = new MessageButton()
           .setCustomId('colorEquip')
           .setLabel('Select Color')
@@ -102,9 +106,13 @@ export async function colorSelect(interaction, color, colors) {
 
         embed = new MessageEmbed()
           .setTitle('Color: ' + color)
+          .setColor(role.color)
           .setDescription('This will select the color for use.')
+          .setFooter('The embed color is the role color')
       }
       else {
+        const role = interaction.guild.roles.cache.find(role => role.name === color);
+
         button = new MessageButton()
           .setCustomId('colorBuy')
           .setLabel('Confirm Purchase')
@@ -112,7 +120,9 @@ export async function colorSelect(interaction, color, colors) {
         
         embed = new MessageEmbed()
           .setTitle('Color: ' + color)
+          .setColor(role.color)
           .setDescription('This will deduct coins from your account, add the color to your inventory and equip it.')
+          .setFooter('The embed color is the role color')
       }
     }
   }

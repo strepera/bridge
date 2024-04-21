@@ -51,7 +51,6 @@ if (match = jsonMsg.match(/Guild > (?:\[(.+\+?)\] )?(\w+) \[(\w+)\]: \.(\w+)( .*
         if (executed) executed(bot, requestedPlayer, match[2], '/gc ');
     }
 } else if (match = jsonMsg.match(new RegExp("Guild > (?:\\[(.+\\+?)\\] )?" + process.env.botUsername + " \\[(.+)\\]: \\b(\\w+)\\b \\S \\.(\\w+)( .*)?"))) {
-} else if (match = jsonMsg.match(/Guild > (?:\[(.+\+?)\] )?(\w+) \[(\w+)\]: (.+) \S \.(\w+)( .*)?/)) {
     let command = match[4];
     let requestedPlayer = match[5] || match[3];
     if (requestedPlayer.split('')[0] == ' ') requestedPlayer = requestedPlayer.substring(1);
