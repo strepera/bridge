@@ -4,7 +4,35 @@ import { prices } from '../prices.js';
 import fs from 'fs';
 
 export async function func(interaction) {
-    interaction.reply({embeds: [prefixEmbed], components: [row]});
+  const users = await getGist();
+  let prefixes;
+  let userObj;
+  for (const user in users) {
+    if (users[user].dcuser == interaction.user.username) {
+      userObj = users[user];
+    }
+  }
+  if (userObj) {
+    if (userObj.prefixes) {
+      prefixes = [];
+      for (const prefix in userObj.prefixes) {
+        prefixes.push(userObj.prefixes[prefix]);
+      }
+      prefixes = prefixes.join(' ');
+    }
+    else {
+      prefixes = 'None';
+    }
+  }
+  else {
+    interaction.reply({embeds: [new MessageEmbed().setTitle('Command Failed').setDescription('Please verify to use this command.').setColor('FF0000')], ephemeral: true})
+  }
+  const prefixEmbed = new MessageEmbed()
+    .setColor('#1ea863')
+    .setTitle('Prefixes')
+    .setDescription('You can select your prefix for discord to minecraft chat messages with this command.\nSelect a prefix from the dropdown below to view its info!\n**Prefixes: ' + prefixes + '**')
+    .setThumbnail('https://cdn.discordapp.com/avatars/1183752068490612796/f127b318f4429579fa0082e287c901fd.png?size=256?size=512')
+  interaction.reply({embeds: [prefixEmbed], components: [row]});
 }
 
 export const data = {
@@ -29,12 +57,6 @@ const dropdown = new MessageSelectMenu()
 
 const row = new MessageActionRow()
     .addComponents(dropdown)
-
-const prefixEmbed = new MessageEmbed()
-    .setColor('#1ea863')
-    .setTitle('Prefixes')
-    .setDescription('You can select your prefix for discord to minecraft chat messages with this command.\nSelect a prefix from the dropdown below to view its info!')
-    .setThumbnail('https://cdn.discordapp.com/avatars/1183752068490612796/f127b318f4429579fa0082e287c901fd.png?size=256?size=512')
 
 export async function prefixSelect(interaction, prefix, prefixes) {
   let button;
@@ -115,7 +137,7 @@ export async function prefixBuy(interaction) {
         }
         json[player.toLowerCase()] = playerObj;
         fs.writeFileSync('bot/playerData.json', JSON.stringify(json, null, 2));
-        interaction.reply({content: 'Bought the prefix " ' + prefix + ' " for ' + prices[prefix].toLocaleString() + '!', ephemeral: true});
+        interaction.reply({content: 'Bought the prefix " ' + prefix + ' " for ' + prices[prefix].toLocaleString() + '!'});
       }
     }
 
@@ -133,7 +155,7 @@ export async function prefixEquip(interaction) {
     for (const user in users) {
       if (users[user].dcuser == dcuser) {
         users[user].prefix = prefix;
-        interaction.reply({content: 'Set your prefix to " ' + prefix + ' "!', ephemeral: true});
+        interaction.reply({content: 'Set your prefix to " ' + prefix + ' "!'});
       }
     }
 
