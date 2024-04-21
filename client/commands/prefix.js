@@ -3,11 +3,11 @@ import getGist from '../getGist.js';
 import { prices } from '../prices.js';
 import fs from 'fs';
 
-export async function prefixCommand(interaction) {
+export async function func(interaction) {
     interaction.reply({embeds: [prefixEmbed], components: [row]});
 }
 
-export const prefixCommandData = {
+export const data = {
     name: "prefix",
     description: "Your discord to minecraft chat separator!"
 }
@@ -40,12 +40,14 @@ export async function prefixSelect(interaction, prefix, prefixes) {
   let button;
   let embed;
   
-  for (const user in global.usersData) {
-    if (global.usersData[user].dcuser == interaction.user.username) {
-      if (global.usersData[user].prefixes) prefixes = global.usersData[user].prefixes;
+  const users = await getGist();
+
+  for (const user in users) {
+    if (users[user].dcuser == interaction.user.username) {
+      if (users[user].prefixes) prefixes = users[user].prefixes;
       let prefixOwned = false;
-      for (const entry in global.usersData[user].prefixes) {
-        if (global.usersData[user].prefixes[entry] == prefix) {
+      for (const entry in users[user].prefixes) {
+        if (users[user].prefixes[entry] == prefix) {
           prefixOwned = true;
           break;
         }
@@ -68,14 +70,19 @@ export async function prefixSelect(interaction, prefix, prefixes) {
         
         embed = new MessageEmbed()
           .setTitle('Prefix: ' + prefix)
-          .setDescription('This will deduct coins from your account and add the prefix to your inventory.')
+          .setDescription('This will deduct coins from your account, add the prefix to your inventory and equip it.')
       }
     }
   }
 
-  const row = new MessageActionRow()
-    .addComponents(button)
-  interaction.reply({embeds: [embed], components: [row], ephemeral: true});
+  if (button) {
+    const row = new MessageActionRow()
+      .addComponents(button)
+    interaction.reply({embeds: [embed], components: [row], ephemeral: true});
+  }
+  else {
+    interaction.reply({embeds: [new MessageEmbed().setTitle('Command Failed').setDescription('Please verify to use this command.').setColor('FF0000')], ephemeral: true})
+  }
 }
 
 export async function prefixBuy(interaction) {
@@ -89,16 +96,16 @@ export async function prefixBuy(interaction) {
         const player = users[user].username;
         if (users[user].prefixes) {
           users[user].prefixes.push(prefix);
+          users[user].prefix = prefix;
         }
         else {
           users[user].prefixes = [];
           users[user].prefixes.push(prefix);
           users[user].prefix = prefix;
         }
-        let playerObj;
         const data = await fs.promises.readFile('bot/playerData.json', 'utf8');
         let json = JSON.parse(data);
-        playerObj = json[player.toLowerCase()];
+        const playerObj = json[player.toLowerCase()];
         if (playerObj.coins >= prices[prefix]) {
           playerObj.coins -= prices[prefix];
         }
@@ -112,15 +119,16 @@ export async function prefixBuy(interaction) {
       }
     }
 
-    const patch =  JSON.stringify(users, null, 2);
+    const patch = JSON.stringify(users, null, 2);
     await getGist(patch);
+    return;
 }
 
 export async function prefixEquip(interaction) {
     const prefix = interaction.message.embeds[0].title.split(' ')[1];
     const dcuser = interaction.user.username;
 
-    const users = getGist();
+    const users = await getGist();
 
     for (const user in users) {
       if (users[user].dcuser == dcuser) {
@@ -131,4 +139,5 @@ export async function prefixEquip(interaction) {
 
     const patch = JSON.stringify(users, null, 2);
     await getGist(patch);
+    return;
 }

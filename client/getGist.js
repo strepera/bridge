@@ -29,15 +29,6 @@ export default async function getGist(patch) {
                 }
             })
         });
-
-        const response0 = await fetch(`https://api.github.com/gists/${process.env.gistId}`, {
-            method: 'GET',
-            headers: {
-                'Authorization': `token ${process.env.gistKey}`,
-                'Accept': 'application/vnd.github.v3+json'
-            }
-          });
-          const gistData0 = await response0.json();
-          global.usersData = JSON.parse(gistData0.files['users.json'].content);
+        global.usersData = JSON.parse(patch);
     }
 }

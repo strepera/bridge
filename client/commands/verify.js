@@ -1,9 +1,10 @@
 import { MessageEmbed } from "discord.js";
 import getGist from '../getGist.js'
 
-export async function verifyCommand(interaction, username) {
+export async function func(interaction, options) {
   try {
       interaction.deferReply();
+      let username = options.getString('username');
       const response = await fetch('https://api.mojang.com/users/profiles/minecraft/' + username);
       const data = await response.json();
       const uuid = data.id;
@@ -117,7 +118,7 @@ async function updateGist(uuid, interaction, username) {
     await getGist(updatedContent);
 }
 
-export const verifyCommandData = {
+export const data = {
     name: "verify",
     description: "Links your minecraft account and discord account!",
     options: [{

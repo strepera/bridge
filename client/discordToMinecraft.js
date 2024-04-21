@@ -7,10 +7,10 @@ export default async function discordToMinecraft(bot, client, message, bridgeCha
     let user = '';
     const member = await message.guild.members.fetch(message.author.id)
     let separator = ':';
-    for (let userData in global.usersData) {
-      userData = global.usersData[userData];
-      if (userData.username == member.nickname) {
-        if (userData.prefix) separator = userData.prefix;
+    const data = global.usersData;
+    for (const user in data) {
+      if (data[user].username == member.nickname) {
+        if (data[user].prefix) separator = data[user].prefix;
       }
     }
     if (message.reference && message.reference.messageId) {

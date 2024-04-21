@@ -1,12 +1,11 @@
 import { MessageEmbed } from "discord.js";
 import getGist from '../getGist.js'
 
-export async function unverifyCommand(interaction) {
+export async function func(interaction) {
     try {
-        let users = await getGist();
+        let users = await getGist()
         users = users.filter(user => user.dcuser !== interaction.user.username);
-        const updatedContent = JSON.stringify(users, null, 2);
-        await getGist(updatedContent);
+        await getGist(JSON.stringify(users, null, 2));
         interaction.reply({embeds: [unverifiedEmbed]});
         interaction.member.roles.cache.forEach(async(role) => {
         if (givenRoles.includes(role.name)) {
@@ -23,7 +22,7 @@ export async function unverifyCommand(interaction) {
     }
 }
 
-export const unverifyCommandData = {
+export const data = {
     name: "unverify",
     description: "Unlinks your minecraft and discord accounts",
 }
