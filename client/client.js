@@ -18,7 +18,8 @@ function replaceEmojisWithNames(str) {
 
 async function formatMessage(message) {
   if (message.stickers.size > 0) {
-    return newMsg = `:${message.stickers.first().name}:`;
+    const newMsg = `:${message.stickers.first().name}:`;
+    return newMsg
   }
  
   let newMsg = message.content.replace(/<@(\d+)>/g, (match, userId) => {
