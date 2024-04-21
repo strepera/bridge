@@ -156,19 +156,18 @@ export async function colorBuy(interaction) {
             users[user].colors.push(color);
           }
           users[user].color = color;
-          updateRole(interaction, color);
         }
         else {
           users[user].colors = [];
           users[user].colors.push(color);
           users[user].color = color;
-          updateRole(interaction, color);
         }
         const data = await fs.promises.readFile('bot/playerData.json', 'utf8');
         let json = JSON.parse(data);
         const playerObj = json[player.toLowerCase()];
         if (playerObj.coins >= prices[color]) {
           playerObj.coins -= prices[color];
+          updateRole(interaction, color);
         }
         else {
           interaction.reply({content: 'You cannot afford this color!', ephemeral: true});
