@@ -6,6 +6,7 @@ import fs from 'fs';
 export async function func(interaction) {
   const users = await getGist();
   let prefixes;
+  let selectedPrefix;
   let userObj;
   for (const user in users) {
     if (users[user].dcuser == interaction.user.username) {
@@ -23,6 +24,12 @@ export async function func(interaction) {
     else {
       prefixes = 'None';
     }
+    if (userObj.prefix) {
+      selectedPrefix = userObj.prefix;
+    }
+    else {
+      selectedPrefix = 'None';
+    }
   }
   else {
     interaction.reply({embeds: [new MessageEmbed().setTitle('Command Failed').setDescription('Please verify to use this command.').setColor('FF0000')]});
@@ -31,7 +38,7 @@ export async function func(interaction) {
   const prefixEmbed = new MessageEmbed()
     .setColor('#1ea863')
     .setTitle('Prefixes')
-    .setDescription('You can select your prefix for discord to minecraft chat messages with this command.\nSelect a prefix from the dropdown below to view its info!\n**Prefixes: ' + prefixes + '**')
+    .setDescription('You can select your prefix for discord to minecraft chat messages with this command.\nSelect a prefix from the dropdown below to view its info!\n**Prefixes: ' + prefixes + '\nSelected Prefix: ' + selectedPrefix + '**')
     .setThumbnail('https://cdn.discordapp.com/avatars/1183752068490612796/f127b318f4429579fa0082e287c901fd.png?size=256?size=512')
   interaction.reply({embeds: [prefixEmbed], components: [row]});
   return;

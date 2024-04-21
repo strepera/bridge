@@ -25,3 +25,19 @@ export const prices = {
     '⚛': 450000,
     'Σ': 500000
 } // max = 25
+
+export const colorPrices = {
+    'White': 20000,
+    'Yellow': 40000,
+    'Green': 60000,
+    'DarkGreen': 80000,
+    'Aqua': 100000,
+    'Cyan': 120000,
+    'Blue': 140000,
+    'Pink': 160000,
+    'Purple': 180000,
+    'Gold': 200000,
+    'Red': 220000,
+    'DarkRed': 240000,
+    'Black': 260000
+} // max = 25

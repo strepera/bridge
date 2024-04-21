@@ -3,8 +3,13 @@ import {
   prefixBuy,
   prefixEquip
 } from './commands/prefix.js'
+import {
+  colorSelect,
+  colorBuy,
+  colorEquip
+} from './commands/color.js'
 import getGist from './getGist.js'
-import discordToMinecraft from './discordToMinecraft.js';
+import discordToMinecraft from './discordToMinecraft.js'
 
 async function importCommand(commandName) {
   const commandModule = await import (`./commands/${commandName}.js`);
@@ -16,7 +21,8 @@ const commands = {
   'unverify': '',
   'prefix': '',
   'online': '',
-  'say': ''
+  'say': '',
+  'color': ''
 }
 
 export async function discord(bot, client, welcomeChannel, bridgeChannelId) {
@@ -31,6 +37,8 @@ export async function discord(bot, client, welcomeChannel, bridgeChannelId) {
           await guild.commands.create(commandData.data);
           commands[command] = commandData.func;
       }
+      console.log('Imported: ');
+      console.log(commands);
       const response = await fetch(`https://discord.com/api/webhooks/${process.env.bridgeId}/${process.env.bridgeToken}`);
       const json = await response.json();
       welcomeChannel = client.channels.cache.get(process.env.welcomeChannelId);
@@ -61,6 +69,14 @@ export async function discord(bot, client, welcomeChannel, bridgeChannelId) {
           case "prefixEquip":
               prefixEquip(interaction);
               break;
+          case "colorSelection":
+              colorSelect(interaction, interaction.values[0]);
+              break;
+          case "colorBuy":
+              colorBuy(interaction);
+              break;
+          case "colorEquip":
+              colorEquip(interaction);
           default:
               break;
       }
