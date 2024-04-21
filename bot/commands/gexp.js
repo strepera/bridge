@@ -1,4 +1,4 @@
-const ranks = ['Member', 'Danger Noodle', 'Elite', 'Ironman', 'Bot', 'Guild Master'];
+const ranks = ['Member', 'Danger Noodle', 'Elite', 'Ironman', 'Bot', 'Guild Master']; //make " 'Ironman', 'Contributor', 'Bot' " @snailifyxd
 
 export default async function(bot, requestedPlayer) {
   requestedPlayer = requestedPlayer.split(" ")[0];
