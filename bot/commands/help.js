@@ -36,7 +36,6 @@ export default function help(bot, request, player) {
     "uuid": () => chat("/gc Usage .uuid {player} | Output | {player}'s uuid is {uuid}"),
     "wiki": () => chat("/gc Usage .wiki {item/npc/location/anything} | e.g. .wiki plasmaflux power orb")
   }
-  console.log(request, player)
   if (request == player) {
     chat('Prefix "." | Commands | 8ball cata coinflip contest dice discord pay event fps gexp guild help info jacob joke math mayor mp networth online patchnotes players random skills slayer speeds uuid wiki')
   }
