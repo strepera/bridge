@@ -63,7 +63,7 @@ if (match = jsonMsg.match(/Guild > (?:\[(.+\+?)\] )?(\w+) \[(\w+)\]: \.(\w+)( .*
         }
     } else {
         const executed = await getCommandAliases(command) || await importCommand(command);
-        if (executed) executed(bot, requestedPlayer, match[4], '/gc ');
+        if (executed) executed(bot, requestedPlayer, match[3], '/gc ');
     }
 }
 if (match = jsonMsg.match(/Party > (?:\[(.+\+?)\] )?(\w+): \.(\w+)( .*)?/)) {
