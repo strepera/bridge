@@ -8,6 +8,7 @@ import {
   colorBuy,
   colorEquip
 } from './commands/color.js'
+import { checkVerification } from './checkVerification.js';
 import getGist from './getGist.js'
 import discordToMinecraft from './discordToMinecraft.js'
 
