@@ -1,25 +1,23 @@
 import fs from 'fs';
 
 export default async function(bot, bet, player, chat) {
-    let playerObj;
     const data = await fs.promises.readFile('bot/playerData.json', 'utf8');
     const json = JSON.parse(data);
-    playerObj = json[player.toLowerCase()];
+    const playerObj = json[player.toLowerCase()];
 
-    let betAmount;
-    if (bet.trim().toLowerCase() === 'all') {
-        betAmount = playerObj.coins;
-    } else {
-        betAmount = bet.split(' ')[0].replace(/[^0-9]/g, '');
-    }
-
-    if (betAmount.trim() == '') {
+    if (bet.trim() == '') {
         bot.chat(chat + 'You need to bet an amount! e.g. ".dice 100"');
         global.lastMessage = (chat + 'You need to bet an amount! e.g. ".dice 100"');
         return;
     }
 
-    if (Number(betAmount) < 100) {
+    if (bet.split(' ')[0].toLowerCase() === 'all') {
+        bet = playerObj.coins;
+    } else {
+        bet = bet.split(' ')[0].replace(/[^0-9]/g, '');
+    }
+
+    if (Number(bet) < 100) {
         bot.chat(chat + 'You need to bet at least 100 coins! You have ' + playerObj.coins + ' coins.');
         global.lastMessage = (chat + 'You need to bet at least 100 coins! You have ' + playerObj.coins + ' coins.');
         return;
