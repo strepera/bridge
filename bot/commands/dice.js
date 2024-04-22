@@ -31,7 +31,7 @@ export default async function(bot, bet, player, chat) {
 
     const dice1 = Math.round(Math.random() * (6 - 1) + 1);
     const dice2 = Math.round(Math.random() * (6 - 1) + 1);
-    let reward = Math.round((dice1 + dice2 - 6.5) * Number(bet) / 60);
+    let reward = Math.round((dice1 + dice2 - 8) * Number(bet) / 60);
 
     playerObj.coins += reward;
     json[player.toLowerCase()] = playerObj;
