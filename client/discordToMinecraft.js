@@ -5,11 +5,12 @@ export default async function discordToMinecraft(bot, client, message, bridgeCha
     if (message.author.bot) return;
     if (message.channelId != bridgeChannelId) return;
     let user = '';
-    const member = await message.guild.members.fetch(message.author.id)
+    const member = await message.guild.members.fetch(message.author.id);
+    const nickname = member.displayName.split(' ')[0];
     let separator = ':';
     const data = global.usersData;
     for (const user in data) {
-      if (data[user].username == member.nickname) {
+      if (data[user].username == nickname) {
         if (data[user].prefix) separator = data[user].prefix;
       }
     }
@@ -20,9 +21,9 @@ export default async function discordToMinecraft(bot, client, message, bridgeCha
       if (repliedMessage.webhookId) {
         user += `${repliedMessage.author.username}: ${repliedContent} ⤷ `;
       }
-      else user += `${repliedMessage.member.displayName}: ${repliedContent} ⤷ `;
+      else user += `${repliedMessage.member.displayName.split(' ')[0]}: ${repliedContent} ⤷ `;
     }
-    user += member.displayName;
+    user += nickname;
     const msg = await formatMessage(message);
     let combined = `${user} ${separator} ${msg}`;
     if (combined.length > 240) {
@@ -48,7 +49,7 @@ function replaceEmojisWithNames(str) {
    
     let newMsg = message.content.replace(/<@(\d+)>/g, (match, userId) => {
       const mention = message.guild.members.cache.get(userId);
-      return mention ? `@${mention.displayName}` : match;
+      return mention ? `@${mention.displayName.split(' ')[0]}` : match;
     }).replace(/\n/g, ' ').replace(/\bez\b/g, "e.z");
    
     newMsg = replaceEmojisWithNames(newMsg);
