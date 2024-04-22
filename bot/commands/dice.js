@@ -1,6 +1,11 @@
 import fs from 'fs';
 
 export default async function(bot, bet, player, chat) {
+    let playerObj;
+    const data = await fs.promises.readFile('bot/playerData.json', 'utf8');
+    const json = JSON.parse(data);
+    playerObj = json[player.toLowerCase()];
+
     let betAmount;
     if (bet.trim().toLowerCase() === 'all') {
         betAmount = playerObj.coins;
@@ -19,12 +24,6 @@ export default async function(bot, bet, player, chat) {
         global.lastMessage = (chat + 'You need to bet at least 100 coins! You have ' + playerObj.coins + ' coins.');
         return;
     }
-
-    let playerObj;
-    const data = await fs.promises.readFile('bot/playerData.json', 'utf8');
-    let json = JSON.parse(data);
-    playerObj = json[player.toLowerCase()];
-
 
     if (Number(bet) > playerObj.coins) {
         bot.chat(chat + 'You cannot bet more coins than you have! Your current balance is ' + playerObj.coins + ' coins.');
