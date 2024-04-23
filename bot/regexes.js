@@ -2,7 +2,7 @@ import { MessageEmbed } from "discord.js";
 
 const regexes = [
   {
-    regex: /Guild > (\w+) joined./,
+    regex: /^Guild > (\w+) joined./,
     func: (match, bridgeWebhook) => {
       const player = match[1].replaceAll('_', '\\_');
       global.onlinePlayers += 1;
@@ -20,7 +20,7 @@ const regexes = [
     }
   },
   {
-    regex: /Guild > (\w+) left./,
+    regex: /^Guild > (\w+) left./,
     func: (match, bridgeWebhook) => {
       const player = match[1].replaceAll('_', '\\_');
       global.onlinePlayers -= 1;
@@ -38,7 +38,7 @@ const regexes = [
     }
   },
   {
-    regex: /(?:\[(\w+\+?)\] )?(\w+) joined the guild!/,
+    regex: /^(?:\[(\S+)\])? (\S+) joined the guild!/,
     func: (match, bridgeWebhook, punishWebhook) => {
       const player = match[2].replaceAll('_', '\\_');
       global.totalPlayers += 1;
@@ -61,7 +61,7 @@ const regexes = [
     }
   },
   {
-    regex: /(?:\[(\w+\+?)\] )?(\w+) left the guild!/,
+    regex: /^(?:\[(\S+)\])? (\S+) left the guild!/,
     func: (match, bridgeWebhook, punishWebhook) => {
       const player = match[2].replaceAll('_', '\\_');
       global.totalPlayers -= 1;
@@ -84,7 +84,7 @@ const regexes = [
     }
   },
   {
-    regex: /Guild > (?:\[(.+\+?)\] )?(\w+) \[(\w+\+?)\]: (.+)/,
+    regex: /^Guild > (?:\[(\S+)\])? (\S+) \[(\S+)\]: (.+)/,
     func: (match, bridgeWebhook) => {
       let content = match[4].replaceAll('@everyone', 'everyone').replaceAll('@here', 'here');
       if (!content.includes('https:')) content = content.replaceAll('_', '\\_');
@@ -97,19 +97,19 @@ const regexes = [
     }
   },
   {
-    regex: /Online Members: (.+)/,
+    regex: /^Online Members: (.+)/,
     func: (match) => {
       return global.onlinePlayers = Number(match[1]);
     }
   },
   {
-    regex: /Total Members: (.+)/,
+    regex: /^Total Members: (.+)/,
     func: (match) => {
       return global.totalPlayers = Number(match[1]);
     }
   },
   {
-    regex: /The Guild has reached Level (\d+)!/,
+    regex: /^The Guild has reached Level (\d+)!/,
     func: (match, bridgeWebhook, punishWebhook) => {
       const embed = new MessageEmbed()
       .setColor('#00ff00')
@@ -125,7 +125,7 @@ const regexes = [
     }
   },
   {
-    regex: /(?:\[(\w+\+?)\] )?(\w+) was promoted from (.+) to (.+)/,
+    regex: /^(?:\[(\S+)\])? (\S+) was promoted from (.+) to (.+)/,
     func: (match, bridgeWebhook, punishWebhook) => {
       const player = match[2].replaceAll('_', '\\_');
       const embed = new MessageEmbed()
@@ -147,7 +147,7 @@ const regexes = [
     }
   },
   {
-    regex: /(?:\[(\w+\+?)\] )?(\w+) was demoted from (.+) to (.+)/,
+    regex: /^(?:\[(\S+)\])? (\S+) was demoted from (.+) to (.+)/,
     func: (match, bridgeWebhook, punishWebhook) => {
       const player = match[2].replaceAll('_', '\\_');
       const embed = new MessageEmbed()
@@ -169,7 +169,7 @@ const regexes = [
     }
   },
   {
-    regex: /(?:\[(\w+\+?)\] )?(\w+) has muted the guild chat for (.+)/,
+    regex: /^(?:\[(\S+)\])? (\S+) has muted the guild chat for (.+)/,
     func: (match, bridgeWebhook, punishWebhook) => {
       const player = match[2].replaceAll('_', '\\_');
       const embed = new MessageEmbed()
@@ -191,7 +191,7 @@ const regexes = [
     }
   },
   {
-    regex: /(?:\[(\w+\+?)\] )?(\w+) has unmuted the guild chat!/,
+    regex: /^(?:\[(\S+)\])? (\S+) has unmuted the guild chat!/,
     func: (match, bridgeWebhook, punishWebhook) => {
       const player = match[2].replaceAll('_', '\\_');
       const embed = new MessageEmbed()
@@ -212,7 +212,7 @@ const regexes = [
     }
   },
   {
-    regex: /(?:\[(\w+\+?)\] )?(\w+) has muted (?:\[(\w+\+?)\] )?(\w+) for (.+)/,
+    regex: /^(?:\[(\S+)\])? (\S+) has muted (?:\[(\S+)\])? (\S+) for (.+)/,
     func: (match, bridgeWebhook, punishWebhook) => {
       const player1 = match[2].replaceAll('_', '\\_');
       const player2 = match[4].replaceAll('_', '\\_');
@@ -235,7 +235,7 @@ const regexes = [
     }
   },
   {
-    regex: /(?:\[(\w+\+?)\] )?(\w+) has unmuted (?:\[(\w+\+?)\] )?(\w+)/,
+    regex: /^(?:\[(\S+)\])? (\S+) has unmuted (?:\[(\S+)\])? (\S+)/,
     func: (match, bridgeWebhook, punishWebhook) => {
       const player1 = match[2].replaceAll('_', '\\_');
       const player2 = match[4].replaceAll('_', '\\_');
@@ -258,7 +258,7 @@ const regexes = [
     }
   },
   {
-    regex: /(?:\[(\w+\+?)\] )?(\w+) was kicked from the guild by (?:\[(\w+\+?)\] )?(\w+)/,
+    regex: /^(?:\[(\S+)\])? (\S+) was kicked from the guild by (?:\[(\S+)\])? (\S+)/,
     func: (match, bridgeWebhook, punishWebhook) => {
       const player1 = match[2].replaceAll('_', '\\_');
       const player2 = match[4].replaceAll('_', '\\_');
@@ -281,7 +281,7 @@ const regexes = [
     }
   },
   {
-    regex: /(\[.+\] )?(.+) has invited you to join their party!/,
+    regex: /^(?:\[(\S+)\])? (\S+) has invited you to join their party!/,
     func: (match, bridgeWebhook, punishWebhook, bot) => {
       const player = match[2];
       bot.chat('/p ' + player);
@@ -298,7 +298,7 @@ const regexes = [
     }
   },
   {
-    regex: /The party was disbanded because all invites expired and the party was empty./,
+    regex: /^The party was disbanded because all invites expired and the party was empty./,
     func: (match, bridgeWebhook, punishWebhook, bot) => {
       global.inParty = false;
     }

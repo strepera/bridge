@@ -37,7 +37,7 @@ const aliases = {
 };
 
 export default async function commands(bot, jsonMsg, match) {
-if (match = jsonMsg.match(/Guild > (?:\[(.+\+?)\] )?(\w+) \[(\w+)\]: \.(\w+)( .*)?/)) {
+if (match = jsonMsg.match(/^Guild > (?:\[(\S+)\])? (\S+) \[(\S+)\]: \.(\w+)( .*)?/)) {
     let command = match[4];
     let requestedPlayer = match[5] || match[2];
     if (requestedPlayer.split('')[0] == ' ') requestedPlayer = requestedPlayer.substring(1);
@@ -51,7 +51,7 @@ if (match = jsonMsg.match(/Guild > (?:\[(.+\+?)\] )?(\w+) \[(\w+)\]: \.(\w+)( .*
         const executed = await getCommandAliases(command) || await importCommand(command);
         if (executed) executed(bot, requestedPlayer, match[2], '/gc ');
     }
-} else if (match = jsonMsg.match(new RegExp("Guild > (?:\\[(.+\\+?)\\] )?" + process.env.botUsername + " \\[(.+)\\]: \\b(\\w+)\\b \\S \\.(\\w+)( .*)?"))) {
+} else if (match = jsonMsg.match(new RegExp("^Guild > (?:\\[(\\S+)\\])? " + process.env.botUsername + " \\[(\\S+)\\]: \\b(\\w+)\\b \\S \\.(\\w+)( .*)?"))) {
     let command = match[4];
     let requestedPlayer = match[5] || match[3];
     if (requestedPlayer.split('')[0] == ' ') requestedPlayer = requestedPlayer.substring(1);
@@ -66,7 +66,7 @@ if (match = jsonMsg.match(/Guild > (?:\[(.+\+?)\] )?(\w+) \[(\w+)\]: \.(\w+)( .*
         if (executed) executed(bot, requestedPlayer, match[3], '/gc ');
     }
 }
-if (match = jsonMsg.match(/Party > (?:\[(.+\+?)\] )?(\w+): \.(\w+)( .*)?/)) {
+if (match = jsonMsg.match(/^Party > (?:\[(\S+)\])? (\S+): \.(\S+)( .*)?/)) {
     let command = match[3];
     let requestedPlayer = match[4] || match[2];
     if (requestedPlayer.split('')[0] == ' ') requestedPlayer = requestedPlayer.substring(1);

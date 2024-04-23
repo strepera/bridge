@@ -41,11 +41,12 @@ export async function minecraft(bot, client, bridgeWebhook, logWebhook, punishWe
     let match;
 
     //levels
-    if (match = jsonMsg.match(new RegExp("Guild > (?:\\[(.+\\+?)\\] )?" + process.env.botUsername + " \\[(.+)\\]: \\b(\\w+)\\b \\S (.+)"))) {
+    if (match = jsonMsg.match(new RegExp("^Guild > (?:\\[(\\S+)\\])? " + process.env.botUsername + " \\[\\S+\\]: \\b(\\w+)\\b \\S (.+)"))) {
       const player = match[3];
+      if (player == 'PotatoBirb') return;
       levelHandler(bot, player)
     }
-    else if (match = jsonMsg.match(/Guild > (?:\[(.+\+?)\] )?(\w+) \[(\w+\+?)\]: (.+)/)) {
+    else if (match = jsonMsg.match(/^Guild > (?:\[(\S+)\])? (\S+) \[(\S+)\]: (.+)/)) {
       const player = match[2];
       if (player != process.env.botUsername) levelHandler(bot, player);
     }
@@ -56,7 +57,7 @@ export async function minecraft(bot, client, bridgeWebhook, logWebhook, punishWe
       global.lastMessage = (global.lastMessage + ' \\\\\\\\');
       return;
     }
-    if (jsonMsg.match(/Advertising is against the rules. You will receive a punishment on the server if you attempt to advertise./)) {
+    if (jsonMsg == 'Advertising is against the rules. You will receive a punishment on the server if you attempt to advertise.') {
       bridgeWebhook.send('Hypixel Message: ' + jsonMsg);
       return;
     }
@@ -71,9 +72,8 @@ export async function minecraft(bot, client, bridgeWebhook, logWebhook, punishWe
     checkAnswer(bot, jsonMsg);
 
     //minecraft -> discord handling
-    const regex1 = new RegExp("Guild > (?:\\[(.+)\\] )?" + process.env.botUsername + " \\[(.+)\\]: \\b(\\w+)\\b \\S (.+)");
-    const regex2 = new RegExp("Guild > (?:\\[(.+)\\] )?" + process.env.botUsername + " \\[(.+)\\]: \\b(\\w+)\\b: (.+)");
-    if (jsonMsg.match(regex1) || jsonMsg.match(regex2)) return;
+    const regex1 = new RegExp("^Guild > (?:\\[(\\S+)\\])? " + process.env.botUsername + " \\[\\S+\\]: \\b(\\w+)\\b \\S (.+)");
+    if (jsonMsg.match(regex1)) return;
     for (const { regex, func } of regexes) {
       if (match = jsonMsg.match(regex)) {
         func(match, bridgeWebhook, punishWebhook, bot);

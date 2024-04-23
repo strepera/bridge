@@ -12,13 +12,13 @@ const boldMessages = [
 ]
 
 export async function onlineHandler(jsonMsg) {
-    if (jsonMsg.match(/Guild Name: (.+)/)) {
+    if (jsonMsg.match(/^Guild Name: (.+)/)) {
         onlineMessage = true;
     }
     if (onlineMessage == true) {
         onlineArray.push(jsonMsg.replaceAll('●', ' '));
         for (let i in onlineArray) {
-          if (onlineArray[i].match(/Offline Members: \d+/)) {
+          if (onlineArray[i].match(/^Offline Members: \d+/)) {
             onlineMessage = false;
             for (let arrayLine in onlineArray) {
               const line = onlineArray[arrayLine];
