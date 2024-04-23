@@ -141,6 +141,10 @@ export async function colorSelect(interaction, color, colors) {
     if (users[user].dcuser == interaction.user.username) {
       if (users[user].colors) colors = users[user].colors;
       let colorOwned = false;
+      let colorSelected = false;
+      if (users[user].color == color) {
+        colorSelected = true;
+      }
       for (const entry in users[user].colors) {
         if (users[user].colors[entry] == color) {
           colorOwned = true;
@@ -151,17 +155,32 @@ export async function colorSelect(interaction, color, colors) {
         const role = interaction.guild.roles.cache.find(role => role.name === color);
         const roleColor = role ? role.color : '#00ff00';
 
-        button = new MessageButton()
-          .setCustomId('colorEquip')
-          .setLabel('Select Color')
-          .setStyle('PRIMARY')
+        if (colorSelected == true) {
+          button = new MessageButton()
+            .setCustomId('colorEquip')
+            .setLabel('Select Color')
+            .setStyle('PRIMARY')
+            .setDisabled(true)
 
-        embed = new MessageEmbed()
-          .setTitle('Color: ' + color)
-          .setColor(roleColor)
-          .setDescription('This will select the color for use.')
-          .setFooter('The embed color is the role color')
-          .setThumbnail('https://cdn.discordapp.com/avatars/1183752068490612796/f127b318f4429579fa0082e287c901fd.png?size=256?size=512')
+          embed = new MessageEmbed()
+            .setTitle('Color: ' + color)
+            .setColor(roleColor)
+            .setDescription('You have already have this color selected!')
+            .setThumbnail('https://cdn.discordapp.com/avatars/1183752068490612796/f127b318f4429579fa0082e287c901fd.png?size=256?size=512')
+        }
+        else {
+          button = new MessageButton()
+            .setCustomId('colorEquip')
+            .setLabel('Select Color')
+            .setStyle('PRIMARY')
+
+          embed = new MessageEmbed()
+            .setTitle('Color: ' + color)
+            .setColor(roleColor)
+            .setDescription('This will select the color for use.')
+            .setFooter('The embed color is the role color')
+            .setThumbnail('https://cdn.discordapp.com/avatars/1183752068490612796/f127b318f4429579fa0082e287c901fd.png?size=256?size=512')
+        }
       }
       else {
         const role = interaction.guild.roles.cache.find(role => role.name === color);
@@ -236,7 +255,7 @@ export async function colorBuy(interaction) {
             .setLabel('Back')
             .setStyle('PRIMARY')
           const row = new MessageActionRow()
-            .addComponents(back, button)
+            .addComponents(back)
           interaction.update({embeds: [embed], components: [row]});
           return;
         }
@@ -245,7 +264,7 @@ export async function colorBuy(interaction) {
         const role = interaction.guild.roles.cache.find(role => role.name === color);
         const roleColor = role ? role.color : '#00ff00';
         const embed = new MessageEmbed()
-        .setTitle('Bought the color ' + prefix + '!')
+        .setTitle('Bought the color ' + color + '!')
         .setDescription('Deducted $' + prices[color].toLocaleString())
         .setColor(roleColor)
         .setThumbnail('https://cdn.discordapp.com/avatars/1183752068490612796/f127b318f4429579fa0082e287c901fd.png?size=256?size=512')
@@ -276,12 +295,18 @@ export async function colorEquip(interaction) {
         updateRole(interaction, color);
         const role = interaction.guild.roles.cache.find(role => role.name === color);
         const roleColor = role ? role.color : '#00ff00';
+        const back = new MessageButton()
+          .setCustomId('displayMainColor')
+          .setLabel('Back')
+          .setStyle('PRIMARY')
+        const row = new MessageActionRow()
+          .addComponents(back)
         const embed = new MessageEmbed()
         .setTitle('Selected Color!')
         .setDescription('Set your color to " ' + color + ' "!')
         .setColor(roleColor)
         .setThumbnail('https://cdn.discordapp.com/avatars/1183752068490612796/f127b318f4429579fa0082e287c901fd.png?size=256?size=512')
-        interaction.update({embeds: [embed]});
+        interaction.update({embeds: [embed], components: [row]});
       }
     }
 

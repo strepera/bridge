@@ -122,23 +122,42 @@ export async function prefixSelect(interaction, prefix, prefixes) {
     if (users[user].dcuser == interaction.user.username) {
       if (users[user].prefixes) prefixes = users[user].prefixes;
       let prefixOwned = false;
-      for (const entry in users[user].prefixes) {
-        if (users[user].prefixes[entry] == prefix) {
+      let prefixSelected = false;
+      if (users[user].prefix == prefix) {
+        prefixSelected = true;
+      }
+      for (const entry in prefixes) {
+        if (prefixes[entry] == prefix) {
           prefixOwned = true;
           break;
         }
       }
       if (prefixOwned == true) {
-        button = new MessageButton()
-          .setCustomId('prefixEquip')
-          .setLabel('Select Prefix')
-          .setStyle('PRIMARY')
+        if (prefixSelected == true) {
+          button = new MessageButton()
+            .setCustomId('prefixEquip')
+            .setLabel('Select Prefix')
+            .setStyle('PRIMARY')
+            .setDisabled(true)
 
-        embed = new MessageEmbed()
-          .setTitle('Prefix: ' + prefix)
-          .setColor('#1ea863')
-          .setDescription('This will select the prefix for use.')
-          .setThumbnail('https://cdn.discordapp.com/avatars/1183752068490612796/f127b318f4429579fa0082e287c901fd.png?size=256?size=512')
+          embed = new MessageEmbed()
+            .setTitle('Prefix: ' + prefix)
+            .setColor('#1ea863')
+            .setDescription('You have already have this prefix selected!')
+            .setThumbnail('https://cdn.discordapp.com/avatars/1183752068490612796/f127b318f4429579fa0082e287c901fd.png?size=256?size=512')
+        }
+        else {
+          button = new MessageButton()
+            .setCustomId('prefixEquip')
+            .setLabel('Select Prefix')
+            .setStyle('PRIMARY')
+
+          embed = new MessageEmbed()
+            .setTitle('Prefix: ' + prefix)
+            .setColor('#1ea863')
+            .setDescription('This will select the prefix for use.')
+            .setThumbnail('https://cdn.discordapp.com/avatars/1183752068490612796/f127b318f4429579fa0082e287c901fd.png?size=256?size=512')
+        }
       }
       else {
         button = new MessageButton()
@@ -222,7 +241,7 @@ export async function prefixBuy(interaction) {
           .setLabel('Back')
           .setStyle('PRIMARY')
          const row = new MessageActionRow()
-          .addComponents(back, button)
+          .addComponents(back)
         interaction.update({embeds: [embed], components: [row]});
       }
     }
@@ -241,12 +260,18 @@ export async function prefixEquip(interaction) {
     for (const user in users) {
       if (users[user].dcuser == dcuser) {
         users[user].prefix = prefix;
+        const back = new MessageButton()
+          .setCustomId('displayMainPrefix')
+          .setLabel('Back')
+          .setStyle('PRIMARY')
+        const row = new MessageActionRow()
+          .addComponents(back)
         const embed = new MessageEmbed()
         .setTitle('Selected Prefix!')
         .setDescription('Set your prefix to " ' + prefix + ' "!')
         .setColor('#1ea863')
         .setThumbnail('https://cdn.discordapp.com/avatars/1183752068490612796/f127b318f4429579fa0082e287c901fd.png?size=256?size=512')
-        interaction.update({embeds: [embed]});
+        interaction.update({embeds: [embed], components: [row]});
       }
     }
 

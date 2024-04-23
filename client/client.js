@@ -69,9 +69,6 @@ export async function discord(bot, client, welcomeChannel, bridgeChannelId) {
             case "displayMainPrefix":
                 displayMainPrefix(interaction);
                 break;
-            case "displayMainColor":
-                displayMainColor(interaction);
-                break;
             case "prefixSelection":
                 prefixSelect(interaction, interaction.values[0]);
                 break;
@@ -80,6 +77,9 @@ export async function discord(bot, client, welcomeChannel, bridgeChannelId) {
                 break;
             case "prefixEquip":
                 prefixEquip(interaction);
+                break;
+            case "displayMainColor":
+                displayMainColor(interaction);
                 break;
             case "colorSelection":
                 colorSelect(interaction, interaction.values[0]);
