@@ -32,7 +32,7 @@ export async function func(interaction) {
     }
   }
   else {
-    interaction.reply({embeds: [new MessageEmbed().setTitle('Command Failed').setDescription('Please verify to use this command.').setColor('FF0000')]});
+    interaction.reply({embeds: [failedEmbed]});
     return;
   }
   const prefixEmbed = new MessageEmbed()
@@ -63,9 +63,54 @@ const dropdown = new MessageSelectMenu()
     .setCustomId('prefixSelection')
     .setPlaceholder('Choose a prefix')
     .addOptions(options)
-
 const row = new MessageActionRow()
     .addComponents(dropdown)
+
+const failedEmbed = new MessageEmbed()
+  .setTitle('Command Failed')
+  .setDescription('Please verify to use this command.')
+  .setColor('FF0000')
+  .setThumbnail('https://cdn.discordapp.com/avatars/1183752068490612796/f127b318f4429579fa0082e287c901fd.png?size=256?size=512')
+
+export async function displayMainPrefix(interaction) {
+  const users = await getGist();
+  let prefixes;
+  let selectedPrefix;
+  let userObj;
+  for (const user in users) {
+    if (users[user].dcuser == interaction.user.username) {
+      userObj = users[user];
+    }
+  }
+  if (userObj) {
+    if (userObj.prefixes) {
+      prefixes = [];
+      for (const prefix in userObj.prefixes) {
+        prefixes.push(userObj.prefixes[prefix]);
+      }
+      prefixes = prefixes.join(' ');
+    }
+    else {
+      prefixes = 'None';
+    }
+    if (userObj.prefix) {
+      selectedPrefix = userObj.prefix;
+    }
+    else {
+      selectedPrefix = 'None';
+    }
+  }
+  else {
+    interaction.update({embeds: [failedEmbed]});
+    return;
+  }
+  const prefixEmbed = new MessageEmbed()
+    .setColor('#1ea863')
+    .setTitle('Prefixes')
+    .setDescription('You can select your prefix for discord to minecraft chat messages with this command.\nSelect a prefix from the dropdown below to view its info!\n**Prefixes: ' + prefixes + '\nSelected Prefix: ' + selectedPrefix + '**')
+    .setThumbnail('https://cdn.discordapp.com/avatars/1183752068490612796/f127b318f4429579fa0082e287c901fd.png?size=256?size=512')
+  interaction.update({embeds: [prefixEmbed], components: [row]});
+}
 
 export async function prefixSelect(interaction, prefix, prefixes) {
   let button;
@@ -91,7 +136,9 @@ export async function prefixSelect(interaction, prefix, prefixes) {
 
         embed = new MessageEmbed()
           .setTitle('Prefix: ' + prefix)
+          .setColor('#1ea863')
           .setDescription('This will select the prefix for use.')
+          .setThumbnail('https://cdn.discordapp.com/avatars/1183752068490612796/f127b318f4429579fa0082e287c901fd.png?size=256?size=512')
       }
       else {
         button = new MessageButton()
@@ -101,19 +148,25 @@ export async function prefixSelect(interaction, prefix, prefixes) {
         
         embed = new MessageEmbed()
           .setTitle('Prefix: ' + prefix)
+          .setColor('#1ea863')
           .setDescription('This will deduct coins from your account, add the prefix to your inventory and equip it.')
+          .setThumbnail('https://cdn.discordapp.com/avatars/1183752068490612796/f127b318f4429579fa0082e287c901fd.png?size=256?size=512')
       }
     }
   }
 
   if (button) {
+    const back = new MessageButton()
+      .setCustomId('displayMainPrefix')
+      .setLabel('Back')
+      .setStyle('PRIMARY')
     const row = new MessageActionRow()
-      .addComponents(button)
-    interaction.reply({embeds: [embed], components: [row], ephemeral: true});
+      .addComponents(back, button)
+    interaction.update({embeds: [embed], components: [row], ephemeral: true});
     return;
   }
   else {
-    interaction.reply({embeds: [new MessageEmbed().setTitle('Command Failed').setDescription('Please verify to use this command.').setColor('FF0000')]})
+    interaction.update({embeds: [failedEmbed]})
     return;
   }
 }
@@ -143,12 +196,34 @@ export async function prefixBuy(interaction) {
           playerObj.coins -= prices[prefix];
         }
         else {
-          interaction.reply({content: 'You cannot afford this prefix!', ephemeral: true});
+          const embed = new MessageEmbed()
+          .setTitle('Error')
+          .setDescription('You cannot afford this prefix!')
+          .setColor('#ff0000')
+          .setThumbnail('https://cdn.discordapp.com/avatars/1183752068490612796/f127b318f4429579fa0082e287c901fd.png?size=256?size=512')
+          const back = new MessageButton()
+            .setCustomId('displayMainPrefix')
+            .setLabel('Back')
+            .setStyle('PRIMARY')
+           const row = new MessageActionRow()
+            .addComponents(back, button)
+          interaction.update({embeds: [embed], components: [row]});
           return;
         }
         json[player.toLowerCase()] = playerObj;
         fs.writeFileSync('bot/playerData.json', JSON.stringify(json, null, 2));
-        interaction.reply({content: 'Bought the prefix " ' + prefix + ' " for ' + prices[prefix].toLocaleString() + '!'});
+        const embed = new MessageEmbed()
+        .setTitle('Bought the prefix ' + prefix + '!')
+        .setDescription('Deducted $' + prices[prefix].toLocaleString())
+        .setColor('#1ea863')
+        .setThumbnail('https://cdn.discordapp.com/avatars/1183752068490612796/f127b318f4429579fa0082e287c901fd.png?size=256?size=512')
+        const back = new MessageButton()
+          .setCustomId('displayMainPrefix')
+          .setLabel('Back')
+          .setStyle('PRIMARY')
+         const row = new MessageActionRow()
+          .addComponents(back, button)
+        interaction.update({embeds: [embed], components: [row]});
       }
     }
 
@@ -166,7 +241,12 @@ export async function prefixEquip(interaction) {
     for (const user in users) {
       if (users[user].dcuser == dcuser) {
         users[user].prefix = prefix;
-        interaction.reply({content: 'Set your prefix to " ' + prefix + ' "!'});
+        const embed = new MessageEmbed()
+        .setTitle('Selected Prefix!')
+        .setDescription('Set your prefix to " ' + prefix + ' "!')
+        .setColor('#1ea863')
+        .setThumbnail('https://cdn.discordapp.com/avatars/1183752068490612796/f127b318f4429579fa0082e287c901fd.png?size=256?size=512')
+        interaction.update({embeds: [embed]});
       }
     }
 

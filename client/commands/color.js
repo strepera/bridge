@@ -43,7 +43,7 @@ export async function func(interaction) {
       }
     }
     else {
-      interaction.reply({embeds: [new MessageEmbed().setTitle('Command Failed').setDescription('Please verify to use this command.').setColor('FF0000')]});
+      interaction.reply({embeds: [failedEmbed]});
       return;
     }
     const role = interaction.guild.roles.cache.find(role => role.name === color);
@@ -81,6 +81,56 @@ const dropdown = new MessageSelectMenu()
 const row = new MessageActionRow()
     .addComponents(dropdown)
 
+const failedEmbed = new MessageEmbed()
+.setTitle('Command Failed')
+.setDescription('Please verify to use this command.')
+.setColor('FF0000')
+.setThumbnail('https://cdn.discordapp.com/avatars/1183752068490612796/f127b318f4429579fa0082e287c901fd.png?size=256?size=512')
+
+export async function displayMainColor(interaction) {
+  const users = await getGist();
+  let colors;
+  let color;
+  let userObj;
+  for (const user in users) {
+    if (users[user].dcuser == interaction.user.username) {
+      userObj = users[user];
+    }
+  }
+  if (userObj) {
+    if (userObj.colors) {
+      colors = [];
+      for (const color in userObj.colors) {
+        colors.push(userObj.colors[color]);
+      }
+      colors = colors.join(' ');
+    }
+    else {
+      colors = 'None';
+    }
+    if (userObj.color) {
+      color = userObj.color;
+    }
+    else {
+      color = 'None';
+    }
+  }
+  else {
+    interaction.update({embeds: [failedEmbed]});
+    return;
+  }
+  const role = interaction.guild.roles.cache.find(role => role.name === color);
+  const roleColor = role ? role.color : '#00ff00';
+  const colorEmbed = new MessageEmbed()
+    .setColor(roleColor)
+    .setTitle('Colors')
+    .setDescription('You can select your role color with this command.\nSelect a color from the dropdown below to view its info!\n**Colors: ' + colors + '\nSelected Color: ' + color + '**')
+    .setThumbnail('https://cdn.discordapp.com/avatars/1183752068490612796/f127b318f4429579fa0082e287c901fd.png?size=256?size=512')
+    .setFooter('The embed color is the role color')
+  interaction.update({embeds: [colorEmbed], components: [row]});
+  return;
+}
+
 export async function colorSelect(interaction, color, colors) {
   let button;
   let embed;
@@ -111,6 +161,7 @@ export async function colorSelect(interaction, color, colors) {
           .setColor(roleColor)
           .setDescription('This will select the color for use.')
           .setFooter('The embed color is the role color')
+          .setThumbnail('https://cdn.discordapp.com/avatars/1183752068490612796/f127b318f4429579fa0082e287c901fd.png?size=256?size=512')
       }
       else {
         const role = interaction.guild.roles.cache.find(role => role.name === color);
@@ -126,18 +177,23 @@ export async function colorSelect(interaction, color, colors) {
           .setColor(roleColor)
           .setDescription('This will deduct coins from your account, add the color to your inventory and equip it.')
           .setFooter('The embed color is the role color')
+          .setThumbnail('https://cdn.discordapp.com/avatars/1183752068490612796/f127b318f4429579fa0082e287c901fd.png?size=256?size=512')
       }
     }
   }
 
   if (button) {
+    const back = new MessageButton()
+    .setCustomId('displayMainColor')
+    .setLabel('Back')
+    .setStyle('PRIMARY')
     const row = new MessageActionRow()
-      .addComponents(button)
-    interaction.reply({embeds: [embed], components: [row], ephemeral: true});
+      .addComponents(back, button)
+    interaction.update({embeds: [embed], components: [row]});
     return;
   }
   else {
-    interaction.reply({embeds: [new MessageEmbed().setTitle('Command Failed').setDescription('Please verify to use this command.').setColor('FF0000')]})
+    interaction.update({embeds: [failedEmbed]})
     return;
   }
 }
@@ -170,12 +226,36 @@ export async function colorBuy(interaction) {
           updateRole(interaction, color);
         }
         else {
-          interaction.reply({content: 'You cannot afford this color!', ephemeral: true});
+          const embed = new MessageEmbed()
+          .setTitle('Error')
+          .setDescription('You cannot afford this color!')
+          .setColor('#ff0000')
+          .setThumbnail('https://cdn.discordapp.com/avatars/1183752068490612796/f127b318f4429579fa0082e287c901fd.png?size=256?size=512')
+          const back = new MessageButton()
+            .setCustomId('displayMainColor')
+            .setLabel('Back')
+            .setStyle('PRIMARY')
+          const row = new MessageActionRow()
+            .addComponents(back, button)
+          interaction.update({embeds: [embed], components: [row]});
           return;
         }
         json[player.toLowerCase()] = playerObj;
         fs.writeFileSync('bot/playerData.json', JSON.stringify(json, null, 2));
-        interaction.reply({content: 'Bought the color " ' + color + ' " for ' + prices[color].toLocaleString() + '!'});
+        const role = interaction.guild.roles.cache.find(role => role.name === color);
+        const roleColor = role ? role.color : '#00ff00';
+        const embed = new MessageEmbed()
+        .setTitle('Bought the color ' + prefix + '!')
+        .setDescription('Deducted $' + prices[color].toLocaleString())
+        .setColor(roleColor)
+        .setThumbnail('https://cdn.discordapp.com/avatars/1183752068490612796/f127b318f4429579fa0082e287c901fd.png?size=256?size=512')
+        const back = new MessageButton()
+          .setCustomId('displayMainColor')
+          .setLabel('Back')
+          .setStyle('PRIMARY')
+         const row = new MessageActionRow()
+          .addComponents(back, button)
+        interaction.update({embeds: [embed], components: [row]});
       }
     }
 
@@ -194,7 +274,14 @@ export async function colorEquip(interaction) {
       if (users[user].dcuser == dcuser) {
         users[user].color = color;
         updateRole(interaction, color);
-        interaction.reply({content: 'Set your color to " ' + color + ' "!'});
+        const role = interaction.guild.roles.cache.find(role => role.name === color);
+        const roleColor = role ? role.color : '#00ff00';
+        const embed = new MessageEmbed()
+        .setTitle('Selected Color!')
+        .setDescription('Set your color to " ' + color + ' "!')
+        .setColor(roleColor)
+        .setThumbnail('https://cdn.discordapp.com/avatars/1183752068490612796/f127b318f4429579fa0082e287c901fd.png?size=256?size=512')
+        interaction.update({embeds: [embed]});
       }
     }
 

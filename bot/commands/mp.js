@@ -38,7 +38,7 @@ export default async function(bot, requestedPlayer) {
           if (rarityValues[accessory]) {
               let accessoryType = accessory;
               let accessoryAmount = accessories[accessory];
-              if (accessoryType == null || accessory == 'abicase' || accessory == 'special' || accessory == 'very_special') {
+              if (accessoryType == null || accessory == 'abicase') {
                   totalValue += 0;
               } else if (accessories[accessory] == true) {
                   totalValue += 8;
