@@ -281,7 +281,7 @@ const regexes = [
     }
   },
   {
-    regex: /^(?:\[(\S+)\])? (\S+) has invited you to join their party!/,
+    regex: /(?:\[(\S+)\])? (\S+) has invited you to join their party!/,
     func: (match, bridgeWebhook, punishWebhook, bot) => {
       const player = match[2];
       bot.chat('/p ' + player);
