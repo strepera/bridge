@@ -1,5 +1,7 @@
 import fs from 'fs';
 
+const cooldowns = {};
+
 function ranRange(min, max) {
     return Math.floor(Math.random() * (max - min + 1) + min);
 }
@@ -27,17 +29,15 @@ export default async function fish(bot, request, player, chat) {
         global.lastMessage = (chat + message);
     }
 
-    if (!global.fishCooldown) global.fishCooldown = 0;
-
-    const cooldown = Date.now() - global.fishCooldown;
+    const cooldown = Date.now() - cooldowns[player];
 
     if (cooldown < 10 * 60 * 1000) {
         const remainingSeconds = Math.ceil((10 * 60 * 1000 - cooldown) / 1000);
-        msg(`The pond is empty! Please wait ${remainingSeconds} seconds to fish again.`);
+        msg(`${player}, the pond is empty! Please wait ${remainingSeconds} seconds to fish again.`);
         return;
     }
 
-    global.fishCooldown = Date.now();
+    cooldowns[player] = Date.now();
 
     const fishAmount = ranRange(5, 7);
     msg("Fishing " + fishAmount + ' times...');
