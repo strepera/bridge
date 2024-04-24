@@ -1,30 +1,51 @@
 {
   "snailinc": {
-    "value": 928,
-    "name": "SnailInc"
+    "value": 1000,
+    "name": "SnailInc",
+    "ownership": {
+      "none": 10000
+    }
   },
   "shotcoin": {
-    "value": 980,
-    "name": "ShotCoin"
+    "value": 1000,
+    "name": "ShotCoin",
+    "ownership": {
+      "none": 10000
+    }
   },
   "snakecoin": {
-    "value": 960,
-    "name": "SnakeCoin"
+    "value": 1000,
+    "name": "SnakeCoin",
+    "ownership": {
+      "none": 10000
+    }
   },
   "sbcorp": {
-    "value": 1050,
-    "name": "SBCorp"
+    "value": 1000,
+    "name": "SBCorp",
+    "ownership": {
+      "none": 10000
+    }
   },
   "wwltt": {
-    "value": 1030,
-    "name": "WWLTT"
+    "value": 1000,
+    "name": "WWLTT",
+    "ownership": {
+      "none": 10000
+    }
   },
   "fartcoin": {
-    "value": 960,
-    "name": "FartCoin"
+    "value": 1000,
+    "name": "FartCoin",
+    "ownership": {
+      "none": 10000
+    }
   },
   "badinvestment": {
-    "value": 960,
-    "name": "BadInvestment"
+    "value": 1000,
+    "name": "BadInvestment",
+    "ownership": {
+      "none": 10000
+    }
   }
 }
