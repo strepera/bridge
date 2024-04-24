@@ -3,27 +3,8 @@ import commands from './commandHandler.js';
 import { gameHandler, checkAnswer } from './gameHandler.js';
 import { onlineHandler } from './onlineHandler.js';
 import { levelHandler } from './levelHandler.js';
-import fs from 'fs';
 
 export async function minecraft(bot, client, bridgeWebhook, logWebhook, punishWebhook) {
-  //start stock prices
-  const stocks = JSON.parse(await fs.promises.readFile('bot/stockPrices.json', 'utf8'));
-  function updateStockPrices() {
-    var now = new Date();
-    var nextHour = new Date(now.getFullYear(), now.getMonth(), now.getDate(), now.getHours() + 1, 0, 0, 0);
-    var difference = nextHour - now;
-
-    setTimeout(() => {
-        for (const stock in stocks) {
-            const difference = stocks[stock].value / 100 * ranRange(-5, 5);
-            stocks[stock].value += difference;
-            fs.writeFileSync('bot/stockPrices.json', JSON.stringify(stocks, null, 2));
-        }
-        updateStockPrices();
-    }, difference);
-  }
-  updateStockPrices();
-
   //initialize game handler
   gameHandler(bot);
 

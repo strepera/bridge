@@ -1,9 +1,5 @@
 import fs from 'fs';
 
-function ranRange(min, max) {
-    return Math.floor(Math.random() * (max - min + 1) + min);
-}
-
 export default async function stock(bot, request, player, chat) {
 
     function msg(message) {

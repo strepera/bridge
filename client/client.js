@@ -15,6 +15,14 @@ import {
 } from './checkVerification.js';
 import getGist from './getGist.js'
 import discordToMinecraft from './discordToMinecraft.js'
+import fs from 'fs';
+import {
+    MessageEmbed
+} from 'discord.js';
+
+function ranRange(min, max) {
+    return Math.floor(Math.random() * (max - min + 1) + min);
+}
 
 async function importCommand(commandName) {
     const commandModule = await
@@ -32,9 +40,10 @@ const commands = {
     'update': ''
 }
 
-export async function discord(bot, client, welcomeChannel, bridgeChannelId) {
+export async function discord(bot, client, welcomeChannel, bridgeChannelId, stockChannel) {
 
     getGist();
+
 
     client.on('ready', async() => {
         console.log('Logged in as ' + client.user.tag);
@@ -48,7 +57,8 @@ export async function discord(bot, client, welcomeChannel, bridgeChannelId) {
         console.log(commands);
         const response = await fetch(`https://discord.com/api/webhooks/${process.env.bridgeId}/${process.env.bridgeToken}`);
         const json = await response.json();
-        welcomeChannel = client.channels.cache.get(process.env.welcomeChannelId);
+        welcomeChannel = await client.channels.cache.get(process.env.welcomeChannelId);
+        stockChannel = await client.channels.cache.get(process.env.stockId);
         bridgeChannelId = json.channel_id;
         setInterval(() => {
             client.user.setActivity(`${global.onlinePlayers} players!`, {
@@ -61,6 +71,34 @@ export async function discord(bot, client, welcomeChannel, bridgeChannelId) {
                     members.forEach(member => checkVerification(member))
                 })
         }, 3 * 60 * 60 * 1000);
+    //start stock prices
+    const stocks = JSON.parse(await fs.promises.readFile('bot/stockPrices.json', 'utf8'));
+
+    async function updateStockPrices() {
+        var now = new Date();
+        var nextHour = new Date(now.getFullYear(), now.getMonth(), now.getDate(), now.getHours() + 1, 0, 0, 0);
+        var difference = nextHour - now;
+
+        setTimeout(() => {
+            for (const stock in stocks) {
+                const difference = stocks[stock].value / 100 * ranRange(-5, 5.5);
+                stocks[stock].value = Math.floor(stocks[stock].value + difference);
+            }
+            fs.writeFileSync('bot/stockPrices.json', JSON.stringify(stocks, null, 2));
+            let stockValues = [];
+            for (const stock in stocks) {
+                stockValues.push(stocks[stock].name + ': ' + stocks[stock].value)
+            }
+            stockChannel.send({
+                embeds: [new MessageEmbed()
+                    .setTitle('Stock Prices Updated')
+                    .setDescription(stockValues.join('\n'))
+                ]
+            });
+            updateStockPrices();
+        }, difference);
+    }
+    updateStockPrices();
     });
 
     client.on('messageCreate', (message) => discordToMinecraft(bot, client, message, bridgeChannelId));
