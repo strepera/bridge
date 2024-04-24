@@ -71,7 +71,8 @@ export default async function fish(bot, request, player, chat) {
         total += result.worth;
     }
     setTimeout(() => {
-        msg("You caught: " + message.join(' '));
+        bot.chat("/t " + player + " You caught: " + message.join(' '));
+        global.lastMessage = ("/t " + player + " You caught: " + message.join(' '));
         setTimeout(() => {
             msg("Total: $" + total);
         }, 500);
