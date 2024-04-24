@@ -28,7 +28,8 @@ const commands = {
     'prefix': '',
     'online': '',
     'say': '',
-    'color': ''
+    'color': '',
+    'update': ''
 }
 
 export async function discord(bot, client, welcomeChannel, bridgeChannelId) {

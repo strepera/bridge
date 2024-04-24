@@ -1,4 +1,5 @@
-import getGist from './getGist.js'
+import getGist from './getGist.js';
+import fs from 'fs';
 
 const givenRoles = [
   'VIP',
@@ -21,6 +22,17 @@ export async function checkVerification(member) {
       const response0 = await fetch('https://api.mojang.com/user/profile/' + user.uuid);
       const data0 = await response0.json();
       const username = data0.name;
+      if (data0.id == user.uuid && data0.name != user.username) {
+        const oldName = user.username;
+        users[users.indexOf(user)].username = data0.name;
+        await getGist(JSON.stringify(users));
+
+        const playerData = JSON.parse(await fs.promises.readFile('bot/playerData.json', 'utf8'));
+        playerData[oldName.toLowerCase()].username = data0.name;
+        playerData[data0.name] = playerData[oldName.toLowerCase()];
+        delete playerData[oldName.toLowerCase()];
+        fs.writeFileSync('bot/playerData.json', JSON.stringify(playerData, null, 2));
+      }
       console.log(member.user.username + ' is already linked to ' + username);
       await member.setNickname(username).catch(() => console.error(member.user.username + ' has elevated permissions. Cannot set nickname.'));
       const role = member.guild.roles.cache.find(r => r.name === 'Verified');

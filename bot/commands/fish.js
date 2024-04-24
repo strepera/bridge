@@ -33,7 +33,7 @@ export default async function fish(bot, request, player, chat) {
 
     if (cooldown < 10 * 60 * 1000) {
         const remainingSeconds = Math.ceil((10 * 60 * 1000 - cooldown) / 1000);
-        msg(`${player}, the pond is empty! Please wait ${remainingSeconds} seconds to fish again.`);
+        msg(`Sorry ${player}, the pond is empty! Please wait ${remainingSeconds} seconds to fish again.`);
         return;
     }
 

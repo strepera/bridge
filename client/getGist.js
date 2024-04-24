@@ -10,7 +10,6 @@ export default async function getGist(patch) {
         const gistData = await response.json();
         global.usersData = JSON.parse(gistData.files['users.json'].content);
         const users = JSON.parse(gistData.files['users.json'].content);
-        global.usersData = users;
         return users;
     }
     else {

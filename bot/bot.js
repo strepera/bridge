@@ -42,9 +42,13 @@ export async function minecraft(bot, client, bridgeWebhook, logWebhook, punishWe
 
     //levels
     if (match = jsonMsg.match(new RegExp("^Guild > (?:\\[(\\S+)\\])? " + process.env.botUsername + " \\[\\S+\\]: \\b(\\w+)\\b \\S (.+)"))) {
-      const player = match[3];
-      if (player == 'PotatoBirb') return;
-      levelHandler(bot, player)
+      const player = match[2];
+      for (const user of global.usersData) {
+        if (global.usersData[user].username == player) {
+          levelHandler(bot, player);
+          break;
+        }
+      }
     }
     else if (match = jsonMsg.match(/^Guild > (?:\[(\S+)\])? (\S+) \[(\S+)\]: (.+)/)) {
       const player = match[2];
