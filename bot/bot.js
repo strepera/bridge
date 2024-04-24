@@ -44,7 +44,7 @@ export async function minecraft(bot, client, bridgeWebhook, logWebhook, punishWe
     if (match = jsonMsg.match(new RegExp("^Guild > (?:\\[(\\S+)\\])? " + process.env.botUsername + " \\[\\S+\\]: \\b(\\w+)\\b \\S (.+)"))) {
       const player = match[2];
       for (const user of global.usersData) {
-        if (global.usersData[user].username == player) {
+        if (user.username == player) {
           levelHandler(bot, player);
           break;
         }
@@ -77,7 +77,13 @@ export async function minecraft(bot, client, bridgeWebhook, logWebhook, punishWe
 
     //minecraft -> discord handling
     const regex1 = new RegExp("^Guild > (?:\\[(\\S+)\\])? " + process.env.botUsername + " \\[\\S+\\]: \\b(\\w+)\\b \\S (.+)");
-    if (jsonMsg.match(regex1)) return;
+    if (match = jsonMsg.match(regex1)) {
+      for (const user of global.usersData) {
+        if (user.username == match[2]) {
+          return;
+        }
+      }
+    }
     for (const { regex, func } of regexes) {
       if (match = jsonMsg.match(regex)) {
         func(match, bridgeWebhook, punishWebhook, bot);
