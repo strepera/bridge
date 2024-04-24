@@ -1,0 +1,30 @@
+{
+    "snailinc": {
+        "value": 1000,
+        "name": "SnailInc"
+    },
+    "shotcoin": {
+        "value": 1000,
+        "name": "ShotCoin"
+    },
+    "snakecoin": {
+        "value": 1000,
+        "name": "SnakeCoin"
+    },
+    "sbcorp": {
+        "value": 1000,
+        "name": "SBCorp"
+    },
+    "wwltt": {
+        "value": 1000,
+        "name": "WWLTT"
+    },
+    "fartcoin": {
+        "value": 1000,
+        "name": "FartCoin"
+    },
+    "badinvestment": {
+        "value": 1000,
+        "name": "BadInvestment"
+    }
+}
