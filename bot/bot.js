@@ -3,6 +3,7 @@ import commands from './commandHandler.js';
 import { gameHandler, checkAnswer } from './gameHandler.js';
 import { onlineHandler } from './onlineHandler.js';
 import { levelHandler } from './levelHandler.js';
+import fs from 'fs';
 
 export async function minecraft(bot, client, bridgeWebhook, logWebhook, punishWebhook) {
   //start stock prices
