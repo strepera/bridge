@@ -28,7 +28,7 @@ export async function gameHandler(bot) {
 export async function checkAnswer(bot, jsonMsg) {
     let match;
     const mcRegex = new RegExp("^Guild > (?:\\[(\\S+)\\])? " + process.env.botUsername + " \\[(\\S+)\\]: .*");
-    const dcRegex = new RegExp("^Guild > (?:\\[(\\S+)\\])? " + process.env.botUsername + " \\[(\\S+)\\]: (.+) .*");
+    const dcRegex = new RegExp("^Guild > (?:\\[(\\S+)\\])? " + process.env.botUsername + " \\[(\\S+)\\]: (\\S+) \\S .*");
     if (jsonMsg.match(mcRegex) && !jsonMsg.match(dcRegex)) return;
     if (match = jsonMsg.match(/^Guild > (?:\[(\S+)\])? (\S+) \[(\S+)\]: (.+) \S (.*)/)) {
       for (const command of commands) {

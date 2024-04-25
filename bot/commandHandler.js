@@ -33,7 +33,8 @@ const aliases = {
     'd': 'dice',
     'cf': 'coinflip',
     'dono': 'donate',
-    'pay': 'donate'
+    'pay': 'donate',
+    'stocks': 'stock'
 };
 
 export default async function commands(bot, jsonMsg, match) {

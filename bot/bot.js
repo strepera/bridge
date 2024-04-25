@@ -20,6 +20,7 @@ export async function minecraft(bot, client, bridgeWebhook, logWebhook, punishWe
       else if (lastPatchNotes != json.items[0].link) {
         bot.chat('/gc NEW UPDATE! ' + json.items[0].link);
         global.lastMessage = ('/gc NEW UPDATE! ' + json.items[0].link);
+        lastPatchNotes = json.items[0].link;
       }
     }
   }, 5 * 60 * 1000);
