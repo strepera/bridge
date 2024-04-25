@@ -4,18 +4,18 @@ export default async function(bot, bet, player, chat) {
     const side = bet.split(' ')[1];
     if (!side) {
         bot.chat(chat + 'You need to pick a side! e.g. ".cf 100 tails"');
-        global.lastMessage = (chat + 'You need to pick a side! e.g. ".cf 100 tails"');
+        bot.lastMessage = (chat + 'You need to pick a side! e.g. ".cf 100 tails"');
         return;
     }
     bet = bet.split(' ')[0].replace(/[^0-9]/g, '');
     if (bet.trim() == '') {
       bot.chat(chat + 'You need to bet an amount! e.g. ".cf 100 tails"');
-      global.lastMessage = (chat + 'You need to bet an amount! e.g. ".cf 100 tails"');
+      bot.lastMessage = (chat + 'You need to bet an amount! e.g. ".cf 100 tails"');
       return;
     }
     if (Number(bet) < 100) {
       bot.chat(chat + 'You need to bet at least 100 coins!');
-      global.lastMessage = (chat + 'You need to bet at least 100 coins!');
+      bot.lastMessage = (chat + 'You need to bet at least 100 coins!');
       return;
     }
     let playerObj;
@@ -24,7 +24,7 @@ export default async function(bot, bet, player, chat) {
     playerObj = json[player.toLowerCase()];
     if (Number(bet) > playerObj.coins) {
       bot.chat(chat + 'You cannot bet more coins than you have!');
-      global.lastMessage = (chat + 'You cannot bet more coins than you have!');
+      bot.lastMessage = (chat + 'You cannot bet more coins than you have!');
       return;
     }
   
@@ -40,7 +40,7 @@ export default async function(bot, bet, player, chat) {
     }
     else {
       bot.chat(chat + 'Pick heads or tails!');
-      global.lastMessage = (chat + 'Pick heads or tails!');
+      bot.lastMessage = (chat + 'Pick heads or tails!');
       return;
     }
   
@@ -50,5 +50,5 @@ export default async function(bot, bet, player, chat) {
   
     if (reward > 0) reward = '+' + reward;
     bot.chat(chat + 'The coin flipped ' + coin + '. You chose ' + side + ' (' + reward + ')');
-    global.lastMessage = (chat + 'The coin flipped ' + coin + '. You chose ' + side + ' (' + reward + ')');
+    bot.lastMessage = (chat + 'The coin flipped ' + coin + '. You chose ' + side + ' (' + reward + ')');
 }

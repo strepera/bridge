@@ -37,11 +37,11 @@ async function getNetworth(bot, requestedPlayer) {
     let lengthenedNetworth = Math.round(networth.networth).toLocaleString();
     lengthenedNetworth = lengthenedNetworth.replaceAll(",", " ");
     bot.chat(`/gc ${requestedPlayer}'s networth is ${lengthenedNetworth}${shortenedNetworth.replaceAll('NaN', '')}.`);
-    global.lastMessage = (`/gc ${requestedPlayer}'s networth is ${lengthenedNetworth}${shortenedNetworth.replaceAll('NaN', '')}.`);
+    bot.lastMessage = (`/gc ${requestedPlayer}'s networth is ${lengthenedNetworth}${shortenedNetworth.replaceAll('NaN', '')}.`);
   }
   else {
     bot.chat("/gc Invalid user " + requestedPlayer);
-    global.lastMessage = ("/gc Invalid user " + requestedPlayer);
+    bot.lastMessage = ("/gc Invalid user " + requestedPlayer);
     console.error("Invalid user");
   }
   } catch (error) {

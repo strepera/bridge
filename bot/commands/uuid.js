@@ -4,6 +4,6 @@ export default async function(bot, requestedPlayer) {
     .then((json) => {
       let uuid = json.id;
       bot.chat(`/gc ${requestedPlayer}'s uuid is ${uuid}`);
-      global.lastMessage = (`/gc ${requestedPlayer}'s uuid is ${uuid}`);
+      bot.lastMessage = (`/gc ${requestedPlayer}'s uuid is ${uuid}`);
   })
 }

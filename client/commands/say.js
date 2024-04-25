@@ -4,12 +4,12 @@ export async function func(interaction, options, bot, branch) {
     const guild = options.getString('guild');
     if (guild.toLowerCase() == 'nope ropes') {
         bot.chat(message);
-        global.lastMessage = (message);
+        bot.lastMessage = (message);
         interaction.reply(message + ' sent!');
     }
     else {
         branch.chat(message);
-        global.lastMessage = (message);
+        bot.lastMessage = (message);
         interaction.reply(message + ' sent!');
     }
 }

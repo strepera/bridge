@@ -31,7 +31,7 @@ function getTimeRemaining(endtime){
       let contestString = closestContest.join(", ");
       let timeRemaining = getTimeRemaining(closestTime);
       bot.chat(`/gc The next contest is ${contestString}. It will start in ${timeRemaining.minutes} minutes.`);
-      global.lastMessage = (`/gc The next contest is ${contestString}. It will start in ${timeRemaining.minutes} minutes.`);
+      bot.lastMessage = (`/gc The next contest is ${contestString}. It will start in ${timeRemaining.minutes} minutes.`);
   })
   .catch(error => console.error('Error:', error));
 }

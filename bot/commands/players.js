@@ -29,5 +29,5 @@ export default async function(bot) {
             message.push(entry, data[name]);
         }
         bot.chat('/gc ' + message.join(' '));
-        global.lastMessage = ('/gc ' + message.join(' '));
+        bot.lastMessage = ('/gc ' + message.join(' '));
 }

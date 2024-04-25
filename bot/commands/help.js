@@ -1,7 +1,7 @@
 export default function help(bot, request, player) {
   async function chat(message) {
     bot.chat(message);
-    global.lastMessage = (message);
+    bot.lastMessage = (message);
   }
 
   const messages = {

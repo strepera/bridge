@@ -19,9 +19,9 @@ export default function(bot, requestedPlayer) {
       const answerprelude = preludes[answerpreludeindex];
       const answer = Math.floor(math.evaluate(requestedPlayer) * 1000) / 1000;
       bot.chat(`/gc ${answerprelude} ${answer}`);
-      global.lastMessage = (`/gc ${answerprelude} ${answer}`);
+      bot.lastMessage = (`/gc ${answerprelude} ${answer}`);
     } catch (err) {
       bot.chat('/gc Sorry, I could not understand the math question.');
-      global.lastMessage = ('/gc Sorry, I could not understand the math question.');
+      bot.lastMessage = ('/gc Sorry, I could not understand the math question.');
     }
 }

@@ -3,7 +3,7 @@ export default async function(bot) {
   .then((response) => response.json())
   .then((json) => {
     bot.chat('/gc ' + json.items[0].link);
-    global.lastMessage = ('/gc ' + json.items[0].link);
+    bot.lastMessage = ('/gc ' + json.items[0].link);
   })
 
 }

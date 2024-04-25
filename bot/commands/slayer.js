@@ -133,7 +133,7 @@ export default async function(bot, requestedPlayer) {
             }    
             if (slayerStarted == true) {        
               bot.chat(slayerArray.join(" "));
-              global.lastMessage = (slayerArray.join(" "));
+              bot.lastMessage = (slayerArray.join(" "));
               slayerStarted = false;
             }
           }

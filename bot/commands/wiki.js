@@ -5,7 +5,7 @@ export default async function(bot, requestedPlayer) {
   for (let item of data.items) {
       if (item.name.toLowerCase() === requestedPlayer) {
         bot.chat(`/gc https://wiki.hypixel.net/${item.id}`);
-        global.lastMessage = (`/gc https://wiki.hypixel.net/${item.id}`);
+        bot.lastMessage = (`/gc https://wiki.hypixel.net/${item.id}`);
         itemFound = true;
           break;
       }
@@ -18,7 +18,7 @@ export default async function(bot, requestedPlayer) {
     }
     const wikiPage = words.join("_");
     bot.chat(`/gc https://wiki.hypixel.net/${wikiPage}`);
-    global.lastMessage = (`/gc https://wiki.hypixel.net/${wikiPage}`);
+    bot.lastMessage = (`/gc https://wiki.hypixel.net/${wikiPage}`);
   }
   return null;
 }

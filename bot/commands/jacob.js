@@ -39,5 +39,5 @@ export default async function(bot, requestedPlayer) {
   }
 
   bot.chat(`/gc Stats for ${requestedPlayer} | Weight; ${totalWeight} | Unique Golds; ${uniqueGolds}/10`)
-  global.lastMessage = (`/gc Stats for ${requestedPlayer} | Weight; ${totalWeight} | Unique Golds; ${uniqueGolds}/10`);
+  bot.lastMessage = (`/gc Stats for ${requestedPlayer} | Weight; ${totalWeight} | Unique Golds; ${uniqueGolds}/10`);
 }

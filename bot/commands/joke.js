@@ -3,10 +3,10 @@ export default async function(bot) {
       .then((response) => response.json())
       .then((json) => {
         bot.chat('/gc ' + json.data.setup);
-        global.lastMessage = ('/gc ' + json.data.setup);
+        bot.lastMessage = ('/gc ' + json.data.setup);
         setTimeout(() => {
           bot.chat('/gc ' + json.data.punchline);
-          global.lastMessage = ('/gc ' + json.data.punchline);
+          bot.lastMessage = ('/gc ' + json.data.punchline);
         }, 5000);
       })
 }

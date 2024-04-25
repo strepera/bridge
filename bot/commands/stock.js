@@ -4,7 +4,7 @@ export default async function stock(bot, request, player, chat) {
 
     function msg(message) {
         bot.chat(chat + message);
-        global.lastMessage = (chat + message);
+        bot.lastMessage = (chat + message);
     }
 
     const stocks = JSON.parse(await fs.promises.readFile('bot/stockPrices.json', 'utf8'));

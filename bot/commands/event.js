@@ -1,7 +1,7 @@
 export default async function(bot, requestedPlayer) {
   if (requestedPlayer !== "jerry" && requestedPlayer !== "spooky") {
      bot.chat("/gc Invalid usage. Use !event {jerry/spooky}.");
-     global.lastMessage = ("/gc Invalid usage. Use !event {jerry/spooky}.");
+     bot.lastMessage = ("/gc Invalid usage. Use !event {jerry/spooky}.");
      return;
   }
   await fetch(`https://api.hypixel.net/v2/resources/skyblock/election`)
@@ -21,7 +21,7 @@ export default async function(bot, requestedPlayer) {
        const jerryDays = Math.floor(timeRemaining / (1000 * 60 * 60 * 24));
        const jerryHours = Math.floor((timeRemaining % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)) - 2;
        bot.chat(`/gc Next jerry event is in ${jerryDays} days and ${jerryHours} hours.`)
-       global.lastMessage = (`/gc Next jerry event is in ${jerryDays} days and ${jerryHours} hours.`)
+       bot.lastMessage = (`/gc Next jerry event is in ${jerryDays} days and ${jerryHours} hours.`)
      }
      else if (requestedPlayer === "spooky") {
        let currentYear = json.mayor.election.year + 1;
@@ -35,7 +35,7 @@ export default async function(bot, requestedPlayer) {
        const spookyDays = Math.floor(timeRemaining / (1000 * 60 * 60 * 24));
        const spookyHours = Math.floor((timeRemaining % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
        bot.chat(`/gc Next spooky festival is in ${spookyDays} days and ${spookyHours} hours.`);
-       global.lastMessage = (`/gc Next spooky festival is in ${spookyDays} days and ${spookyHours} hours.`);
+       bot.lastMessage = (`/gc Next spooky festival is in ${spookyDays} days and ${spookyHours} hours.`);
      }
   });
 }; 

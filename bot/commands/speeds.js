@@ -39,5 +39,5 @@ export default function speeds(bot, requestedCategory) {
       break;
   }
   bot.chat(message);
-  global.lastMessage = message;
+  bot.lastMessage = message;
 }

@@ -4,5 +4,5 @@ export default async function ball(bot) {
   let answerIndex = Math.floor(Math.random() * answers.length);
   let ballmessage = answers[answerIndex];
   bot.chat(`/gc ${ballmessage}`);
-  global.lastMessage = (`/gc ${ballmessage}`);
+  bot.lastMessage = (`/gc ${ballmessage}`);
 }

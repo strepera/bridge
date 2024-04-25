@@ -24,12 +24,12 @@ export default async function getMathProblem(bot, message) {
   }
   console.log('Answer:', global.mathAnswer);
   bot.chat(message);
-  global.lastMessage = (message);
+  bot.lastMessage = (message);
   global.mathAnswerTimestamp = Date.now();
   setTimeout(() => {
     if (global.mathAnswer) {
      bot.chat('/gc No one answered in time! The answer was "' + global.mathAnswer + '"');
-     global.lastMessage = ('/gc No one answered in time! The answer was "' + global.mathAnswer + '"');
+     bot.lastMessage = ('/gc No one answered in time! The answer was "' + global.mathAnswer + '"');
      delete global.mathAnswer;
     }
   }, 30 * 1000);
@@ -40,7 +40,7 @@ export async function check(answer, player, bot) {
   if (answer.includes(global.mathAnswer)) {
     const elapsedTime = Date.now() - global.mathAnswerTimestamp;
     bot.chat(`/gc ${player} got it correct in ${elapsedTime} ms!`);
-    global.lastMessage = (`/gc ${player} got it correct in ${elapsedTime} ms!`);
+    bot.lastMessage = (`/gc ${player} got it correct in ${elapsedTime} ms!`);
     let playerObj;
     const data = await fs.promises.readFile('bot/playerData.json', 'utf8');
     let json = JSON.parse(data);

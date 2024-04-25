@@ -72,7 +72,7 @@ export default async function(bot, requestedPlayer, match) {
       calculating = true;
       if (!requestedLevel) {
         bot.chat('/gc Invalid syntax. (cata {player} calc {level} {floor} (hecatomb or ring)');
-        global.lastMessage = ('/gc Invalid syntax. (cata {player} calc {level} {floor} (hecatomb or ring)');
+        bot.lastMessage = ('/gc Invalid syntax. (cata {player} calc {level} {floor} (hecatomb or ring)');
       }
     } 
     if (requestedPlayer.split(" ")[0] == 'calc') {
@@ -83,7 +83,7 @@ export default async function(bot, requestedPlayer, match) {
       calculating = true;
       if (!requestedLevel) {
         bot.chat('/gc Invalid syntax. (cata {player} calc {level} {floor} (hecatomb or ring)');
-        global.lastMessage = ('/gc Invalid syntax. (cata {player} calc {level} {floor} (hecatomb or ring)')
+        bot.lastMessage = ('/gc Invalid syntax. (cata {player} calc {level} {floor} (hecatomb or ring)')
         return;
      }
     }
@@ -176,20 +176,20 @@ export default async function(bot, requestedPlayer, match) {
           const expDifference = experienceToLevel[requestedLevel] - cataExperience;
           const requiredFloors = Math.floor(expDifference / (baseExp[requestedFloor] * bonus));
           bot.chat(`/gc ${requestedPlayer} needs ${requiredFloors} ${requestedFloor} runs to get from cata ${cataLevel} to ${requestedLevel}.`);
-          global.lastMessage = (`/gc ${requestedPlayer} needs ${requiredFloors} ${requestedFloor} runs to get from cata ${cataLevel} to ${requestedLevel}.`);
+          bot.lastMessage = (`/gc ${requestedPlayer} needs ${requiredFloors} ${requestedFloor} runs to get from cata ${cataLevel} to ${requestedLevel}.`);
           calculating = false;
         }
         else {
         const response2 = await fetch(`https://api.hypixel.net/v2/player?key=${process.env.apiKey}&uuid=${uuid}`);
         const json2 = await response2.json();
         let totalSecretsFound = json2.success === true && json2.profiles !== null ? json2.player.achievements.skyblock_treasure_hunter : 0;
-        bot.chat(`/gc ${requestedPlayer} ⚔ ${cataLevel}, ${secretsFound} secrets. [${totalSecretsFound} total]`);
-        global.lastMessage = (`/gc ${requestedPlayer} ⚔ ${cataLevel}, ${secretsFound} secrets. [${totalSecretsFound} total]`);
+        bot.chat(`/gc ${requestedPlayer} ⚔${cataLevel}, ${secretsFound} secrets. [${totalSecretsFound} total]`);
+        bot.lastMessage = (`/gc ${requestedPlayer} ⚔${cataLevel}, ${secretsFound} secrets. [${totalSecretsFound} total]`);
         }
       }
       else {
         bot.chat("/gc Invalid user " + requestedPlayer);
-        global.lastMessage = ("/gc Invalid user " + requestedPlayer);
+        bot.lastMessage = ("/gc Invalid user " + requestedPlayer);
         console.error("Invalid user " + requestedPlayer);
       }
     } catch (error) {

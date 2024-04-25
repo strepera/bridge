@@ -30,7 +30,7 @@ export default async function discordToMinecraft(bot, client, message, bridgeCha
       combined = combined.substring(0,240);
     }
     bot.chat(`/gc ${combined}`);
-    global.lastMessage = (`/gc ${combined}`);
+    bot.lastMessage = (`/gc ${combined}`);
 }
 
 function replaceEmojisWithNames(str) {

@@ -26,7 +26,7 @@ export default async function fish(bot, request, player, chat) {
 
     function msg(message) {
         bot.chat(chat + message);
-        global.lastMessage = (chat + message);
+        bot.lastMessage = (chat + message);
     }
 
     const cooldown = Date.now() - cooldowns[player];
@@ -72,7 +72,7 @@ export default async function fish(bot, request, player, chat) {
     }
     setTimeout(() => {
         bot.chat("/t " + player + " You caught: " + message.join(' '));
-        global.lastMessage = ("/t " + player + " You caught: " + message.join(' '));
+        bot.lastMessage = ("/t " + player + " You caught: " + message.join(' '));
         setTimeout(() => {
             msg("Total: $" + total);
         }, 500);

@@ -16,7 +16,7 @@ export default async function info(bot, player, placeholder, chat) {
                 message.push(`${Number(i) + 1}. ${top3Users[i][1].username} $${top3Users[i][1].coins}, ${top3Users[i][1].messageCount} msgs`);
             }
             bot.chat(message.join(', '));
-            global.lastMessage = (message.join(', '));
+            bot.lastMessage = (message.join(', '));
         });
         return;
     }
@@ -27,11 +27,11 @@ export default async function info(bot, player, placeholder, chat) {
 
         if (!json[player.toLowerCase()]) { 
             bot.chat(chat + 'Invalid player.');
-            global.lastMessage =(chat + 'Invalid player.');
+            bot.lastMessage =(chat + 'Invalid player.');
             return;
         }
 
         bot.chat(`${chat}${json[player.toLowerCase()].username} has ${json[player.toLowerCase()].coins.toLocaleString()} coins and has sent ${json[player.toLowerCase()].messageCount.toLocaleString()} messages`);
-        global.lastMessage = (`${chat}${json[player.toLowerCase()].username} has ${json[player.toLowerCase()].coins.toLocaleString()} coins and has sent ${json[player.toLowerCase()].messageCount.toLocaleString()} messages`);
+        bot.lastMessage = (`${chat}${json[player.toLowerCase()].username} has ${json[player.toLowerCase()].coins.toLocaleString()} coins and has sent ${json[player.toLowerCase()].messageCount.toLocaleString()} messages`);
     });
 }

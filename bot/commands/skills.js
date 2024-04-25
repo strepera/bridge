@@ -111,7 +111,7 @@ export default async function(bot, requestedPlayer) {
             }
             if (skillStarted == true) {
               bot.chat(message.join(" "));
-              global.lastMessage = (message.join(" "));
+              bot.lastMessage = (message.join(" "));
               skillStarted = false;
             }
           }
@@ -120,6 +120,6 @@ export default async function(bot, requestedPlayer) {
   }
   else {
     bot.chat('Invalid player.');
-    global.lastMessage = ('Invalid player.');
+    bot.lastMessage = ('Invalid player.');
   }
 }

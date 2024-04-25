@@ -7,7 +7,7 @@ export default async function(bot, bet, player, chat) {
 
     if (bet.trim() == '') {
         bot.chat(chat + 'You need to bet an amount! e.g. ".dice 100"');
-        global.lastMessage = (chat + 'You need to bet an amount! e.g. ".dice 100"');
+        bot.lastMessage = (chat + 'You need to bet an amount! e.g. ".dice 100"');
         return;
     }
 
@@ -19,13 +19,13 @@ export default async function(bot, bet, player, chat) {
 
     if (Number(bet) < 100) {
         bot.chat(chat + 'You need to bet at least 100 coins! You have ' + playerObj.coins + ' coins.');
-        global.lastMessage = (chat + 'You need to bet at least 100 coins! You have ' + playerObj.coins + ' coins.');
+        bot.lastMessage = (chat + 'You need to bet at least 100 coins! You have ' + playerObj.coins + ' coins.');
         return;
     }
 
     if (Number(bet) > playerObj.coins) {
         bot.chat(chat + 'You cannot bet more coins than you have! Your current balance is ' + playerObj.coins + ' coins.');
-        global.lastMessage = (chat + 'You cannot bet more coins than you have! Your current balance is ' + playerObj.coins + ' coins.');
+        bot.lastMessage = (chat + 'You cannot bet more coins than you have! Your current balance is ' + playerObj.coins + ' coins.');
         return;
     }
 
@@ -39,5 +39,5 @@ export default async function(bot, bet, player, chat) {
 
     if (reward > 0) reward = '+' + reward;
     bot.chat(chat + 'The dice rolled ' + dice1 + ' + ' + dice2 + '. (' + reward + ')');
-    global.lastMessage = (chat + 'The dice rolled ' + dice1 + ' + ' + dice2 + '. (' + reward + ')');
+    bot.lastMessage = (chat + 'The dice rolled ' + dice1 + ' + ' + dice2 + '. (' + reward + ')');
 }

@@ -24,7 +24,7 @@ export default async function(bot) {
     if (!json.current) {
       nextMayorYear = "Not available";
       bot.chat(`/gc Current mayor is ${mayorname} | Perks are ${perks}`)
-      global.lastMessage = (`/gc Current mayor is ${mayorname} | Perks are ${perks}`)
+      bot.lastMessage = (`/gc Current mayor is ${mayorname} | Perks are ${perks}`)
     }
     else {
       nextMayorYear = json.current.year;
@@ -39,7 +39,7 @@ export default async function(bot) {
       let topCandidatePerks = topCandidate.perks.map(perk => perk.name).join(', ');
       topCandidatePerks = topCandidatePerks.replace(/EZPZ/g, 'E ZPZ');
       bot.chat(`/gc Current mayor is ${mayorname} | Perks are ${perks} | Next Mayor is ${topCandidate.name} | Perks are ${topCandidatePerks}. They are elected in ${days} days and ${hours} hours.`);
-      global.lastMessage = (`/gc Current mayor is ${mayorname} | Perks are ${perks} | Next Mayor is ${topCandidate.name} | Perks are ${topCandidatePerks}. They are elected in ${days} days and ${hours} hours.`);
+      bot.lastMessage = (`/gc Current mayor is ${mayorname} | Perks are ${perks} | Next Mayor is ${topCandidate.name} | Perks are ${topCandidatePerks}. They are elected in ${days} days and ${hours} hours.`);
     }
 });
 }

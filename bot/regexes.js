@@ -92,6 +92,7 @@ const regexes = [
       let content = match[4].replaceAll('@everyone', 'everyone').replaceAll('@here', 'here');
       if (!content.includes('https:')) content = content.replaceAll('_', '\\_');
       if (content.includes('⤷')) return;
+      if (match[2] == process.env.botUsername2) return;
       bridgeWebhook.send({
          content: content,
          username: match[2],

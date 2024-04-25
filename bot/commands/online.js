@@ -32,16 +32,16 @@ export default async function(bot, requestedPlayer) {
           }
           mode = modeParts.join(' ');
           bot.chat(`/gc ${requestedPlayer} is in ${gameType} - ${mode}`);
-          global.lastMessage = (`/gc ${requestedPlayer} is in ${gameType} - ${mode}`);
+          bot.lastMessage = (`/gc ${requestedPlayer} is in ${gameType} - ${mode}`);
         }
         else {
             bot.chat(`/gc ${requestedPlayer} is offline.`);
-            global.lastMessage = (`/gc ${requestedPlayer} is offline.`);
+            bot.lastMessage = (`/gc ${requestedPlayer} is offline.`);
         }
       }
       else {
         bot.chat('Invalid player.');
-        global.lastMessage = ('Invalid player.');
+        bot.lastMessage = ('Invalid player.');
       }
   } catch (error) {
       console.error('Error:', error);

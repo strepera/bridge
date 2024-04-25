@@ -53,7 +53,7 @@ export default async function(bot, requestedPlayer) {
         }
     }
     bot.chat('Inactive members: ' + inactiveList.join(' '));
-    global.lastMessage = ('Inactive members: ' + inactiveList.join(' '));
+    bot.lastMessage = ('Inactive members: ' + inactiveList.join(' '));
   }
   else {
   const response0 = await fetch(`https://api.mojang.com/users/profiles/minecraft/${requestedPlayer}`);
@@ -92,7 +92,7 @@ export default async function(bot, requestedPlayer) {
   }
   setTimeout(() => {
     bot.chat(`/gc  ${requestedPlayer} joined ${joinDate}. 100k gexp for danger noodle, 200k for elite. Their gexp this week is ${totalGEXP.toLocaleString()}.`);
-    global.lastMessage = (`/gc  ${requestedPlayer} joined ${joinDate}. 100k gexp for danger noodle, 200k for elite. Their gexp this week is ${totalGEXP.toLocaleString()}.`);
+    bot.lastMessage = (`/gc  ${requestedPlayer} joined ${joinDate}. 100k gexp for danger noodle, 200k for elite. Their gexp this week is ${totalGEXP.toLocaleString()}.`);
   }, 250);
  }
 }

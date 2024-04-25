@@ -10,12 +10,12 @@ export default async function getGuildData(bot, requestedPlayer, level) {
         const json = await response.json();
         if (json.success != true) {
             bot.chat('/gc Invalid guild/player');
-            global.lastMessage = ('/gc Invalid guild/player');
+            bot.lastMessage = ('/gc Invalid guild/player');
             return;
         }
         if (json.guild == null) {
             bot.chat('/gc Player is not in a guild');
-            global.lastMessage = ('/gc Player is not in a guild');
+            bot.lastMessage = ('/gc Player is not in a guild');
             return;
         }
         const name = json.guild.name;
@@ -44,7 +44,7 @@ export default async function getGuildData(bot, requestedPlayer, level) {
             }) * 100) / 100;
         }
         bot.chat(`/gc ${name} [${tag}] [${level}] created ${created} by ${leader} (${members}/125)`);
-        global.lastMessage = (`/gc ${name} [${tag}] [${level}] created ${created} by ${leader} (${members}/125)`);
+        bot.lastMessage = (`/gc ${name} [${tag}] [${level}] created ${created} by ${leader} (${members}/125)`);
         return;
     }
     else if (json.success == true) {
@@ -74,7 +74,7 @@ export default async function getGuildData(bot, requestedPlayer, level) {
             }) * 100) / 100;
         }
         bot.chat(`/gc ${name} [${tag}] [${level}] created ${created} by ${leader} (${members}/125)`);
-        global.lastMessage = (`/gc ${name} [${tag}] [${level}] created ${created} by ${leader} (${members}/125)`);
+        bot.lastMessage = (`/gc ${name} [${tag}] [${level}] created ${created} by ${leader} (${members}/125)`);
         return;
     }
 }

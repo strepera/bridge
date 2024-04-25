@@ -4,13 +4,13 @@ export default async function(bot, requestedPlayer, player, chat) {
     const payment = Number(requestedPlayer.split(' ')[1]);
     if (!payment) {
         bot.chat(chat + 'You need to pick an amount to donate! e.g. ".donate snailify 100"');
-        global.lastMessage = (chat + 'You need to pick an amount to donate! e.g. ".donate snailify 100"');
+        bot.lastMessage = (chat + 'You need to pick an amount to donate! e.g. ".donate snailify 100"');
         return;
     }
     requestedPlayer = requestedPlayer.split(' ')[0];
     if (requestedPlayer.trim() == '') {
       bot.chat(chat + 'You need to pick a player to donate to! e.g. ".donate snailify 100"');
-      global.lastMessage = (chat + 'You need to pick a player to donate to! e.g. ".donate snailify 100"');
+      bot.lastMessage = (chat + 'You need to pick a player to donate to! e.g. ".donate snailify 100"');
       return;
     }
     const data = await fs.promises.readFile('bot/playerData.json', 'utf8');
@@ -21,12 +21,12 @@ export default async function(bot, requestedPlayer, player, chat) {
     }
     else {
         bot.chat(chat + 'Invalid player.');
-        global.lastMessage = (chat + 'Invalid player.');
+        bot.lastMessage = (chat + 'Invalid player.');
         return;
     }
     if (payment > playerObj.coins) {
       bot.chat(chat + 'You cannot donate more coins than you have!');
-      global.lastMessage = (chat + 'You cannot donate more coins than you have!');
+      bot.lastMessage = (chat + 'You cannot donate more coins than you have!');
       return;
     }
   
@@ -37,5 +37,5 @@ export default async function(bot, requestedPlayer, player, chat) {
     fs.writeFileSync('bot/playerData.json', JSON.stringify(json, null, 2));
   
     bot.chat(chat + 'You donated $' + payment + ' to ' + requestedPlayerObj.username + '.');
-    global.lastMessage = (chat + 'You donated $' + payment + ' to ' + requestedPlayerObj.username + '.');
+    bot.lastMessage = (chat + 'You donated $' + payment + ' to ' + requestedPlayerObj.username + '.');
 }
