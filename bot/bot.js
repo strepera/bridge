@@ -20,6 +20,7 @@ export async function minecraft(bot, client, bridgeWebhook, logWebhook, punishWe
       }
       else if (lastPatchNotes != json.items[0].link) {
         bot.chat('/gc NEW UPDATE! ' + json.items[0].link);
+        branch.chat('/gc NEW UPDATE! ' + json.items[0].link);
         global.lastMessage = ('/gc NEW UPDATE! ' + json.items[0].link);
         lastPatchNotes = json.items[0].link;
       }
@@ -47,21 +48,29 @@ export async function minecraft(bot, client, bridgeWebhook, logWebhook, punishWe
   })
 
   bot.on('messagestr', async (jsonMsg) => {
-    messagestr(jsonMsg, bot);
+    let match;
+    if (match = jsonMsg.match(/^Guild > (?:\[(\S+)\])? (\S+) \[(\S+)\]: (.+)/)) {
+      if (match[2] != process.env.botUsername1) branch.chat(match[2] + ' : ' + match[4]);
+    }
+    messagestr(jsonMsg, bot, process.env.botUsername1);
   })
 
   branch.on('messagestr', async (jsonMsg) => {
-    messagestr(jsonMsg, branch);
+    let match;
+    if (match = jsonMsg.match(/^Guild > (?:\[(\S+)\])? (\S+) \[(\S+)\]: (.+)/)) {
+      if (match[2] != process.env.botUsername2) bot.chat(match[2] + ' : ' + match[4]);
+    }
+    messagestr(jsonMsg, branch, process.env.botUsername2);
   })
 
-  async function messagestr(jsonMsg, bot) {
+  async function messagestr(jsonMsg, bot, botUsername) {
     if (jsonMsg.trim() == '') return;
     logWebhook.send(jsonMsg);
   
     let match;
   
     //levels
-    if (match = jsonMsg.match(new RegExp("^Guild > (?:\\[(\\S+)\\])? " + process.env.botUsername + " \\[\\S+\\]: \\b(\\w+)\\b \\S (.+)"))) {
+    if (match = jsonMsg.match(new RegExp("^Guild > (?:\\[(\\S+)\\])? " + botUsername + " \\[\\S+\\]: \\b(\\w+)\\b \\S (.+)"))) {
       const player = match[2];
       for (const user of global.usersData) {
         if (user.username == player) {
@@ -72,7 +81,7 @@ export async function minecraft(bot, client, bridgeWebhook, logWebhook, punishWe
     }
     else if (match = jsonMsg.match(/^Guild > (?:\[(\S+)\])? (\S+) \[(\S+)\]: (.+)/)) {
       const player = match[2];
-      if (player != process.env.botUsername) levelHandler(bot, player);
+      if (player != botUsername) levelHandler(bot, player);
     }
   
     //check if the message was blocked
@@ -96,7 +105,7 @@ export async function minecraft(bot, client, bridgeWebhook, logWebhook, punishWe
     checkAnswer(bot, jsonMsg);
   
     //minecraft -> discord handling
-    const regex1 = new RegExp("^Guild > (?:\\[(\\S+)\\])? " + process.env.botUsername + " \\[\\S+\\]: \\b(\\w+)\\b \\S (.+)");
+    const regex1 = new RegExp("^Guild > (?:\\[(\\S+)\\])? " + botUsername + " \\[\\S+\\]: \\b(\\w+)\\b \\S (.+)");
     if (match = jsonMsg.match(regex1)) {
       for (const user of global.usersData) {
         if (user.username == match[2]) {
