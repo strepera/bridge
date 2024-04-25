@@ -4,7 +4,8 @@ import { gameHandler, checkAnswer } from './gameHandler.js';
 import { onlineHandler } from './onlineHandler.js';
 import { levelHandler } from './levelHandler.js';
 
-export async function minecraft(bot, client, bridgeWebhook, logWebhook, punishWebhook) {
+export async function minecraft(bot, client, bridgeWebhook, logWebhook, punishWebhook, branch) {
+
   //initialize game handler
   gameHandler(bot);
 
@@ -28,19 +29,37 @@ export async function minecraft(bot, client, bridgeWebhook, logWebhook, punishWe
   bot.on('login', () => {
     console.log('Joined as ' + bot.username);
     bot.chat("§"); // send self to limbo
-    bot.chat("/g online");
+    bot.chat('/g online');
+  })
+
+  branch.on('login', () => {
+    console.log('Joined as ' + branch.username);
+    branch.chat("§"); // send self to limbo
+    branch.chat('/g online');
   })
 
   bot.on('message', (message) => {
-    console.log(message.toAnsi()); //make message colourful!!!
+    console.log('NR: ' + message.toAnsi()); //make message colourful!!!
+  })
+
+  branch.on('message', (message) => {
+    console.log('DN: ' + message.toAnsi()); //make message colourful!!!
   })
 
   bot.on('messagestr', async (jsonMsg) => {
+    messagestr(jsonMsg, bot);
+  })
+
+  branch.on('messagestr', async (jsonMsg) => {
+    messagestr(jsonMsg, branch);
+  })
+
+  async function messagestr(jsonMsg, bot) {
     if (jsonMsg.trim() == '') return;
     logWebhook.send(jsonMsg);
-
+  
     let match;
-
+  
     //levels
     if (match = jsonMsg.match(new RegExp("^Guild > (?:\\[(\\S+)\\])? " + process.env.botUsername + " \\[\\S+\\]: \\b(\\w+)\\b \\S (.+)"))) {
       const player = match[2];
@@ -55,7 +74,7 @@ export async function minecraft(bot, client, bridgeWebhook, logWebhook, punishWe
       const player = match[2];
       if (player != process.env.botUsername) levelHandler(bot, player);
     }
-
+  
     //check if the message was blocked
     if (jsonMsg == 'You cannot say the same message twice!' || jsonMsg == 'You are sending commands too fast! Please slow down.') {
       bot.chat(global.lastMessage + ' \\\\\\\\');
@@ -66,16 +85,16 @@ export async function minecraft(bot, client, bridgeWebhook, logWebhook, punishWe
       bridgeWebhook.send('Hypixel Message: ' + jsonMsg);
       return;
     }
-
+  
     //check if the message is from the /g online command
     onlineHandler(jsonMsg);
     
     //check for commands
     commands(bot, jsonMsg, match);
-
+  
     //check for chat games answers
     checkAnswer(bot, jsonMsg);
-
+  
     //minecraft -> discord handling
     const regex1 = new RegExp("^Guild > (?:\\[(\\S+)\\])? " + process.env.botUsername + " \\[\\S+\\]: \\b(\\w+)\\b \\S (.+)");
     if (match = jsonMsg.match(regex1)) {
@@ -91,5 +110,5 @@ export async function minecraft(bot, client, bridgeWebhook, logWebhook, punishWe
         break;
       }
     };
-  })
+  }
 }

@@ -1,5 +1,12 @@
-export async function func(interaction, message, bot) {
-    bot.chat('/g online');
+export async function func(interaction, options, bot, branch) {
+    const guild = options.getString('guild');
+    if (guild.toLowerCase() == 'nope ropes') {
+      bot.chat('/g online');
+    }
+    else {
+      branch.chat('/g online');
+    }
+
     function checkOnlineEmbed(interaction) {
         if (global.onlineEmbed != undefined) {
           interaction.reply({embeds: [global.onlineEmbed]});
@@ -11,10 +18,20 @@ export async function func(interaction, message, bot) {
           }, 500);
         }
     }
-    checkOnlineEmbed(interaction, message, bot);
+    checkOnlineEmbed(interaction);
 }
 
 export const data = {
     name: "online",
-    description: "Shows you who's online ingame!"
+    description: "Shows you who's online ingame!",
+    options: [{
+      name: "guild",
+      type: "STRING",
+      description: "Choose a guild",
+      required: true,
+      choices: [
+          { name: "Nope Ropes", value: "nope ropes" },
+          { name: "Danger Noodles", value: "danger noodles" }
+      ]
+  }]
 }

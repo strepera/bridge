@@ -40,10 +40,9 @@ const commands = {
     'update': ''
 }
 
-export async function discord(bot, client, welcomeChannel, bridgeChannelId, stockChannel) {
+export async function discord(bot, client, branch, welcomeChannel, bridgeChannelId, stockChannel,) {
 
     getGist();
-
 
     client.on('ready', async() => {
         console.log('Logged in as ' + client.user.tag);
@@ -102,6 +101,7 @@ export async function discord(bot, client, welcomeChannel, bridgeChannelId, stoc
     });
 
     client.on('messageCreate', (message) => discordToMinecraft(bot, client, message, bridgeChannelId));
+    client.on('messageCreate', (message) => discordToMinecraft(branch, client, message, bridgeChannelId));
 
     client.on('interactionCreate', async interaction => {
         switch (interaction.customId) {
@@ -137,7 +137,7 @@ export async function discord(bot, client, welcomeChannel, bridgeChannelId, stoc
             commandName,
             options
         } = interaction;
-        commands[commandName](interaction, options, bot);
+        commands[commandName](interaction, options, bot, branch);
     })
     client.on('guildMemberAdd', async(member) => {
         await welcomeChannel.send('Welcome <@' + member.user.id + '>!');

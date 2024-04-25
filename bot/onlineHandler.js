@@ -21,7 +21,7 @@ export async function onlineHandler(jsonMsg) {
           if (onlineArray[i].match(/^Offline Members: \d+/)) {
             onlineMessage = false;
             for (let arrayLine in onlineArray) {
-              const line = onlineArray[arrayLine];
+              let line = onlineArray[arrayLine];
               for (let message in boldMessages) {
                 if (line.includes(boldMessages[message])) {
                   onlineArray[arrayLine] = '**' + onlineArray[arrayLine] + '**';

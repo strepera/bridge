@@ -1,5 +1,8 @@
 import { MessageEmbed } from "discord.js";
 
+let onlinePlayersCount = 0;
+let totalPlayersCount = 0;
+
 const regexes = [
   {
     regex: /^Guild > (\w+) joined./,
@@ -88,6 +91,7 @@ const regexes = [
     func: (match, bridgeWebhook) => {
       let content = match[4].replaceAll('@everyone', 'everyone').replaceAll('@here', 'here');
       if (!content.includes('https:')) content = content.replaceAll('_', '\\_');
+      if (content.includes('⤷')) return;
       bridgeWebhook.send({
          content: content,
          username: match[2],
@@ -99,13 +103,29 @@ const regexes = [
   {
     regex: /^Online Members: (.+)/,
     func: (match) => {
-      return global.onlinePlayers = Number(match[1]);
+      if (onlinePlayersCount < 3) {
+        onlinePlayersCount++;
+        if (onlinePlayersCount == 1) {
+          global.onlinePlayers = Number(match[1]);
+        }
+        else {
+          global.onlinePlayers += Number(match[1]);
+        }
+      }
     }
   },
   {
     regex: /^Total Members: (.+)/,
     func: (match) => {
-      return global.totalPlayers = Number(match[1]);
+      if (totalPlayersCount < 3) {
+        totalPlayersCount++;
+        if (totalPlayersCount == 1) {
+          global.totalPlayers = Number(match[1]);
+        }
+        else {
+          global.totalPlayers += Number(match[1]);
+        }
+      }
     }
   },
   {
