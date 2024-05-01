@@ -1,6 +1,6 @@
 import fs from 'fs'
 
-export default async function getMathProblem(bot, message) {
+export default async function getMathProblem(bot, branch, message) {
   const chosenOperator = Math.random() < 0.5 ? '+' : '*';
   if (chosenOperator == '+') {
     let num1 = Math.floor(Math.random() * 100);
@@ -25,11 +25,15 @@ export default async function getMathProblem(bot, message) {
   console.log('Answer:', global.mathAnswer);
   bot.chat(message);
   bot.lastMessage = (message);
+  branch.chat(message);
+  branch.lastMessage = (message);
   global.mathAnswerTimestamp = Date.now();
   setTimeout(() => {
     if (global.mathAnswer) {
      bot.chat('/gc No one answered in time! The answer was "' + global.mathAnswer + '"');
      bot.lastMessage = ('/gc No one answered in time! The answer was "' + global.mathAnswer + '"');
+     branch.chat('/gc No one answered in time! The answer was "' + global.mathAnswer + '"');
+     branch.lastMessage = ('/gc No one answered in time! The answer was "' + global.mathAnswer + '"');
      delete global.mathAnswer;
     }
   }, 30 * 1000);

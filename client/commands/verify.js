@@ -3,7 +3,7 @@ import getGist from '../getGist.js'
 
 export async function func(interaction, options) {
   try {
-      interaction.deferReply();
+      await interaction.deferReply();
       let username = options.getString('username');
       const response = await fetch('https://api.mojang.com/users/profiles/minecraft/' + username);
       const data = await response.json();
@@ -29,11 +29,13 @@ export async function func(interaction, options) {
                 const role = await interaction.guild.roles.cache.find(r => r.name === 'Verified');
                 await interaction.member.roles.add(role).catch(() => console.error(interaction.user.username + ' has elevated permissions. Cannot set role.'));
                 try {
-                    const response0 = await fetch(`https://api.hypixel.net/v2/guild?key=${process.env.apiKey}&name=Nope%20Ropes`);
+                    const response0 = await fetch(`https://api.hypixel.net/v2/guild?key=${process.env.apiKey}&name=${process.env.guild1}`);
                     const data0 = await response0.json();
                     if (data0.guild && data0.guild.members) {
                        for (let member in data0.guild.members) {
                          if (data0.guild.members[member].uuid == uuid) {
+                           const guildRole = member.guild.roles.cache.find(r => r.name === process.env.guild1.replaceAll('%20', ' '));
+                           await member.roles.add(guildRole).catch(() => console.error(member.user.username + ' has elevated permissions. Cannot set role.'));
                            if (data0.guild.members[member].rank != "Guild Master" && data0.guild.members[member].rank != "Bot") {
                              const role = interaction.guild.roles.cache.find(r => r.name === data0.guild.members[member].rank);
                              if (role) {
@@ -50,6 +52,30 @@ export async function func(interaction, options) {
                 } catch (e) {
                     console.error(e);
                 }
+                try {
+                  const response0 = await fetch(`https://api.hypixel.net/v2/guild?key=${process.env.apiKey}&name=${process.env.guild2}`);
+                  const data0 = await response0.json();
+                  if (data0.guild && data0.guild.members) {
+                     for (let member in data0.guild.members) {
+                       if (data0.guild.members[member].uuid == uuid) {
+                         const guildRole = member.guild.roles.cache.find(r => r.name === process.env.guild2.replaceAll('%20', ' '));
+                         await member.roles.add(guildRole).catch(() => console.error(member.user.username + ' has elevated permissions. Cannot set role.'));
+                         if (data0.guild.members[member].rank != "Guild Master" && data0.guild.members[member].rank != "Bot") {
+                           const role = interaction.guild.roles.cache.find(r => r.name === data0.guild.members[member].rank);
+                           if (role) {
+                             await interaction.member.roles.add(role).catch(() => console.error(interaction.user.username + ' has elevated permissions. Cannot set role.'));
+                           } else {
+                             console.error(`Role not found for rank: ${data0.guild.members[member].rank}`);
+                           }
+                         }
+                       }
+                     }
+                  } else {
+                     console.error('Guild or guild members not found in API response');
+                  }
+              } catch (e) {
+                  console.error(e);
+              }
                 try {
                     const response1 = await fetch('https://api.hypixel.net/v2/player?key=' + process.env.apiKey + '&uuid=' + uuid);
                     const data1 = await response1.json();

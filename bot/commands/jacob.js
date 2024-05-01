@@ -1,5 +1,6 @@
 export default async function(bot, requestedPlayer) {
   requestedPlayer = requestedPlayer.split(" ")[0];
+  let totalWeight;
   const response = await fetch(`https://api.mojang.com/users/profiles/minecraft/${requestedPlayer}`)
   const json = await response.json();
   let uuid = json.id;
@@ -9,7 +10,6 @@ export default async function(bot, requestedPlayer) {
   const response1 = await fetch(`https://api.elitebot.dev/Weight/${uuid}`);
   const json1 = await response1.json();
   let profileId = json1.selectedProfileId;
-  let totalWeight;
   for (let profile of json1.profiles) {
    if (profile.profileId === profileId) {
      totalWeight = Math.floor(profile.totalWeight);

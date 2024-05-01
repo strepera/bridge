@@ -3,11 +3,12 @@ import commands from './commandHandler.js';
 import { gameHandler, checkAnswer } from './gameHandler.js';
 import { onlineHandler } from './onlineHandler.js';
 import { levelHandler } from './levelHandler.js';
+import updateRanks from './updateRanks.js';
 
 export async function minecraft(bot, client, bridgeWebhook, logWebhook, punishWebhook, branch) {
 
   //initialize game handler
-  gameHandler(bot);
+  gameHandler(bot, branch);
 
   //check for patch notes
   let lastPatchNotes = '';
@@ -26,17 +27,20 @@ export async function minecraft(bot, client, bridgeWebhook, logWebhook, punishWe
     }
   }, 5 * 60 * 1000);
 
-  bot.on('login', () => {
+  // check guild ranks
+  setInterval(() => {
+    updateRanks(bot, process.env.guild1);
+    updateRanks(branch, process.env.guild2);
+  }, 3 * 60 * 60 * 1000);
+
+  setTimeout(() => {
     console.log('Joined as ' + bot.username);
     bot.chat("§"); // send self to limbo
     bot.chat('/g online');
-  })
-
-  branch.on('login', () => {
     console.log('Joined as ' + branch.username);
     branch.chat("§"); // send self to limbo
     branch.chat('/g online');
-  })
+  }, 7000);
 
   bot.on('message', (message) => {
     console.log('NR: ' + message.toAnsi()); //make message colourful!!!
@@ -48,17 +52,33 @@ export async function minecraft(bot, client, bridgeWebhook, logWebhook, punishWe
 
   bot.on('messagestr', async (jsonMsg) => {
     let match;
-    if (match = jsonMsg.match(/^Guild > (?:\[(\S+)\])? (\S+) \[(\S+)\]: (.+)/)) {
-      if (match[2] != process.env.botUsername1) branch.chat('[NR] ' + match[2] + ' : ' + match[4]);
+    if (match = jsonMsg.match(/^Guild > (?:\[(\S+)\] )?(\S+) \[(\S+)\]: (.+)/)) {
+      if (match[2] != process.env.botUsername1) {
+        branch.chat('[NR] ' + match[2] + ' : ' + match[4]);
+        branch.lastMessage = ('[NR] ' + match[2] + ' : ' + match[4]);
+      }
     }
+    if (match = jsonMsg.match(/^Guild > (\S+) (joined.|left.)/)) {
+      branch.chat('[NR] ' + match[1] + ' ' + match[2] + ' (' + global.onlinePlayers + '/' + global.totalPlayers + ')');
+      branch.lastMessage = ('[NR] ' + match[1] + ' ' + match[2] + ' (' + global.onlinePlayers + '/' + global.totalPlayers + ')');
+    }
+    checkAnswer(bot, branch, jsonMsg, process.env.botUsername1);
     messagestr(jsonMsg, bot, process.env.botUsername1);
   })
 
   branch.on('messagestr', async (jsonMsg) => {
     let match;
-    if (match = jsonMsg.match(/^Guild > (?:\[(\S+)\])? (\S+) \[(\S+)\]: (.+)/)) {
-      if (match[2] != process.env.botUsername2) bot.chat('[DN] ' + match[2] + ' : ' + match[4]);
+    if (match = jsonMsg.match(/^Guild > (?:\[(\S+)\] )?(\S+) \[(\S+)\]: (.+)/)) {
+      if (match[2] != process.env.botUsername2) {
+        bot.chat('[DN] ' + match[2] + ' : ' + match[4]);
+        bot.lastMessage = ('[DN] ' + match[2] + ' : ' + match[4]);
+      }
     }
+    if (match = jsonMsg.match(/^Guild > (\S+) (joined.|left.)/)) {
+      bot.chat('[DN] ' + match[1] + ' '+ match[2] + ' (' + global.onlinePlayers + '/' + global.totalPlayers + ')');
+      bot.lastMessage = ('[DN] ' + match[1] + ' ' + match[2] + ' (' + global.onlinePlayers + '/' + global.totalPlayers + ')');
+    }
+    checkAnswer(bot, branch, jsonMsg, process.env.botUsername2);
     messagestr(jsonMsg, branch, process.env.botUsername2);
   })
 
@@ -67,9 +87,13 @@ export async function minecraft(bot, client, bridgeWebhook, logWebhook, punishWe
     logWebhook.send(jsonMsg);
   
     let match;
+
+    if (match = jsonMsg.match(/(?:\[(\S+)\] )?(\S+) has requested to join the Guild!/)) {
+      bot.chat('/g accept ' + match[2]);
+    }
   
     //levels
-    if (match = jsonMsg.match(new RegExp("^Guild > (?:\\[(\\S+)\\])? " + botUsername + " \\[\\S+\\]: \\b(\\w+)\\b \\S (.+)"))) {
+    if (match = jsonMsg.match(new RegExp("^Guild > (?:\\[(\\S+)\\] )?" + botUsername + " \\[\\S+\\]: \\b(\\w+)\\b \\S (.+)"))) {
       const player = match[2];
       for (const user of global.usersData) {
         if (user.username == player) {
@@ -78,11 +102,11 @@ export async function minecraft(bot, client, bridgeWebhook, logWebhook, punishWe
         }
       }
     }
-    else if (match = jsonMsg.match(/^Guild > (?:\[(\S+)\])? (\S+) \[(\S+)\]: (.+)/)) {
+    else if (match = jsonMsg.match(/^Guild > (?:\[(\S+)\] )?(\S+) \[(\S+)\]: (.+)/)) {
       const player = match[2];
       if (player != botUsername) levelHandler(bot, player);
     }
-    if (jsonMsg.match(new RegExp("^Guild > (?:\\[(\\S+)\\])? " + botUsername + " \\[\\S+\\]: \\[\\S+\\] \\b(\\w+)\\b \\S (.+)"))) return;
+    if (jsonMsg.match(new RegExp("^Guild > (?:\\[(\\S+)\\] )?" + botUsername + " \\[\\S+\\]: \\[\\S+\\] \\b(\\w+)\\b \\S (.+)"))) return;
 
     //check for commands
     commands(bot, jsonMsg, botUsername);
@@ -102,11 +126,8 @@ export async function minecraft(bot, client, bridgeWebhook, logWebhook, punishWe
     //check if the message is from the /g online command
     onlineHandler(jsonMsg);
   
-    //check for chat games answers
-    checkAnswer(bot, jsonMsg, botUsername);
-  
     //minecraft -> discord handling
-    const regex1 = new RegExp("^Guild > (?:\\[(\\S+)\\])? " + botUsername + " \\[\\S+\\]: \\b(\\w+)\\b \\S (.+)");
+    const regex1 = new RegExp("^Guild > (?:\\[(\\S+)\\] )?" + botUsername + " \\[\\S+\\]: \\b(\\w+)\\b \\S (.+)");
     if (match = jsonMsg.match(regex1)) {
       for (const user of global.usersData) {
         if (user.username == match[2]) {

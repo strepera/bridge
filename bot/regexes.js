@@ -5,43 +5,7 @@ let totalPlayersCount = 0;
 
 const regexes = [
   {
-    regex: /^Guild > (\w+) joined./,
-    func: (match, bridgeWebhook) => {
-      const player = match[1].replaceAll('_', '\\_');
-      global.onlinePlayers += 1;
-      const embed = new MessageEmbed()
-      .setColor('#00ff00')
-      .setTitle(`${player} joined! (${global.onlinePlayers}/${global.totalPlayers})`)
-      .setDescription('Welcome!')
-      .setThumbnail(`https://minotar.net/helm/${match[1]}/32`)
-      bridgeWebhook.send({
-        embeds: [embed],
-        username: match[1],
-        avatarURL: `https://minotar.net/helm/${match[1]}/32`
-      })
-      return;
-    }
-  },
-  {
-    regex: /^Guild > (\w+) left./,
-    func: (match, bridgeWebhook) => {
-      const player = match[1].replaceAll('_', '\\_');
-      global.onlinePlayers -= 1;
-      const embed = new MessageEmbed()
-      .setColor('#ff0000')
-      .setTitle(`${player} left. (${global.onlinePlayers}/${global.totalPlayers})`)
-      .setDescription('Goodbye!')
-      .setThumbnail(`https://minotar.net/helm/${match[1]}/32`)
-      bridgeWebhook.send({
-        embeds: [embed],
-        username: match[1],
-        avatarURL: `https://minotar.net/helm/${match[1]}/32`
-      })
-      return;
-    }
-  },
-  {
-    regex: /^(?:\[(\S+)\])? (\S+) joined the guild!/,
+    regex: /^(?:\[(\S+)\] )?(\S+) joined the guild!/,
     func: (match, bridgeWebhook, punishWebhook) => {
       const player = match[2].replaceAll('_', '\\_');
       global.totalPlayers += 1;
@@ -64,7 +28,7 @@ const regexes = [
     }
   },
   {
-    regex: /^(?:\[(\S+)\])? (\S+) left the guild!/,
+    regex: /^(?:\[(\S+)\] )?(\S+) left the guild!/,
     func: (match, bridgeWebhook, punishWebhook) => {
       const player = match[2].replaceAll('_', '\\_');
       global.totalPlayers -= 1;
@@ -87,16 +51,137 @@ const regexes = [
     }
   },
   {
-    regex: /^Guild > (?:\[(\S+)\])? (\S+) \[(\S+)\]: (.+)/,
-    func: (match, bridgeWebhook) => {
+    regex: /^Guild > (?:\[(\S+)\] )?(\S+) \[(\S+)\]: (.+)/,
+    func: (match, bridgeWebhook, punishWebhook, bot) => {
       let content = match[4].replaceAll('@everyone', 'everyone').replaceAll('@here', 'here');
       if (!content.includes('https:')) content = content.replaceAll('_', '\\_');
       if (content.includes('⤷')) return;
-      if (match[2] == process.env.botUsername2) return;
+      const message = match[0];
+      const player = match[2];
+      if (match = message.match(new RegExp("^Guild > (?:\\[\\S+\\] )?" + process.env.botUsername1 + " \\[(\\S+)\\]: (.+)"))) {
+        const output = match[2];
+        if (output.match(/^(\S+) \S (.+)/)) return;
+        if (output.split(' ')[0].match(/(QUICK|Unscramble)/)) {
+          const title = output.split(' ')[0] == 'QUICK' ? 'Quick Maths!' : 'Unscramble!'
+          const embed = new MessageEmbed()
+          .setTitle(title)
+          .setDescription(output)
+          .setColor('#00ff00')
+          bridgeWebhook.send({
+            embeds: [embed],
+            username: 'Nope Ropes',
+            avatarURL: 'https://cdn.discordapp.com/avatars/1183752068490612796/f127b318f4429579fa0082e287c901fd.png?size=256?size=512'
+          })
+          return;
+        }
+        if (output.startsWith('[DN]')) { // make configurable
+          const status = output.split(' ')[2];
+          if (status == 'joined.') {
+            const player = output.split(' ')[1].replaceAll('_', '\\_');
+            global.onlinePlayers += 1;
+            const embed = new MessageEmbed()
+            .setColor('#00ff00')
+            .setTitle(`${player} joined! (${global.onlinePlayers}/${global.totalPlayers})`)
+            .setDescription('Welcome!')
+            .setThumbnail(`https://minotar.net/helm/${output.split(' ')[1]}/32`)
+            bridgeWebhook.send({
+              embeds: [embed],
+              username: 'Nope Ropes',
+              avatarURL: 'https://cdn.discordapp.com/avatars/1183752068490612796/f127b318f4429579fa0082e287c901fd.png?size=256?size=512'
+            })
+            return;
+          }
+          else {
+            const player = output.split(' ')[1].replaceAll('_', '\\_');
+            global.onlinePlayers -= 1;
+            const embed = new MessageEmbed()
+            .setColor('#ff0000')
+            .setTitle(`${player} left. (${global.onlinePlayers}/${global.totalPlayers})`)
+            .setDescription('Goodbye!')
+            .setThumbnail(`https://minotar.net/helm/${output.split(' ')[1]}/32`)
+            bridgeWebhook.send({
+              embeds: [embed],
+              username: 'Nope Ropes',
+              avatarURL: 'https://cdn.discordapp.com/avatars/1183752068490612796/f127b318f4429579fa0082e287c901fd.png?size=256?size=512'
+            })
+            return;
+          }
+        }
+        const embed = new MessageEmbed()
+        .setTitle('Command: .' + bot.lastCommand)
+        .setDescription(output)
+        .setColor('#00ff00')
+        bridgeWebhook.send({
+          embeds: [embed],
+          username: 'Nope Ropes',
+          avatarURL: 'https://cdn.discordapp.com/avatars/1183752068490612796/f127b318f4429579fa0082e287c901fd.png?size=256?size=512'
+        })
+        return;
+      }
+      else if (match = message.match(new RegExp("^Guild > (?:\\[\\S+\\] )?" + process.env.botUsername2 + " \\[(\\S+)\\]: (.+)"))) {
+        const output = match[2];
+        if (output.match(/^(\S+) \S (.+)/)) return;
+        if (output.split(' ')[0].match(/(QUICK|Unscramble)/)) {
+          const title = output.split(' ')[0] == 'QUICK' ? 'Quick Maths!' : 'Unscramble!'
+          const embed = new MessageEmbed()
+          .setTitle(title)
+          .setDescription(output)
+          .setColor('#00ff00')
+          bridgeWebhook.send({
+            embeds: [embed],
+            username: 'Danger Noodles',
+            avatarURL: 'https://cdn.discordapp.com/avatars/1232984080740515853/e0416e61f64c3d1659a271228e398fdd.png?size=256?size=512'
+          })
+          return;
+        }
+        if (output.startsWith('[NR]')) { // make configurable
+          const status = output.split(' ')[2];
+          if (status == 'joined.') {
+            const player = output.split(' ')[1].replaceAll('_', '\\_');
+            global.onlinePlayers += 1;
+            const embed = new MessageEmbed()
+            .setColor('#00ff00')
+            .setTitle(`${player} joined! (${global.onlinePlayers}/${global.totalPlayers})`)
+            .setDescription('Welcome!')
+            .setThumbnail(`https://minotar.net/helm/${output.split(' ')[1]}/32`)
+            bridgeWebhook.send({
+              embeds: [embed],
+              username: 'Danger Noodles',
+              avatarURL: 'https://cdn.discordapp.com/avatars/1232984080740515853/e0416e61f64c3d1659a271228e398fdd.png?size=256?size=512'
+            })
+            return;
+          }
+          else {
+            const player = output.split(' ')[1].replaceAll('_', '\\_');
+            global.onlinePlayers -= 1;
+            const embed = new MessageEmbed()
+            .setColor('#ff0000')
+            .setTitle(`${player} left. (${global.onlinePlayers}/${global.totalPlayers})`)
+            .setDescription('Goodbye!')
+            .setThumbnail(`https://minotar.net/helm/${output.split(' ')[1]}/32`)
+            bridgeWebhook.send({
+              embeds: [embed],
+              username: 'Danger Noodles',
+              avatarURL: 'https://cdn.discordapp.com/avatars/1232984080740515853/e0416e61f64c3d1659a271228e398fdd.png?size=256?size=512'
+            })
+            return;
+          }
+        }
+        const embed = new MessageEmbed()
+        .setTitle('Command: .' + bot.lastCommand)
+        .setDescription(output)
+        .setColor('#00ff00')
+        bridgeWebhook.send({
+          embeds: [embed],
+          username: 'Danger Noodles',
+          avatarURL: 'https://cdn.discordapp.com/avatars/1232984080740515853/e0416e61f64c3d1659a271228e398fdd.png?size=256?size=512'
+        })
+        return;
+      }
       bridgeWebhook.send({
          content: content,
-         username: match[2],
-         avatarURL: `https://minotar.net/helm/${match[2]}/32`
+         username: player,
+         avatarURL: `https://minotar.net/helm/${player}/32`
       });
       return;
     }
@@ -104,8 +189,8 @@ const regexes = [
   {
     regex: /^Online Members: (.+)/,
     func: (match) => {
+      onlinePlayersCount += 1;
       if (onlinePlayersCount < 3) {
-        onlinePlayersCount++;
         if (onlinePlayersCount == 1) {
           global.onlinePlayers = Number(match[1]);
         }
@@ -118,8 +203,8 @@ const regexes = [
   {
     regex: /^Total Members: (.+)/,
     func: (match) => {
+      totalPlayersCount += 1;
       if (totalPlayersCount < 3) {
-        totalPlayersCount++;
         if (totalPlayersCount == 1) {
           global.totalPlayers = Number(match[1]);
         }
@@ -146,7 +231,7 @@ const regexes = [
     }
   },
   {
-    regex: /^(?:\[(\S+)\])? (\S+) was promoted from (.+) to (.+)/,
+    regex: /^(?:\[(\S+)\] )?(\S+) was promoted from (.+) to (.+)/,
     func: (match, bridgeWebhook, punishWebhook) => {
       const player = match[2].replaceAll('_', '\\_');
       const embed = new MessageEmbed()
@@ -168,7 +253,7 @@ const regexes = [
     }
   },
   {
-    regex: /^(?:\[(\S+)\])? (\S+) was demoted from (.+) to (.+)/,
+    regex: /^(?:\[(\S+)\] )?(\S+) was demoted from (.+) to (.+)/,
     func: (match, bridgeWebhook, punishWebhook) => {
       const player = match[2].replaceAll('_', '\\_');
       const embed = new MessageEmbed()
@@ -190,7 +275,7 @@ const regexes = [
     }
   },
   {
-    regex: /^(?:\[(\S+)\])? (\S+) has muted the guild chat for (.+)/,
+    regex: /^(?:\[(\S+)\] )?(\S+) has muted the guild chat for (.+)/,
     func: (match, bridgeWebhook, punishWebhook) => {
       const player = match[2].replaceAll('_', '\\_');
       const embed = new MessageEmbed()
@@ -212,7 +297,7 @@ const regexes = [
     }
   },
   {
-    regex: /^(?:\[(\S+)\])? (\S+) has unmuted the guild chat!/,
+    regex: /^(?:\[(\S+)\] )?(\S+) has unmuted the guild chat!/,
     func: (match, bridgeWebhook, punishWebhook) => {
       const player = match[2].replaceAll('_', '\\_');
       const embed = new MessageEmbed()
@@ -233,7 +318,7 @@ const regexes = [
     }
   },
   {
-    regex: /^(?:\[(\S+)\])? (\S+) has muted (?:\[(\S+)\])? (\S+) for (.+)/,
+    regex: /^(?:\[(\S+)\] )?(\S+) has muted (?:\[(\S+)\] )?(\S+) for (.+)/,
     func: (match, bridgeWebhook, punishWebhook) => {
       const player1 = match[2].replaceAll('_', '\\_');
       const player2 = match[4].replaceAll('_', '\\_');
@@ -256,7 +341,7 @@ const regexes = [
     }
   },
   {
-    regex: /^(?:\[(\S+)\])? (\S+) has unmuted (?:\[(\S+)\])? (\S+)/,
+    regex: /^(?:\[(\S+)\] )?(\S+) has unmuted (?:\[(\S+)\] )?(\S+)/,
     func: (match, bridgeWebhook, punishWebhook) => {
       const player1 = match[2].replaceAll('_', '\\_');
       const player2 = match[4].replaceAll('_', '\\_');
@@ -279,7 +364,7 @@ const regexes = [
     }
   },
   {
-    regex: /^(?:\[(\S+)\])? (\S+) was kicked from the guild by (?:\[(\S+)\])? (\S+)/,
+    regex: /^(?:\[(\S+)\] )?(\S+) was kicked from the guild by (?:\[(\S+)\] )?(\S+)/,
     func: (match, bridgeWebhook, punishWebhook) => {
       const player1 = match[2].replaceAll('_', '\\_');
       const player2 = match[4].replaceAll('_', '\\_');
@@ -302,7 +387,7 @@ const regexes = [
     }
   },
   {
-    regex: /(?:\[(\S+)\])? (\S+) has invited you to join their party!/,
+    regex: /(?:\[(\S+)\] )?(\S+) has invited you to join their party!/,
     func: (match, bridgeWebhook, punishWebhook, bot) => {
       const player = match[2];
       bot.chat('/p ' + player);

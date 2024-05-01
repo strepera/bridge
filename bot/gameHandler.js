@@ -2,7 +2,7 @@ import * as fs from 'fs';
 
 const commands = [];
 
-export async function gameHandler(bot) {
+export async function gameHandler(bot, branch) {
   fs.readdir('bot/games', async (err, files) => {
     if (err) {
       console.error(err);
@@ -16,28 +16,30 @@ export async function gameHandler(bot) {
       const frequency = process.env.gameFrequency * 60 * 1000;
       setTimeout(() => {
         setInterval(() => {
-          command.default(bot);
+          command.default(bot, branch);
         }, frequency);
       }, frequency * commands.indexOf(command) / commands.length );
       console.log('Imported:');
-      console.log(command)
+      console.log(command);
     }
   })
 }
 
-export async function checkAnswer(bot, jsonMsg, botUsername) {
+export async function checkAnswer(bot, branch, jsonMsg, botUsername) {
     let match;
-    const mcRegex = new RegExp("^Guild > (?:\\[(\\S+)\\])? " + botUsername + " \\[(\\S+)\\]: .*");
-    const dcRegex = new RegExp("^Guild > (?:\\[(\\S+)\\])? " + botUsername + " \\[(\\S+)\\]: (\\S+) \\S .*");
+    const mcRegex = new RegExp("^Guild > (?:\\[(\\S+)\\] )?" + botUsername + " \\[(\\S+)\\]: .*");
+    const dcRegex = new RegExp("^Guild > (?:\\[(\\S+)\\] )?" + botUsername + " \\[(\\S+)\\]: (\\S+) \\S .*");
     if (jsonMsg.match(mcRegex) && !jsonMsg.match(dcRegex)) return;
-    if (match = jsonMsg.match(/^Guild > (?:\[(\S+)\])? (\S+) \[(\S+)\]: (.+) \S (.*)/)) {
+    if (match = jsonMsg.match(/^Guild > (?:\[(\S+)\] )?(\S+) \[(\S+)\]: (.+) \S (.*)/)) {
       for (const command of commands) {
         command.check(match[5], match[4], bot);
+        command.check(match[5], match[4], branch);
       }
     }
-    else if (match = jsonMsg.match(/^Guild > (?:\[(\S+)\])? (\S+) \[(\S+)\]: (.*)/)) {
+    else if (match = jsonMsg.match(/^Guild > (?:\[(\S+)\] )?(\S+) \[(\S+)\]: (.*)/)) {
       for (const command of commands) {
         command.check(match[4], match[2], bot);
+        command.check(match[4], match[2], branch);
       }
     }
 }

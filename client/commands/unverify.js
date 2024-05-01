@@ -28,6 +28,8 @@ export const data = {
 }
 
 const givenRoles = [
+  'Nope Ropes',
+  'Danger Noodles',
   'VIP',
   'VIP+',
   'MVP',

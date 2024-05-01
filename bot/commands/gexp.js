@@ -1,66 +1,13 @@
-const ranks = ['Member', 'Danger Noodle', 'Elite', 'Ironman', 'Bot', 'Guild Master']; //make " 'Ironman', 'Contributor', 'Bot' " @snailifyxd
+const ranks = ['Member', 'Danger Noodle', 'Elite', 'Ironman', 'Bot', 'Guild Master'];
 
 export default async function(bot, requestedPlayer) {
+  const name = bot.username == process.env.botUsername1 ? process.env.guild1 : process.env.guild2
   requestedPlayer = requestedPlayer.split(" ")[0];
-  let inactiveList = [];
-  if (requestedPlayer == 'all') {
-    const response = await fetch(`https://api.hypixel.net/v2/guild?key=${process.env.apiKey}&name=Nope%20Ropes`);
-    const json = await response.json();
-    let members = json.guild.members;
-    for (let member in members) {
-      member = members[member];
-      let rank = member.rank;
-      let totalGEXP = 0;
-      for (let day in member.expHistory) {
-        totalGEXP += member.expHistory[day];
-      }
-      if (rank != 'Ironman') {
-        let newRank;
-        if (totalGEXP >= 100000) {
-          if (totalGEXP >= 200000) {
-            newRank = 'Elite';
-          }
-          else {
-            newRank = 'Danger Noodle';
-          }
-         }
-         else {
-          newRank = 'Member';
-          if (totalGEXP == 0) {
-            const response0 = await fetch(`https://api.mojang.com/user/profile/${member.uuid}`);
-            const json0 = await response0.json();
-            inactiveList.push(json0.name);
-          }
-         }
-         if (newRank != rank) {
-          const response0 = await fetch(`https://api.mojang.com/user/profile/${member.uuid}`);
-          const json0 = await response0.json();
-          let requestedUsername = json0.name;
-          bot.chat(`/g setrank ${requestedUsername} ${newRank}`);
-        }
-         const response1 = await fetch(`https://api.hypixel.net/v2/skyblock/profiles?key=${process.env.apiKey}&uuid=${member.uuid}`);
-         const json1 = await response1.json();
-         if (json1.success == true) {
-           for (let profile in json1.profiles) {
-             if (profile.game_mode == 'ironman') {
-               const response0 = await fetch(`https://api.mojang.com/user/profile/${member.uuid}`);
-               const json0 = await response0.json();
-               let name = json0.name;
-               bot.chat(`/g setrank ${name} ironman`);
-             }
-           }
-         }
-        }
-    }
-    bot.chat('Inactive members: ' + inactiveList.join(' '));
-    bot.lastMessage = ('Inactive members: ' + inactiveList.join(' '));
-  }
-  else {
   const response0 = await fetch(`https://api.mojang.com/users/profiles/minecraft/${requestedPlayer}`);
   const json0 = await response0.json();
   let uuid = json0.id;
   requestedPlayer = json0.name;
-  const response = await fetch(`https://api.hypixel.net/v2/guild?key=${process.env.apiKey}&name=Nope%20Ropes`);
+  const response = await fetch(`https://api.hypixel.net/v2/guild?key=${process.env.apiKey}&name=${name}`);
   const json = await response.json();
   let members = json.guild.members;
   let totalGEXP = 0;
@@ -94,5 +41,4 @@ export default async function(bot, requestedPlayer) {
     bot.chat(`/gc  ${requestedPlayer} joined ${joinDate}. 100k gexp for danger noodle, 200k for elite. Their gexp this week is ${totalGEXP.toLocaleString()}.`);
     bot.lastMessage = (`/gc  ${requestedPlayer} joined ${joinDate}. 100k gexp for danger noodle, 200k for elite. Their gexp this week is ${totalGEXP.toLocaleString()}.`);
   }, 250);
- }
 }

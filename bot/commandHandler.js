@@ -39,24 +39,33 @@ const aliases = {
 
 export default async function commands(bot, jsonMsg, botUsername) {
     let match;
-    if (match = jsonMsg.match(/^Guild > (?:\[(\S+)\])? (\S+) \[(\S+)\]: \.(\w+)( .*)?/)) {
+    if (match = jsonMsg.match(/^Guild > (?:\[(\S+)\] )?(\S+) \[(\S+)\]: \.(\S+)( .*)?/)) {
         let command = match[4];
         let requestedPlayer = match[5] || match[2];
         if (requestedPlayer.split('')[0] == ' ') requestedPlayer = requestedPlayer.substring(1);
         const executed = await getCommandAliases(command) || await importCommand(command);
-        if (executed) executed(bot, requestedPlayer, match[2], '/gc ');
-    } else if (match = jsonMsg.match(new RegExp("^Guild > (?:\\[(\\S+)\\])? " + botUsername + " \\[(\\S+)\\]: \\b(\\w+)\\b \\S \\.(\\w+)( .*)?"))) {
+        if (executed) {
+            executed(bot, requestedPlayer, match[2], '/gc ');
+            bot.lastCommand = command;
+        }
+    } else if (match = jsonMsg.match(new RegExp("^Guild > (?:\\[(\\S+)\\] )?" + botUsername + " \\[(\\S+)\\]: (\\S+) \\S \\.(\\S+)( .*)?"))) {
         let command = match[4];
         let requestedPlayer = match[5] || match[3];
         if (requestedPlayer.split('')[0] == ' ') requestedPlayer = requestedPlayer.substring(1);
         const executed = await getCommandAliases(command) || await importCommand(command);
-        if (executed) executed(bot, requestedPlayer, match[3], '/gc ');
+        if (executed) {
+            executed(bot, requestedPlayer, match[3], '/gc ');
+            bot.lastCommand = command;
+        }
     }
-    if (match = jsonMsg.match(/^Party > (?:\[(\S+)\])? (\S+): \.(\S+)( .*)?/)) {
+    if (match = jsonMsg.match(/^Party > (?:\[(\S+)\] )?(\S+): \.(\S+)( .*)?/)) {
         let command = match[3];
         let requestedPlayer = match[4] || match[2];
         if (requestedPlayer.split('')[0] == ' ') requestedPlayer = requestedPlayer.substring(1);
         const executed = await getCommandAliases(command) || await importCommand(command);
-        if (executed) executed(bot, requestedPlayer, match[2], '/pc ');
+        if (executed) {
+            executed(bot, requestedPlayer, match[2], '/pc ');
+            bot.lastCommand = command;
+        }
     }
 }

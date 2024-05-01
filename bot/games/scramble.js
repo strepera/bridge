@@ -6,7 +6,7 @@ String.prototype.shuffleWords = function () {
            .join(' ');
 }
 
-export default async function getScrambledWord(bot) {
+export default async function getScrambledWord(bot, branch) {
   const response = await fetch('https://api.hypixel.net/v2/resources/skyblock/items');
   const data = await response.json();
   const items = data.items;
@@ -16,12 +16,16 @@ export default async function getScrambledWord(bot) {
   console.log("Answer: " + global.randomItemName);
   bot.chat("/gc Unscramble for 2.5k coins! | " + shuffledItemName);
   bot.lastMessage = ("/gc Unscramble for 2.5k coins! | " + shuffledItemName);
+  branch.chat("/gc Unscramble for 2.5k coins! | " + shuffledItemName);
+  branch.lastMessage = ("/gc Unscramble for 2.5k coins! | " + shuffledItemName);
   global.randomItemName = global.randomItemName.toLowerCase();
   global.randomItemNameTimestamp = Date.now();
   setTimeout(() => {
    if (global.randomItemName) {
     bot.chat('/gc No one answered in time! The answer was "' + global.randomItemName + '"');
     bot.lastMessage = ('/gc No one answered in time! The answer was "' + global.randomItemName + '"');
+    branch.chat('/gc No one answered in time! The answer was "' + global.randomItemName + '"');
+    branch.lastMessage = ('/gc No one answered in time! The answer was "' + global.randomItemName + '"');
     delete global.randomItemName;
    }
    }, 30 * 1000);

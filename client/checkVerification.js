@@ -2,6 +2,8 @@ import getGist from './getGist.js';
 import fs from 'fs';
 
 const givenRoles = [
+  'Nope Ropes',
+  'Danger Noodles',
   'VIP',
   'VIP+',
   'MVP',
@@ -13,7 +15,7 @@ const givenRoles = [
   'Ironman'
 ]
 
-export async function checkVerification(member) {
+export async function checkVerification(member, bot, branch) {
   let checkedRoles = [];
   let ironman = false;
   const users = await getGist();
@@ -39,11 +41,13 @@ export async function checkVerification(member) {
       await member.roles.add(role).catch(() => console.error(member.user.username + ' has elevated permissions. Cannot set role.'));
       checkedRoles.push('Verified');
       try {
-          const response0 = await fetch(`https://api.hypixel.net/v2/guild?key=${process.env.apiKey}&name=Nope%20Ropes`);
+          const response0 = await fetch(`https://api.hypixel.net/v2/guild?key=${process.env.apiKey}&name=${process.env.guild1}`);
           const data0 = await response0.json();
           if (data0.guild && data0.guild.members) {
              for (let guildMember in data0.guild.members) {
                if (data0.guild.members[guildMember].uuid == user.uuid) {
+                 await member.roles.add(process.env.guild1role).catch(() => console.error(member.user.username + ' has elevated permissions. Cannot set role.'));
+                 checkedRoles.push(process.env.guild1.replaceAll('%20', ' '));
                  if (data0.guild.members[guildMember].rank != "Guild Master" && data0.guild.members[guildMember].rank != "Bot") {
                   const role = member.guild.roles.cache.find(r => r.name === data0.guild.members[guildMember].rank);
                   const response2 = await fetch(`https://api.hypixel.net/v2/skyblock/profiles?key=${process.env.apiKey}&uuid=${user.uuid}`);
@@ -71,7 +75,7 @@ export async function checkVerification(member) {
                      }
                      else {
                       await member.roles.add(role).catch(() => console.error(member.user.username + ' has elevated permissions. Cannot set role.'));
-                      checkedRoles.push(data0.guild.members[guildMember].rank)
+                      checkedRoles.push(data0.guild.members[guildMember].rank);
                      }
                    } else {
                      console.error(`Role not found for rank: ${data0.guild.members[guildMember].rank}`);
@@ -87,6 +91,57 @@ export async function checkVerification(member) {
       catch (e) {
         console.error(e);
       }
+      try {
+        const response0 = await fetch(`https://api.hypixel.net/v2/guild?key=${process.env.apiKey}&name=${process.env.guild2}`);
+        const data0 = await response0.json();
+        if (data0.guild && data0.guild.members) {
+           for (let guildMember in data0.guild.members) {
+             if (data0.guild.members[guildMember].uuid == user.uuid) {
+               await member.roles.add(process.env.guild2role).catch(() => console.error(member.user.username + ' has elevated permissions. Cannot set role.'));
+               checkedRoles.push(process.env.guild2.replaceAll('%20', ' '));
+               if (data0.guild.members[guildMember].rank != "Guild Master" && data0.guild.members[guildMember].rank != "Bot") {
+                const role = member.guild.roles.cache.find(r => r.name === data0.guild.members[guildMember].rank);
+                const response2 = await fetch(`https://api.hypixel.net/v2/skyblock/profiles?key=${process.env.apiKey}&uuid=${user.uuid}`);
+                const json2 = await response2.json();
+                if (json2.success == true) {
+                  for (let profile in json2.profiles) {
+                    if (json2.profiles[profile].game_mode == 'ironman' && json2.profiles[profile].selected == true) {
+                      const ironmanRole = member.guild.roles.cache.find(r => r.name === 'Ironman');
+                      await member.roles.add(ironmanRole).catch(() => console.error(member.user.username + ' has elevated permissions. Cannot set role.'));
+                      checkedRoles.push('Ironman');
+                      ironman = true;
+                      if (data0.guild.members[guildMember].rank != 'Ironman') {
+                        branch.chat('/g setrank ' + username + ' ironman');
+                      }
+                    }
+                  }
+                }
+                if (ironman == false) {
+                 if (role) {
+                   if (data0.guild.members[guildMember].rank == 'Ironman') {
+                    const eliteRole = await member.guild.roles.cache.find(r => r.name === 'Elite');
+                    await member.roles.add(eliteRole).catch(() => console.error(member.user.username + ' has elevated permissions. Cannot set role.'));
+                    checkedRoles.push('Elite');
+                    branch.chat('/g setrank ' + username + ' elite');
+                   }
+                   else {
+                    await member.roles.add(role).catch(() => console.error(member.user.username + ' has elevated permissions. Cannot set role.'));
+                    checkedRoles.push(data0.guild.members[guildMember].rank);
+                   }
+                 } else {
+                   console.error(`Role not found for rank: ${data0.guild.members[guildMember].rank}`);
+                 }
+                }
+               }
+             }
+           }
+        } else {
+           console.error('Guild or guild members not found in API response');
+        }
+    }
+    catch (e) {
+      console.error(e);
+    }
       try {
           const response1 = await fetch('https://api.hypixel.net/v2/player?key=' + process.env.apiKey + '&uuid=' + user.uuid);
           const data1 = await response1.json();

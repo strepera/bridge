@@ -67,7 +67,7 @@ export async function discord(bot, client, branch, welcomeChannel, bridgeChannel
         setInterval(() => {
             guild.members.fetch()
                 .then(members => {
-                    members.forEach(member => checkVerification(member))
+                    members.forEach(member => checkVerification(member, bot, branch))
                 })
         }, 3 * 60 * 60 * 1000);
     //start stock prices
@@ -102,6 +102,11 @@ export async function discord(bot, client, branch, welcomeChannel, bridgeChannel
 
     client.on('messageCreate', (message) => discordToMinecraft(bot, client, message, bridgeChannelId));
     client.on('messageCreate', (message) => discordToMinecraft(branch, client, message, bridgeChannelId));
+    client.on('messageCreate', (message) => {
+        if (message.channelId == '990192646981029940' && !message.author.bot) {
+            message.delete();
+        }
+    })
 
     client.on('interactionCreate', async interaction => {
         switch (interaction.customId) {
@@ -141,7 +146,7 @@ export async function discord(bot, client, branch, welcomeChannel, bridgeChannel
     })
     client.on('guildMemberAdd', async(member) => {
         await welcomeChannel.send('Welcome <@' + member.user.id + '>!');
-        checkVerification(member);
+        checkVerification(member, bot, branch);
     });
 
     client.on('guildMemberRemove', async(member) => {
