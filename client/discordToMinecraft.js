@@ -18,7 +18,7 @@ export default async function discordToMinecraft(bot, client, message, bridgeCha
       const repliedChannel = await client.channels.cache.get(message.reference.channelId);
       const repliedMessage = await repliedChannel.messages.fetch(message.reference.messageId);
       const repliedContent = await formatMessage(repliedMessage);
-      if (repliedMessage.webhookId) {
+      if (repliedMessage.webhookId || !repliedMessage.member) {
         user += `${repliedMessage.author.username}: ${repliedContent} ⤷ `;
       }
       else user += `${repliedMessage.member.displayName.split(' ')[0]}: ${repliedContent} ⤷ `;
@@ -40,25 +40,25 @@ function replaceEmojisWithNames(str) {
         return name ? `:${name}:` : match;
     });
   }
-  
-  async function formatMessage(message) {
-    if (message.stickers.size > 0) {
-      const newMsg = `:${message.stickers.first().name}:`;
-      return newMsg
-    }
-   
-    let newMsg = message.content.replace(/<@(\d+)>/g, (match, userId) => {
-      const mention = message.guild.members.cache.get(userId);
-      return mention ? `@${mention.displayName.split(' ')[0]}` : match;
-    }).replace(/\n/g, ' ').replace(/\bez\b/g, "e.z");
-   
-    newMsg = replaceEmojisWithNames(newMsg);
-   
-    if (message.attachments) {
-      message.attachments.forEach(attachment => {
-        newMsg += ` ${attachment.url}`;
-      })
-    }
-   
-    return newMsg;
+
+async function formatMessage(message) {
+  if (message.stickers.size > 0) {
+    const newMsg = `:${message.stickers.first().name}:`;
+    return newMsg
   }
+ 
+  let newMsg = message.content.replace(/<@(\d+)>/g, (match, userId) => {
+    const mention = message.guild.members.cache.get(userId);
+    return mention ? `@${mention.displayName.split(' ')[0]}` : match;
+  }).replace(/\n/g, ' ').replace(/\bez\b/g, "e.z");
+ 
+  newMsg = replaceEmojisWithNames(newMsg);
+ 
+  if (message.attachments) {
+    message.attachments.forEach(attachment => {
+      newMsg += ` ${attachment.url}`;
+    })
+  }
+ 
+  return newMsg;
+}

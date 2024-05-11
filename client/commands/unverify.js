@@ -36,9 +36,9 @@ const givenRoles = [
   'MVP+',
   'Verified',
   'Member',
+  'Snek',
   'Danger Noodle',
-  'Elite',
-  'Ironman'
+  'Nope Rope',
 ]
   
 const unverifiedEmbed = new MessageEmbed()

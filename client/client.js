@@ -70,15 +70,14 @@ export async function discord(bot, client, branch, welcomeChannel, bridgeChannel
                     members.forEach(member => checkVerification(member, bot, branch))
                 })
         }, 3 * 60 * 60 * 1000);
-    //start stock prices
-    const stocks = JSON.parse(await fs.promises.readFile('bot/stockPrices.json', 'utf8'));
 
     async function updateStockPrices() {
         var now = new Date();
         var nextHour = new Date(now.getFullYear(), now.getMonth(), now.getDate(), now.getHours() + 1, 0, 0, 0);
         var difference = nextHour - now;
 
-        setTimeout(() => {
+        setTimeout(async () => {
+            const stocks = JSON.parse(await fs.promises.readFile('bot/stockPrices.json', 'utf8'));
             for (const stock in stocks) {
                 const difference = stocks[stock].value / 100 * ranRange(-5, 5.5);
                 stocks[stock].value = Math.floor(stocks[stock].value + difference);
@@ -102,11 +101,6 @@ export async function discord(bot, client, branch, welcomeChannel, bridgeChannel
 
     client.on('messageCreate', (message) => discordToMinecraft(bot, client, message, bridgeChannelId));
     client.on('messageCreate', (message) => discordToMinecraft(branch, client, message, bridgeChannelId));
-    client.on('messageCreate', (message) => {
-        if (message.channelId == '990192646981029940' && !message.author.bot) {
-            message.delete();
-        }
-    })
 
     client.on('interactionCreate', async interaction => {
         switch (interaction.customId) {

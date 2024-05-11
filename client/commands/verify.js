@@ -1,122 +1,153 @@
 import { MessageEmbed } from "discord.js";
 import getGist from '../getGist.js'
 
-export async function func(interaction, options) {
-  try {
-      await interaction.deferReply();
-      let username = options.getString('username');
-      const response = await fetch('https://api.mojang.com/users/profiles/minecraft/' + username);
-      const data = await response.json();
-      const uuid = data.id;
-      username = data.name;
-
-      const hypixelResponse = await fetch('https://api.hypixel.net/v2/player?key=' + process.env.apiKey + '&uuid=' + uuid);
-      const hypixelData = await hypixelResponse.json();
-
-      if (hypixelData.success == true) {
-          if (hypixelData.player) {
-            if (hypixelData.player.socialMedia) {
-            const dcuser = interaction.user.username
-              if (dcuser == hypixelData.player.socialMedia.links.DISCORD) {
-                await updateGist(uuid, interaction, username);
-                await interaction.editReply({embeds: [new MessageEmbed()
-                    .setColor('#1EA863')
-                    .setTitle('Successfully linked')
-                    .setThumbnail('https://cdn.discordapp.com/avatars/1183752068490612796/f127b318f4429579fa0082e287c901fd.png?size=256?size=512')
-                    .setDescription(`**Minecraft:** ${username} \n**Discord:** ${dcuser}\nExample: \`\`/verify ${username}\`\` in this channel to verify.`)
-                ]})
-                await interaction.member.setNickname(username).catch(() => console.error(interaction.user.username + ' has elevated permissions. Cannot set nickname.'));
-                const role = await interaction.guild.roles.cache.find(r => r.name === 'Verified');
-                await interaction.member.roles.add(role).catch(() => console.error(interaction.user.username + ' has elevated permissions. Cannot set role.'));
-                try {
-                    const response0 = await fetch(`https://api.hypixel.net/v2/guild?key=${process.env.apiKey}&name=${process.env.guild1}`);
-                    const data0 = await response0.json();
-                    if (data0.guild && data0.guild.members) {
-                       for (let member in data0.guild.members) {
-                         if (data0.guild.members[member].uuid == uuid) {
-                           const guildRole = member.guild.roles.cache.find(r => r.name === process.env.guild1.replaceAll('%20', ' '));
-                           await member.roles.add(guildRole).catch(() => console.error(member.user.username + ' has elevated permissions. Cannot set role.'));
-                           if (data0.guild.members[member].rank != "Guild Master" && data0.guild.members[member].rank != "Bot") {
-                             const role = interaction.guild.roles.cache.find(r => r.name === data0.guild.members[member].rank);
-                             if (role) {
-                               await interaction.member.roles.add(role).catch(() => console.error(interaction.user.username + ' has elevated permissions. Cannot set role.'));
-                             } else {
-                               console.error(`Role not found for rank: ${data0.guild.members[member].rank}`);
-                             }
-                           }
-                         }
-                       }
-                    } else {
-                       console.error('Guild or guild members not found in API response');
-                    }
-                } catch (e) {
-                    console.error(e);
-                }
-                try {
-                  const response0 = await fetch(`https://api.hypixel.net/v2/guild?key=${process.env.apiKey}&name=${process.env.guild2}`);
-                  const data0 = await response0.json();
-                  if (data0.guild && data0.guild.members) {
-                     for (let member in data0.guild.members) {
-                       if (data0.guild.members[member].uuid == uuid) {
-                         const guildRole = member.guild.roles.cache.find(r => r.name === process.env.guild2.replaceAll('%20', ' '));
-                         await member.roles.add(guildRole).catch(() => console.error(member.user.username + ' has elevated permissions. Cannot set role.'));
-                         if (data0.guild.members[member].rank != "Guild Master" && data0.guild.members[member].rank != "Bot") {
-                           const role = interaction.guild.roles.cache.find(r => r.name === data0.guild.members[member].rank);
-                           if (role) {
-                             await interaction.member.roles.add(role).catch(() => console.error(interaction.user.username + ' has elevated permissions. Cannot set role.'));
-                           } else {
-                             console.error(`Role not found for rank: ${data0.guild.members[member].rank}`);
-                           }
-                         }
-                       }
-                     }
-                  } else {
-                     console.error('Guild or guild members not found in API response');
-                  }
-              } catch (e) {
-                  console.error(e);
-              }
-                try {
-                    const response1 = await fetch('https://api.hypixel.net/v2/player?key=' + process.env.apiKey + '&uuid=' + uuid);
-                    const data1 = await response1.json();
-                    const rank = data1.player.newPackageRank;
-                    const rankRole = await interaction.guild.roles.cache.find(r => r.name === rank.replaceAll('_PLUS', '+'));
-                    await interaction.member.roles.add(rankRole).catch(() => console.error(interaction.user.username + ' has elevated permissions. Cannot set role.'));
-                } catch (e) {
-                    console.error(e);
-                }
-                return;
-              } else {
-                await interaction.editReply({embeds: [new MessageEmbed()
-                    .setColor('#FF0000')
-                    .setTitle('Error Linking')
-                    .setThumbnail('https://cdn.discordapp.com/avatars/1183752068490612796/f127b318f4429579fa0082e287c901fd.png?size=256?size=512')
-                    .setDescription(`Your minecraft linked discord username did not match.\nTry this tutorial and link with \`\`${interaction.user.username}\`\`:\nhttps://www.youtube.com/watch?v=UresIQdoQHk`)]});
-                  return;
-              }
-            } else {
-                await interaction.editReply({embeds: [new MessageEmbed()
-                    .setColor('#FF0000')
-                    .setTitle('Error Linking')
-                    .setThumbnail('https://cdn.discordapp.com/avatars/1183752068490612796/f127b318f4429579fa0082e287c901fd.png?size=256?size=512')
-                    .setDescription(`Your minecraft linked discord username did not match.\nTry this tutorial and link with \`\`${interaction.user.username}\`\`:\nhttps://www.youtube.com/watch?v=UresIQdoQHk`)]});
-                  return;
-            }
-          } else {
-              await interaction.editReply({
-                  embeds: [invalidEmbed]
-              });
-              return;
-          }
-      } else {
-          await interaction.editReply({
-              embeds: [invalidEmbed]
-          });
-          return;
+async function setNickname(interaction, guild, uuid, username, guildRoleId) {
+  const guildResponse = await fetch(`https://api.hypixel.net/v2/guild?key=${process.env.apiKey}&name=${guild}`);
+  const guildData = await guildResponse.json();
+  if (!guildData.guild || !guildData.guild.members) return;
+  let memberFound = false;
+  for (const member of guildData.guild.members) {
+    if (member.uuid == uuid) {
+      memberFound = true;
+      await interaction.member.setNickname(username + ' ' + toSuperscript(member.rank.toLowerCase())).catch(() => console.error(interaction.user.username + ' has elevated permissions. Cannot set nickname.'));
+      await interaction.member.roles.add(guildRoleId).catch(() => console.error(interaction.member.user.username + ' has elevated permissions. Cannot set role.'));
+      const role = await interaction.guild.roles.cache.find(r => r.name === 'Verified');
+      await interaction.member.roles.add(role).catch(() => console.error(interaction.user.username + ' has elevated permissions. Cannot set role.'));
+      if (member.rank != "Guild Master" && member.rank != "Bot") {
+        const role = interaction.guild.roles.cache.find(r => r.name === member.rank);
+        if (role) {
+          await interaction.member.roles.add(role).catch(() => console.error(interaction.user.username + ' has elevated permissions. Cannot set role.'));
+        } else {
+          console.error(`Role not found for rank: ${member.rank}`);
+        }
       }
-  } catch (e) {
-      console.error(e);
+      return;
+    }
   }
+  if (memberFound) {
+    await interaction.member.setNickname(username).catch(() => console.error(interaction.user.username + ' has elevated permissions. Cannot set nickname.'));
+  }
+  const role = await interaction.guild.roles.cache.find(r => r.name === 'Verified');
+  await interaction.member.roles.add(role).catch(() => console.error(interaction.user.username + ' has elevated permissions. Cannot set role.'));
+}
+
+const superscriptMap = {
+  "0": "⁰",
+  "1": "¹",
+  "2": "²",
+  "3": "³",
+  "4": "⁴",
+  "5": "⁵",
+  "6": "⁶",
+  "7": "⁷",
+  "8": "⁸",
+  "9": "⁹",
+  "+": "⁺",
+  "-": "⁻",
+  "=": "⁼",
+  "(": "⁽",
+  ")": "⁾",
+  "n": "ⁿ",
+  "x": "ˣ",
+  "y": "ʸ",
+  "z": "ᶻ",
+  "a": "ᵃ",
+  "b": "ᵇ",
+  "c": "ᶜ",
+  "d": "ᵈ",
+  "e": "ᵉ",
+  "f": "ᶠ",
+  "g": "ᵍ",
+  "h": "ʰ",
+  "i": "ⁱ",
+  "j": "ʲ",
+  "k": "ᵏ",
+  "l": "ˡ",
+  "m": "ᵐ",
+  "n": "ⁿ",
+  "o": "ᵒ",
+  "p": "ᵖ",
+  "r": "ʳ",
+  "s": "ˢ",
+  "t": "ᵗ",
+  "u": "ᵘ",
+  "v": "ᵛ",
+  "w": "ʷ",
+  "x": "ˣ",
+  "y": "ʸ",
+  "z": "ᶻ"
+}
+
+function toSuperscript(input) {
+  let result = '';
+  for (let char of input) {
+     if (superscriptMap[char]) {
+       result += superscriptMap[char];
+     } else {
+       result += char;
+     }
+  }
+  return result;
+} 
+
+async function addRankRole(interaction, uuid) {
+    const response1 = await fetch('https://api.hypixel.net/v2/player?key=' + process.env.apiKey + '&uuid=' + uuid);
+    const data1 = await response1.json();
+    const rank = data1.player.newPackageRank;
+    if (rank) {
+      const rankRole = await interaction.guild.roles.cache.find(r => r.name === rank.replaceAll('_PLUS', '+'));
+      await interaction.member.roles.add(rankRole).catch(() => console.error(interaction.user.username + ' has elevated permissions. Cannot set role.'));
+    }
+}
+
+export async function func(interaction, options) {
+  await interaction.deferReply();
+  const dcuser = interaction.user.username;
+  let username = options.getString('username');
+  const response = await fetch('https://api.mojang.com/users/profiles/minecraft/' + username);
+  const data = await response.json();
+  const uuid = data.id;
+  username = data.name;
+
+  const hypixelResponse = await fetch('https://api.hypixel.net/v2/player?key=' + process.env.apiKey + '&uuid=' + uuid);
+  const hypixelData = await hypixelResponse.json();
+  
+  if (!hypixelData.success || !hypixelData.player) {
+    return interaction.editReply({
+      embeds: [new MessageEmbed()
+        .setColor('#FF0000')
+        .setTitle('Invalid Username')
+        .setThumbnail('https://cdn.discordapp.com/avatars/1183752068490612796/f127b318f4429579fa0082e287c901fd.png?size=256?size=512')
+        .setDescription(`Player \`\`${username}\`\` doesn't exist or doesn't play hypixel.`)]
+    });
+  }
+
+  if (!hypixelData.player.socialMedia || dcuser != hypixelData.player.socialMedia.links.DISCORD) {
+    return interaction.editReply({ embeds: [new MessageEmbed()
+      .setColor('#FF0000')
+      .setTitle('Error Linking')
+      .setThumbnail('https://cdn.discordapp.com/avatars/1183752068490612796/f127b318f4429579fa0082e287c901fd.png?size=256?size=512')
+      .setDescription(`Your minecraft linked discord username did not match.
+      Type this in minecraft: \`\`${interaction.user.username}\`\`
+      Minecraft username: \`\`${username}\`\`
+      `)
+      .setImage('https://imgur.com/vvegsn6.gif')
+      ]});
+  }
+
+  if (await updateGist(uuid, interaction, username)) return;
+
+  await interaction.editReply({embeds: [new MessageEmbed()
+      .setColor('#1EA863')
+      .setTitle('Successfully linked')
+      .setThumbnail('https://cdn.discordapp.com/avatars/1183752068490612796/f127b318f4429579fa0082e287c901fd.png?size=256?size=512')
+      .setDescription(`**Minecraft:** ${username} \n**Discord:** ${dcuser}\nExample: \`\`/verify ${username}\`\` in this channel to verify.`)
+  ]})
+  
+  await setNickname(interaction, process.env.guild1, uuid, username);
+  await setNickname(interaction, process.env.guild2, uuid, username);
+  await addRankRole(interaction, uuid);
+
 }
 
 async function updateGist(uuid, interaction, username) {
@@ -131,7 +162,7 @@ async function updateGist(uuid, interaction, username) {
             .setThumbnail('https://cdn.discordapp.com/avatars/1183752068490612796/f127b318f4429579fa0082e287c901fd.png?size=256?size=512')
             .setDescription('You are already verified.');
             interaction.editReply({embeds:[embed]});
-            return;
+            return true;
         }
     }
 
@@ -154,9 +185,3 @@ export const data = {
         required: true
     }]
 }
-
-const invalidEmbed = new MessageEmbed()
-.setColor('#FF0000')
-.setTitle('Invalid Username')
-.setThumbnail('https://cdn.discordapp.com/avatars/1183752068490612796/f127b318f4429579fa0082e287c901fd.png?size=256?size=512')
-.setDescription("Player doesn't exist or doesn't play hypixel.")

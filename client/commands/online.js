@@ -9,7 +9,7 @@ export async function func(interaction, options, bot, branch) {
 
     function checkOnlineEmbed(interaction) {
         if (global.onlineEmbed != undefined) {
-          interaction.reply({embeds: [global.onlineEmbed]});
+          interaction.reply({embeds: [global.onlineEmbed.embed]});
           delete global.onlineEmbed;
         }
         else {

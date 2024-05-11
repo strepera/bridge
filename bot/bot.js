@@ -54,13 +54,22 @@ export async function minecraft(bot, client, bridgeWebhook, logWebhook, punishWe
     let match;
     if (match = jsonMsg.match(/^Guild > (?:\[(\S+)\] )?(\S+) \[(\S+)\]: (.+)/)) {
       if (match[2] != process.env.botUsername1) {
-        branch.chat('[NR] ' + match[2] + ' : ' + match[4]);
-        branch.lastMessage = ('[NR] ' + match[2] + ' : ' + match[4]);
+        branch.chat(process.env.guild1prefix + match[2] + ' : ' + match[4]);
+        branch.lastMessage = (process.env.guild1prefix + match[2] + ' : ' + match[4]);
       }
     }
     if (match = jsonMsg.match(/^Guild > (\S+) (joined.|left.)/)) {
-      branch.chat('[NR] ' + match[1] + ' ' + match[2] + ' (' + global.onlinePlayers + '/' + global.totalPlayers + ')');
-      branch.lastMessage = ('[NR] ' + match[1] + ' ' + match[2] + ' (' + global.onlinePlayers + '/' + global.totalPlayers + ')');
+      global.onlinePlayers = match[2] == 'joined.' ? global.onlinePlayers += 1 : global.onlinePlayers -= 1;
+      branch.chat(process.env.guild1prefix + match[1] + ' ' + match[2] + ' (' + global.onlinePlayers + '/' + global.totalPlayers + ')');
+      branch.lastMessage = (process.env.guild1prefix + match[1] + ' ' + match[2] + ' (' + global.onlinePlayers + '/' + global.totalPlayers + ')');
+    }
+    if (match = jsonMsg.match(/^(?:\[(\S+)\] )?(\S+) joined the guild!/)) {
+      branch.chat(process.env.guild1prefix + match[2] + ' joined the guild!');
+      branch.lastMessage = (process.env.guild1prefix + match[2] + ' joined the guild!');
+    }
+    if (match = jsonMsg.match(/^(?:\[(\S+)\] )?(\S+) left the guild!/)) {
+      branch.chat(process.env.guild1prefix + match[2] + ' left the guild!');
+      branch.lastMessage = (process.env.guild1prefix + match[2] + ' left the guild!');
     }
     checkAnswer(bot, branch, jsonMsg, process.env.botUsername1);
     messagestr(jsonMsg, bot, process.env.botUsername1);
@@ -70,13 +79,22 @@ export async function minecraft(bot, client, bridgeWebhook, logWebhook, punishWe
     let match;
     if (match = jsonMsg.match(/^Guild > (?:\[(\S+)\] )?(\S+) \[(\S+)\]: (.+)/)) {
       if (match[2] != process.env.botUsername2) {
-        bot.chat('[DN] ' + match[2] + ' : ' + match[4]);
-        bot.lastMessage = ('[DN] ' + match[2] + ' : ' + match[4]);
+        bot.chat(process.env.guild2prefix + match[2] + ' : ' + match[4]);
+        bot.lastMessage = (process.env.guild2prefix + match[2] + ' : ' + match[4]);
       }
     }
     if (match = jsonMsg.match(/^Guild > (\S+) (joined.|left.)/)) {
-      bot.chat('[DN] ' + match[1] + ' '+ match[2] + ' (' + global.onlinePlayers + '/' + global.totalPlayers + ')');
-      bot.lastMessage = ('[DN] ' + match[1] + ' ' + match[2] + ' (' + global.onlinePlayers + '/' + global.totalPlayers + ')');
+      global.onlinePlayers = match[2] == 'joined.' ? global.onlinePlayers += 1 : global.onlinePlayers -= 1;
+      bot.chat(process.env.guild2prefix + match[1] + ' '+ match[2] + ' (' + global.onlinePlayers + '/' + global.totalPlayers + ')');
+      bot.lastMessage = (process.env.guild2prefix + match[1] + ' ' + match[2] + ' (' + global.onlinePlayers + '/' + global.totalPlayers + ')');
+    }
+    if (match = jsonMsg.match(/^(?:\[(\S+)\] )?(\S+) joined the guild!/)) {
+      bot.chat(process.env.guild2prefix + match[2] + ' joined the guild!');
+      bot.lastMessage = (process.env.guild2prefix + match[2] + ' joined the guild!');
+    }
+    if (match = jsonMsg.match(/^(?:\[(\S+)\] )?(\S+) left the guild!/)) {
+      bot.chat(process.env.guild2prefix + match[2] + ' left the guild!');
+      bot.lastMessage = (process.env.guild2prefix + match[2] + ' left the guild!');
     }
     checkAnswer(bot, branch, jsonMsg, process.env.botUsername2);
     messagestr(jsonMsg, branch, process.env.botUsername2);
@@ -113,9 +131,8 @@ export async function minecraft(bot, client, bridgeWebhook, logWebhook, punishWe
   
     //check if the message was blocked
     if (jsonMsg == 'You cannot say the same message twice!' || jsonMsg == 'You are sending commands too fast! Please slow down.') {
-      console.log(bot.lastMessage);
-      bot.chat(bot.lastMessage + ' \\\\\\\\');
-      bot.lastMessage = (bot.lastMessage + ' \\\\\\\\');
+      bot.chat(bot.lastMessage + ' ' + generateRandomNonNumericString(8));
+      bot.lastMessage = (bot.lastMessage + ' ' + generateRandomNonNumericString(8));
       return;
     }
     if (jsonMsg == 'Advertising is against the rules. You will receive a punishment on the server if you attempt to advertise.') {
@@ -142,4 +159,14 @@ export async function minecraft(bot, client, bridgeWebhook, logWebhook, punishWe
       }
     };
   }
+}
+
+function generateRandomNonNumericString(length) {
+  let result = '';
+  const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
+  const charactersLength = characters.length;
+  for (let i = 0; i < length; i++) {
+      result += characters.charAt(Math.floor(Math.random() * charactersLength));
+  }
+  return result;
 }

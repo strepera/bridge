@@ -32,7 +32,7 @@ export default async function stock(bot, request, player, chat) {
             if (!stocks[stockType].ownership[player.toLowerCase()]) stocks[stockType].ownership[player.toLowerCase()] = buyAmount;
             else stocks[stockType].ownership[player.toLowerCase()] += buyAmount;
             playerData[player.toLowerCase()].coins -= stocks[stockType].value * buyAmount;
-            msg("Bought " + buyAmount + ' ' + stocks[stockType].name + ' stocks for $' + stocks[stockType].value * buyAmount);
+            msg("Bought [" + buyAmount + '] ' + stocks[stockType].name + ' stocks for $' + stocks[stockType].value * buyAmount);
             fs.writeFileSync('bot/playerData.json', JSON.stringify(playerData, null, 2));
             fs.writeFileSync('bot/stockPrices.json', JSON.stringify(stocks, null, 2));
             break;
@@ -49,7 +49,7 @@ export default async function stock(bot, request, player, chat) {
             stocks[stockType].ownership[player.toLowerCase()] -= sellAmount;
             if (stocks[stockType].ownership[player.toLowerCase()] == 0) delete stocks[stockType].ownership[player];
             playerData[player.toLowerCase()].coins += stocks[stockType].value * sellAmount;
-            msg("Sold " + sellAmount + ' ' + stocks[stockType].name + ' stocks and gained $' + stocks[stockType].value * sellAmount);
+            msg("Sold [" + sellAmount + '] ' + stocks[stockType].name + ' stocks and gained $' + stocks[stockType].value * sellAmount);
             fs.writeFileSync('bot/playerData.json', JSON.stringify(playerData, null, 2));
             fs.writeFileSync('bot/stockPrices.json', JSON.stringify(stocks, null, 2));
             break;

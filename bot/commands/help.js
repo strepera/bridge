@@ -22,11 +22,12 @@ export default function help(bot, request, player) {
     "info": () => chat("/gc Usage .info {player} | e.g. .info snailify"),
     "jacob": () => chat("/gc Usage .jacob {player} | e.g. .jacob snailify"),
     "joke": () => chat("/gc Usage .joke | Output | (random setup then punchline)"),
+    "leaderboard": () => chat("/gc Usage .lb {player in guild} {leaderboard type} | Types | gexp, nw, level"),
     "math": () => chat("/gc Usage .math {question} | e.g. .math 5 x 6"),
     "mayor": () => chat("/gc Usage .mayor | Output | Current mayor and next mayor with perks"),
     "mp": () => chat("/gc Usage .mp {player} | e.g. .mp snailify"),
     "networth": () => chat("/gc Usage .networth {player} | e.g. .networth snailify"),
-    "online": () => chat("/gc Usage .online {player} | Output | {player} is in SKYBLOCK - {island}"),
+    "online": () => chat("/gc Usage .online {player} or .online | Output | {player} is in SKYBLOCK - {island} or the people online in the other guild."),
     "patchnotes": () => chat("/gc Usage .patchnotes | Output | (most recent patchnotes)"),
     "players": () => chat("/gc Usage .players | Output | (amount of players in each skyblock island)"),
     "random": () => chat("/gc Usage .random {number 1-15} | Output | (that many guild users)"),
@@ -37,7 +38,7 @@ export default function help(bot, request, player) {
     "wiki": () => chat("/gc Usage .wiki {item/npc/location/anything} | e.g. .wiki plasmaflux power orb")
   }
   if (request == player) {
-    chat('Prefix "." | Commands | 8ball cata coinflip contest dice discord pay event fps gexp guild help info jacob joke math mayor mp networth online patchnotes players random skills slayer speeds uuid wiki')
+    chat('Prefix "." | Commands | 8ball cata coinflip contest dice discord pay event fps gexp guild help info jacob joke leaderboard math mayor mp networth online patchnotes players random skills slayer speeds uuid wiki')
   }
   else if (messages[request]) {
     messages[request]();

@@ -1,5 +1,5 @@
 export async function func(interaction, options, bot, branch) {
-    if (interaction.user.id != process.env.ownerId) return;
+    if (interaction.user.id != process.env.ownerId) return interaction.reply({content: 'You do not have permission to use this command.'});
     const message = options.getString('message');
     const guild = options.getString('guild');
     if (guild.toLowerCase() == 'nope ropes') {

@@ -4,7 +4,7 @@ function formatNumber(num) {
   if (num >= 1000000000) return (num / 1000000000).toFixed(2) + "B";
   if (num >= 1000000) return (num / 1000000).toFixed(2) + "M";
   if (num >= 1000) return (num / 1000).toFixed(2) + "K";
-  return num;
+  return num.toFixed(2);
 }
 
 async function getNetworth(bot, requestedPlayer) {
@@ -30,14 +30,26 @@ async function getNetworth(bot, requestedPlayer) {
     }
     if (selectedProfileId === undefined) {return}
     const museumResponse = await fetch(`https://api.hypixel.net/v2/skyblock/museum?key=${process.env.apiKey}&uuid=${uuid}&profile=${selectedProfileId}`);
-    const museumData = await museumResponse.json();
+    const museumJson = await museumResponse.json();
+    const museumData = museumJson.members[uuid];
+    const longNetworthObj = await skyhelper.getNetworth(profileData, bankBalance, { v2Endpoint: true, cache: false, onlyNetworth: false, museumData});
     const networth = await skyhelper.getNetworth(profileData, bankBalance, { v2Endpoint: true, onlyNetworth: true, museumData });
     let num = parseInt(networth.networth.toLocaleString().replace(/,/g, ""));
     let shortenedNetworth = `${Math.round(networth.networth.toLocaleString())} (${formatNumber(num)})`;
     let lengthenedNetworth = Math.round(networth.networth).toLocaleString();
     lengthenedNetworth = lengthenedNetworth.replaceAll(",", " ");
-    bot.chat(`/gc ${requestedPlayer}'s networth is ${lengthenedNetworth}${shortenedNetworth.replaceAll('NaN', '')}.`);
-    bot.lastMessage = (`/gc ${requestedPlayer}'s networth is ${lengthenedNetworth}${shortenedNetworth.replaceAll('NaN', '')}.`);
+    const equipment = formatNumber(longNetworthObj.types.armor.total + longNetworthObj.types.equipment.total + longNetworthObj.types.wardrobe.total);
+    const purse = formatNumber(longNetworthObj.purse);
+    const bank = formatNumber(longNetworthObj.bank);
+    const essence = formatNumber(longNetworthObj.types.essence.total);
+    const items = formatNumber(longNetworthObj.types.inventory.total + longNetworthObj.types.enderchest.total + longNetworthObj.types.personal_vault.total
+       + longNetworthObj.types.fishing_bag.total + longNetworthObj.types.potion_bag.total + longNetworthObj.types.candy_inventory.total);
+    const pets = formatNumber(longNetworthObj.types.pets.total);
+    const accessories = formatNumber(longNetworthObj.types.accessories.total);
+    const museum = formatNumber(longNetworthObj.types.museum.total);
+    const breakdown = `Purse: ${purse} Bank: ${bank} Essence: ${essence} Equipment: ${equipment} Items: ${items} Pets: ${pets} Accessories: ${accessories} Museum: ${museum}`;
+    bot.chat(`/gc ${requestedPlayer}'s networth${shortenedNetworth.replaceAll('NaN', '')} breakdown: ${breakdown}`);
+    bot.lastMessage = (`/gc ${requestedPlayer}'s networth ${shortenedNetworth.replaceAll('NaN', '')} breakdown: ${breakdown}`);
   }
   else {
     bot.chat("/gc Invalid user " + requestedPlayer);

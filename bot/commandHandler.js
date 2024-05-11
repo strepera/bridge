@@ -34,7 +34,8 @@ const aliases = {
     'cf': 'coinflip',
     'dono': 'donate',
     'pay': 'donate',
-    'stocks': 'stock'
+    'stocks': 'stock',
+    'lb': 'leaderboard'
 };
 
 export default async function commands(bot, jsonMsg, botUsername) {
@@ -46,7 +47,7 @@ export default async function commands(bot, jsonMsg, botUsername) {
         const executed = await getCommandAliases(command) || await importCommand(command);
         if (executed) {
             executed(bot, requestedPlayer, match[2], '/gc ');
-            bot.lastCommand = command;
+            bot.lastCommand = command + ' ' + requestedPlayer;
         }
     } else if (match = jsonMsg.match(new RegExp("^Guild > (?:\\[(\\S+)\\] )?" + botUsername + " \\[(\\S+)\\]: (\\S+) \\S \\.(\\S+)( .*)?"))) {
         let command = match[4];
@@ -55,7 +56,7 @@ export default async function commands(bot, jsonMsg, botUsername) {
         const executed = await getCommandAliases(command) || await importCommand(command);
         if (executed) {
             executed(bot, requestedPlayer, match[3], '/gc ');
-            bot.lastCommand = command;
+            bot.lastCommand = command + ' ' + requestedPlayer;
         }
     }
     if (match = jsonMsg.match(/^Party > (?:\[(\S+)\] )?(\S+): \.(\S+)( .*)?/)) {
@@ -65,7 +66,7 @@ export default async function commands(bot, jsonMsg, botUsername) {
         const executed = await getCommandAliases(command) || await importCommand(command);
         if (executed) {
             executed(bot, requestedPlayer, match[2], '/pc ');
-            bot.lastCommand = command;
+            bot.lastCommand = command + ' ' + requestedPlayer;
         }
     }
 }

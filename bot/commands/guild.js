@@ -1,4 +1,5 @@
-export default async function getGuildData(bot, requestedPlayer, level) {
+export default async function getGuildData(bot, requestedPlayer, playerExecuted, chat) {
+    let level = 0;
     requestedPlayer = requestedPlayer.replaceAll(' ', '%20');
     const response = await fetch(`https://api.hypixel.net/v2/guild?key=${process.env.apiKey}&name=${requestedPlayer}`);
     const json = await response.json();
@@ -9,13 +10,13 @@ export default async function getGuildData(bot, requestedPlayer, level) {
         const response = await fetch(`https://api.hypixel.net/v2/guild?key=${process.env.apiKey}&player=${uuid}`);
         const json = await response.json();
         if (json.success != true) {
-            bot.chat('/gc Invalid guild/player');
-            bot.lastMessage = ('/gc Invalid guild/player');
+            bot.chat(chat + 'Invalid guild/player');
+            bot.lastMessage = (chat + 'Invalid guild/player');
             return;
         }
         if (json.guild == null) {
-            bot.chat('/gc Player is not in a guild');
-            bot.lastMessage = ('/gc Player is not in a guild');
+            bot.chat(chat + 'Player is not in a guild');
+            bot.lastMessage = (chat + 'Player is not in a guild');
             return;
         }
         const name = json.guild.name;
@@ -43,8 +44,8 @@ export default async function getGuildData(bot, requestedPlayer, level) {
                 return acc;
             }) * 100) / 100;
         }
-        bot.chat(`/gc ${name} [${tag}] [${level}] created ${created} by ${leader} (${members}/125)`);
-        bot.lastMessage = (`/gc ${name} [${tag}] [${level}] created ${created} by ${leader} (${members}/125)`);
+        bot.chat(`${chat}${name} [${tag}] [${level}] created ${created} by ${leader} (${members}/125)`);
+        bot.lastMessage = (`${chat}${name} [${tag}] [${level}] created ${created} by ${leader} (${members}/125)`);
         return;
     }
     else if (json.success == true) {
@@ -73,8 +74,8 @@ export default async function getGuildData(bot, requestedPlayer, level) {
                 return acc;
             }) * 100) / 100;
         }
-        bot.chat(`/gc ${name} [${tag}] [${level}] created ${created} by ${leader} (${members}/125)`);
-        bot.lastMessage = (`/gc ${name} [${tag}] [${level}] created ${created} by ${leader} (${members}/125)`);
+        bot.chat(`${chat}${name} [${tag}] [${level}] created ${created} by ${leader} (${members}/125)`);
+        bot.lastMessage = (`${chat}${name} [${tag}] [${level}] created ${created} by ${leader} (${members}/125)`);
         return;
     }
 }

@@ -9,7 +9,36 @@ const readability = {
   'dynamic': 'Private Island'
 }
 
-export default async function(bot, requestedPlayer) {
+import { bot as main } from '../../index.js';
+import { branch as branch } from '../../index.js';
+
+export default async function(bot, requestedPlayer, player, chat) {
+  if (requestedPlayer == player) {
+    if (bot.username == process.env.botUsername1) {
+      branch.chat('/g online');
+    }
+    else {
+      main.chat('/g online');
+    }
+    async function checkOnlineEmbed() {
+      console.log(global.onlineEmbed);
+      if (global.onlineEmbed != undefined) {
+        bot.chat(chat + global.onlineEmbed.name + ' (' + global.onlineEmbed.online + '/' + global.onlineEmbed.total + ')');
+        bot.lastMessage = (chat + global.onlineEmbed.name + ' (' + global.onlineEmbed.online + '/' + global.onlineEmbed.total + ')');
+        bot.chat('/t ' + player + ' Players: ' + global.onlineEmbed.players.join(', '));
+        bot.lastMessage = ('/t ' + player + ' Players: ' + global.onlineEmbed.players.join(', '));
+        delete global.onlineEmbed;
+        return;
+      }
+      else {
+        setTimeout(async () => {
+          await checkOnlineEmbed();
+        }, 500);
+      }
+    }
+    await checkOnlineEmbed();
+    return;
+  }
   let uuid;
   requestedPlayer = requestedPlayer.split(' ')[0];
   try {
@@ -31,17 +60,17 @@ export default async function(bot, requestedPlayer) {
               modeParts[part] = modeParts[part][0].toUpperCase() + modeParts[part].slice(1);
           }
           mode = modeParts.join(' ');
-          bot.chat(`/gc ${requestedPlayer} is in ${gameType} - ${mode}`);
-          bot.lastMessage = (`/gc ${requestedPlayer} is in ${gameType} - ${mode}`);
+          bot.chat(`${chat}${requestedPlayer} is in ${gameType} - ${mode}`);
+          bot.lastMessage = (`${chat}${requestedPlayer} is in ${gameType} - ${mode}`);
         }
         else {
-            bot.chat(`/gc ${requestedPlayer} is offline.`);
-            bot.lastMessage = (`/gc ${requestedPlayer} is offline.`);
+            bot.chat(`${chat}${requestedPlayer} is offline.`);
+            bot.lastMessage = (`${chaT}${requestedPlayer} is offline.`);
         }
       }
       else {
-        bot.chat('Invalid player.');
-        bot.lastMessage = ('Invalid player.');
+        bot.chat(chat + 'Invalid player.');
+        bot.lastMessage = (chat + 'Invalid player.');
       }
   } catch (error) {
       console.error('Error:', error);
