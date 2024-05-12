@@ -21,7 +21,6 @@ export default async function(bot, requestedPlayer, player, chat) {
       main.chat('/g online');
     }
     async function checkOnlineEmbed() {
-      console.log(global.onlineEmbed);
       if (global.onlineEmbed != undefined) {
         bot.chat(chat + global.onlineEmbed.name + ' (' + global.onlineEmbed.online + '/' + global.onlineEmbed.total + ')');
         bot.lastMessage = (chat + global.onlineEmbed.name + ' (' + global.onlineEmbed.online + '/' + global.onlineEmbed.total + ')');
@@ -32,11 +31,11 @@ export default async function(bot, requestedPlayer, player, chat) {
       }
       else {
         setTimeout(async () => {
-          await checkOnlineEmbed();
+          checkOnlineEmbed();
         }, 500);
       }
     }
-    await checkOnlineEmbed();
+    checkOnlineEmbed();
     return;
   }
   let uuid;

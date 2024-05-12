@@ -129,9 +129,13 @@ export async function checkVerification(member, bot, branch) {
     const lowerName = mojangData.name.toLowerCase();
 
     const playerData = JSON.parse(await fs.promises.readFile('bot/playerData.json', 'utf8'));
-    playerData[oldName.toLowerCase()].username = lowerName;
+    if (playerData[oldName.toLowerCase()]) {
+      playerData[oldName.toLowerCase()].username = lowerName;
+    }
     playerData[lowerName] = playerData[oldName.toLowerCase()];
-    delete playerData[oldName.toLowerCase()];
+    if (playerData[oldName.toLowerCase()]) {
+      delete playerData[oldName.toLowerCase()];
+    }
     fs.writeFileSync('bot/playerData.json', JSON.stringify(playerData, null, 2));
   }
 
