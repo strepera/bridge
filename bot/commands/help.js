@@ -10,12 +10,15 @@ export default function help(bot, request, player) {
     "cata": () => chat("/gc Usage Use .cata 1 for cata info help, use .cata 2 for cata calc help."),
     "cata 1": () => chat("/gc Usage .cata {player} | e.g. .cata snailify"),
     "cata 2": () => chat("/gc Usage .cata {player} calc {level} {floor} {hecatomb/ring} | e.g. .cata snailify calc 50 m7 hecatomb ring"),
+    "cf": () => chat("/gc Usage .cf {player} | Shows cf info for player"),
+    "class": () => chat("/gc Usage .class {player} | e.g. .class snailify"),
     "coinflip": () => chat("/gc Usage .coinflip {amount} {heads/tails} | e.g. .coinflip 100 tails"),
     "contest": () => chat("/gc Usage .contest | Output | The next contest is {crop}, {crop}, {crop}. It will start in {minutes} minutes."),
     "dice": () => chat("/gc Usage .dice {amount} | e.g. .dice 100"),
     "discord": () => chat("/gc Usage .discord | Output | The discord link is https://discord.com/invite/VeB4Z9C"),
     "pay": () => chat("/gc Usage .pay {player} {amount} | e.g. .pay snailify 1000"),
     "event": () => chat("/gc Usage .event {jerry/spooky} | e.g. .event jerry"),
+    "fish": () => chat("/gc Usage .fish | Gives random amount of coins"),
     "fps": () => chat("/gc Usage .fps | Output | https://www.youtube.com/watch?v=io4wESYYBwk&t=7s"),
     "gexp": () => chat("/gc Usage .gexp {player} | e.g. .gexp snailify"),
     "guild": () => chat("/gc Usage .guild {player/guild} | e.g. .guild Nope Ropes"),
@@ -30,6 +33,7 @@ export default function help(bot, request, player) {
     "online": () => chat("/gc Usage .online {player} or .online | Output | {player} is in SKYBLOCK - {island} or the people online in the other guild."),
     "patchnotes": () => chat("/gc Usage .patchnotes | Output | (most recent patchnotes)"),
     "players": () => chat("/gc Usage .players | Output | (amount of players in each skyblock island)"),
+    "profile": () => chat("/gc Usage .profile {player} {profile} | e.g. .profile snailify peach"),
     "random": () => chat("/gc Usage .random {number 1-15} | Output | (that many guild users)"),
     "skills": () => chat("/gc Usage .skills {player} {profile} | e.g. .skills snailify peach"),
     "slayer": () => chat("/gc Usage .slayer {player} {profile} | e.g. .slayer snailify peach"),
@@ -38,7 +42,7 @@ export default function help(bot, request, player) {
     "wiki": () => chat("/gc Usage .wiki {item/npc/location/anything} | e.g. .wiki plasmaflux power orb")
   }
   if (request == player) {
-    chat('Prefix "." | Commands | 8ball cata coinflip contest dice discord pay event fps gexp guild help info jacob joke leaderboard math mayor mp networth online patchnotes players random skills slayer speeds uuid wiki')
+    chat('Prefix "." | Commands | 8ball cata cf class coinflip contest dice discord pay event fish fps gexp guild help info jacob joke leaderboard math mayor mp networth online patchnotes players profile random skills slayer speeds uuid wiki')
   }
   else if (messages[request]) {
     messages[request]();

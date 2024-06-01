@@ -56,7 +56,8 @@ async function formatMessage(message) {
  
   if (message.attachments) {
     message.attachments.forEach(attachment => {
-      newMsg += ` ${attachment.url}`;
+    //  newMsg += ` ${attachment.url}`;
+        newMsg += ' (Attachment)';
     })
   }
  

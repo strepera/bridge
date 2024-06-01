@@ -118,7 +118,7 @@ export async function func(interaction, options) {
         .setColor('#FF0000')
         .setTitle('Invalid Username')
         .setThumbnail('https://cdn.discordapp.com/avatars/1183752068490612796/f127b318f4429579fa0082e287c901fd.png?size=256?size=512')
-        .setDescription(`Player \`\`${username}\`\` doesn't exist or doesn't play hypixel.`)]
+        .setDescription(`Player \`\`${options.getString('username')}\`\` doesn't exist or doesn't play hypixel.`)]
     });
   }
 
@@ -129,8 +129,7 @@ export async function func(interaction, options) {
       .setThumbnail('https://cdn.discordapp.com/avatars/1183752068490612796/f127b318f4429579fa0082e287c901fd.png?size=256?size=512')
       .setDescription(`Your minecraft linked discord username did not match.
       Type this in minecraft: \`\`${interaction.user.username}\`\`
-      Minecraft username: \`\`${username}\`\`
-      `)
+      Minecraft username: \`\`${username}\`\``)
       .setImage('https://imgur.com/vvegsn6.gif')
       ]});
   }

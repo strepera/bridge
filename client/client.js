@@ -69,7 +69,7 @@ export async function discord(bot, client, branch, welcomeChannel, bridgeChannel
                 .then(members => {
                     members.forEach(member => checkVerification(member, bot, branch))
                 })
-        }, 3 * 60 * 60 * 1000);
+        }, 2 * 60 * 60 * 1000);
 
     async function updateStockPrices() {
         var now = new Date();

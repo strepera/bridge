@@ -74,9 +74,7 @@ function toSuperscript(input) {
   return result;
 } 
 
-let checkedRoles = [];
-
-async function setNickname(member, guild, uuid, username, guildRoleId) {
+async function setNickname(member, guild, uuid, username, guildRoleId, checkedRoles) {
   const guildResponse = await fetch(`https://api.hypixel.net/v2/guild?key=${process.env.apiKey}&name=${guild}`);
   const guildData = await guildResponse.json();
   if (!guildData.guild || !guildData.guild.members) return;
@@ -99,7 +97,7 @@ async function setNickname(member, guild, uuid, username, guildRoleId) {
           console.error(`Role not found for rank: ${member.rank}`);
         }
       }
-      return;
+      return checkedRoles;
     }
   }
   if (memberFound) {
@@ -108,10 +106,11 @@ async function setNickname(member, guild, uuid, username, guildRoleId) {
   const role = await member.guild.roles.cache.find(r => r.name === 'Verified');
   await member.roles.add(role).catch(() => console.error(member.username + ' has elevated permissions. Cannot set role.'));
   checkedRoles.push('Verified');
+  return checkedRoles;
 }
 
 export async function checkVerification(member, bot, branch) {
-  checkedRoles = [];
+  let checkedRoles = [];
   const users = await getGist();
   const user = users.find(user => user.dcuser === member.user.username);
 
@@ -139,8 +138,8 @@ export async function checkVerification(member, bot, branch) {
     fs.writeFileSync('bot/playerData.json', JSON.stringify(playerData, null, 2));
   }
 
-  await setNickname(member, process.env.guild1, user.uuid, username, process.env.guild1role);
-  await setNickname(member, process.env.guild2, user.uuid, username, process.env.guild2role);
+  checkedRoles = await setNickname(member, process.env.guild1, user.uuid, username, process.env.guild1role, checkedRoles);
+  checkedRoles = await setNickname(member, process.env.guild2, user.uuid, username, process.env.guild2role, checkedRoles);
 
   const playerResponse = await fetch('https://api.hypixel.net/v2/player?key=' + process.env.apiKey + '&uuid=' + user.uuid);
   const playerData = await playerResponse.json();
@@ -158,5 +157,6 @@ export async function checkVerification(member, bot, branch) {
   })
 
   console.log('Checked verification status for: ' + member.user.username + ' (' + member.user.id + ')');
+  console.log(checkedRoles);
 
 }

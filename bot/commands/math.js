@@ -1,6 +1,6 @@
 import * as math from 'mathjs';
 
-export default function(bot, requestedPlayer) {
+export default function(bot, requestedPlayer, player, chat) {
   requestedPlayer = requestedPlayer.replaceAll("x","*");
     try {
       const preludes = [
@@ -17,11 +17,11 @@ export default function(bot, requestedPlayer) {
       ];
       const answerpreludeindex = Math.floor(Math.random() * preludes.length);
       const answerprelude = preludes[answerpreludeindex];
-      const answer = Math.floor(math.evaluate(requestedPlayer) * 1000) / 1000;
-      bot.chat(`/gc ${answerprelude} ${answer}`);
-      bot.lastMessage = (`/gc ${answerprelude} ${answer}`);
+      const answer = math.evaluate(requestedPlayer);
+      bot.chat(`${chat}${answerprelude} ${answer}`);
+      bot.lastMessage = (`${chat}${answerprelude} ${answer}`);
     } catch (err) {
-      bot.chat('/gc Sorry, I could not understand the math question.');
-      bot.lastMessage = ('/gc Sorry, I could not understand the math question.');
+      bot.chat(chat + 'Sorry, I could not understand the math question.');
+      bot.lastMessage = (chat + 'Sorry, I could not understand the math question.');
     }
 }

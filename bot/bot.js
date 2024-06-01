@@ -31,7 +31,7 @@ export async function minecraft(bot, client, bridgeWebhook, logWebhook, punishWe
   setInterval(() => {
     updateRanks(bot, process.env.guild1);
     updateRanks(branch, process.env.guild2);
-  }, 3 * 60 * 60 * 1000);
+  }, 6 * 60 * 60 * 1000);
 
   setTimeout(() => {
     console.log('Joined as ' + bot.username);
@@ -131,8 +131,8 @@ export async function minecraft(bot, client, bridgeWebhook, logWebhook, punishWe
   
     //check if the message was blocked
     if (jsonMsg == 'You cannot say the same message twice!' || jsonMsg == 'You are sending commands too fast! Please slow down.') {
-      bot.chat(bot.lastMessage + ' ' + generateRandomNonNumericString(8));
-      bot.lastMessage = (bot.lastMessage + ' ' + generateRandomNonNumericString(8));
+      bot.chat(bot.lastMessage + ' @' + generateRandomNonNumericString(8));
+      bot.lastMessage = (bot.lastMessage + ' @' + generateRandomNonNumericString(8));
       return;
     }
     if (jsonMsg == 'Advertising is against the rules. You will receive a punishment on the server if you attempt to advertise.') {

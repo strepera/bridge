@@ -104,7 +104,7 @@ export default async function(bot, requestedPlayer) {
               }
             }
             const skillAverage = Math.floor((skillSum / 9) * 100) / 100;
-            let message = ['/gc', `${requestedPlayer}'s skills ⚝[` + Math.floor(members[member].leveling.experience / 100) + ']', '☯', skillAverage, '|'];
+            let message = ['/gc', `${requestedPlayer}'s skills ⚝ [` + Math.floor(members[member].leveling.experience / 100) + ']', '☯', skillAverage, '|'];
             for (let skill in playerSkills) {
               message.push(skillIcons[skill]);
               message.push(playerSkills[skill].toString()); 

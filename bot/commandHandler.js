@@ -31,11 +31,11 @@ const aliases = {
     'plrs': 'players',
     'i': 'info',
     'd': 'dice',
-    'cf': 'coinflip',
     'dono': 'donate',
     'pay': 'donate',
     'stocks': 'stock',
-    'lb': 'leaderboard'
+    'lb': 'leaderboard',
+    'skill': 'skills'
 };
 
 export default async function commands(bot, jsonMsg, botUsername) {
