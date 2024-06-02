@@ -94,8 +94,17 @@ async function getCps(data, cookiebuff) {
     }
 
     
-    return Math.floor(additive * multiplicative).toLocaleString() + ' (with tt)';
+    return Math.floor(additive * multiplicative);
 }
+
+const prestigeRequirements = [
+	0,
+	500000000,
+	1200000000,
+	4000000000,
+	10000000000,
+	25000000000
+];
 
 function check(value) {
     if (value) {
@@ -129,6 +138,7 @@ export default async function cfCommand(bot, requestedPlayer, player, chat) {
     const cfData = profileData.events.easter;
     const chocolate = formatNumber(cfData.total_chocolate);
     const currentChocolate = formatNumber(cfData.chocolate);
+	const chocolateSincePrestige = check(cfData.chocolate_since_prestige);
     const prestige = cfData.chocolate_level;
     const timeTower = check(cfData.time_tower.level);
     const coach = check(cfData.chocolate_multiplier_upgrades);
@@ -144,8 +154,9 @@ export default async function cfCommand(bot, requestedPlayer, player, chat) {
         }
     }
     const cps = await getCps(cfData, profileData.profile.cookie_buff_active);
+	const timeLeft = ((prestigeRequirements[prestige] - chocolateSincePrestige) / cps / 60 / 60).toFixed(2);
 
-    msg(`${requestedPlayer}'s cf: CPS ${cps} Prestige ${prestige} Timetower ${timeTower} Shrine ${shrine} Coach ${coach} All-time ${chocolate} Current ${currentChocolate} Rabbits ${rabbits}/457 Duplicates: ${duplicates}`);
+    msg(`${requestedPlayer}'s cf: CPS (with tt) [${cps.toLocaleString()}] Prestige [${prestige}/6] (${timeLeft} hrs for prestige ${prestige + 1}) Timetower ${timeTower}/15 Shrine ${shrine}/20 Coach ${coach}/20 All-time ${chocolate} Current ${currentChocolate} Rabbits ${rabbits}/457 Duplicates: ${duplicates}`);
 }
 
 const rabbits = {
