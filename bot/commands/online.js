@@ -64,7 +64,7 @@ export default async function(bot, requestedPlayer, player, chat) {
         }
         else {
             bot.chat(`${chat}${requestedPlayer} is offline.`);
-            bot.lastMessage = (`${chaT}${requestedPlayer} is offline.`);
+            bot.lastMessage = (`${chat}${requestedPlayer} is offline.`);
         }
       }
       else {

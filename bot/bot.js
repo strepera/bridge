@@ -71,6 +71,7 @@ export async function minecraft(bot, client, bridgeWebhook, logWebhook, punishWe
       branch.chat(process.env.guild1prefix + match[2] + ' left the guild!');
       branch.lastMessage = (process.env.guild1prefix + match[2] + ' left the guild!');
     }
+    commands(bot, branch, jsonMsg);
     checkAnswer(bot, branch, jsonMsg, process.env.botUsername1);
     messagestr(jsonMsg, bot, process.env.botUsername1);
   })
@@ -96,6 +97,7 @@ export async function minecraft(bot, client, bridgeWebhook, logWebhook, punishWe
       bot.chat(process.env.guild2prefix + match[2] + ' left the guild!');
       bot.lastMessage = (process.env.guild2prefix + match[2] + ' left the guild!');
     }
+    commands(bot, branch, jsonMsg);
     checkAnswer(bot, branch, jsonMsg, process.env.botUsername2);
     messagestr(jsonMsg, branch, process.env.botUsername2);
   })
@@ -122,12 +124,12 @@ export async function minecraft(bot, client, bridgeWebhook, logWebhook, punishWe
     }
     else if (match = jsonMsg.match(/^Guild > (?:\[(\S+)\] )?(\S+) \[(\S+)\]: (.+)/)) {
       const player = match[2];
-      if (player != botUsername) levelHandler(bot, player);
+      if (player != botUsername) {
+        levelHandler(bot, player);
+        global.messageCount++;
+      };
     }
     if (jsonMsg.match(new RegExp("^Guild > (?:\\[(\\S+)\\] )?" + botUsername + " \\[\\S+\\]: \\[\\S+\\] \\b(\\w+)\\b \\S (.+)"))) return;
-
-    //check for commands
-    commands(bot, jsonMsg, botUsername);
   
     //check if the message was blocked
     if (jsonMsg == 'You cannot say the same message twice!' || jsonMsg == 'You are sending commands too fast! Please slow down.') {

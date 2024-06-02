@@ -147,45 +147,7 @@ const regexes = [
         const output = match[2];
         if (output.match(/^(\S+) \S (.+)/)) return;
         if (output.includes(' ⤷ ')) return;
-        if (output.split(' ')[0].match(/(QUICK|Unscramble)/)) {
-          const title = output.split(' ')[0] == 'QUICK' ? 'Quick Maths!' : 'Unscramble!'
-          const embed = new MessageEmbed()
-          .setTitle(title)
-          .setDescription(output)
-          .setColor('#00ff00')
-          bridgeWebhook.send({
-            embeds: [embed],
-            username: 'Nope Ropes',
-            avatarURL: 'https://cdn.discordapp.com/avatars/1183752068490612796/f127b318f4429579fa0082e287c901fd.png?size=256?size=512'
-          })
-          return;
-        }
-        if (match = output.match(/^(\S+) got it correct in (\S+) ms!/)) {
-          const embed = new MessageEmbed()
-          .setColor('#00ff00')
-          .setTitle('Game ended!')
-          .setDescription(match[1] + ' won in ' + match[2] + ' ms!')
-          .setThumbnail(`https://minotar.net/helm/${match[1]}/32`)
-          bridgeWebhook.send({
-            embeds: [embed],
-            username: 'Nope Ropes',
-            avatarURL: 'https://cdn.discordapp.com/avatars/1183752068490612796/f127b318f4429579fa0082e287c901fd.png?size=256?size=512'
-          })
-          return;
-        }
-        if (match = output.match(/^No one answered in time! The answer was "(.+)"/)) {
-          const embed = new MessageEmbed()
-          .setColor('#00ff00')
-          .setTitle('Game ended!')
-          .setDescription('The answer was ' + match[1] + '!')
-          bridgeWebhook.send({
-            embeds: [embed],
-            username: 'Nope Ropes',
-            avatarURL: 'https://cdn.discordapp.com/avatars/1183752068490612796/f127b318f4429579fa0082e287c901fd.png?size=256?size=512'
-          })
-          return;
-        }
-        if (output.startsWith(process.env.guild1prefix)) { // make configurable
+        if (output.startsWith(process.env.guild1prefix)) {
           const status = output.split(' ')[2];
           if (status == 'joined.') {
             const player = output.split(' ')[1].replaceAll('_', '\\_');
@@ -218,15 +180,6 @@ const regexes = [
           else if (status == 'joined') return; // guild join
           else if (status == 'left') return; // guild leave
         }
-        const embed = new MessageEmbed()
-        .setTitle('Command: .' + bot.lastCommand)
-        .setDescription(output)
-        .setColor('#00ff00')
-        bridgeWebhook.send({
-          embeds: [embed],
-          username: 'Nope Ropes',
-          avatarURL: 'https://cdn.discordapp.com/avatars/1183752068490612796/f127b318f4429579fa0082e287c901fd.png?size=256?size=512'
-        })
         return;
       }
       bridgeWebhook.send({

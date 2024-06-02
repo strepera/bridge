@@ -79,8 +79,8 @@ function formatNumber(num) {
   return num;
 }
 
-let slayerStarted = false;
 export default async function(bot, requestedPlayer) {
+  let slayerStarted = false;
   let requestedProfile;
   if (requestedPlayer.split(" ")[1]) requestedProfile = requestedPlayer.split(" ")[1];
   requestedPlayer = requestedPlayer.split(" ")[0];

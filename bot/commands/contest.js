@@ -12,26 +12,32 @@ function getTimeRemaining(endtime){
     minutes,
     seconds
   };
- }
+}
  
- export default async function(bot) {
+export default async function(bot, requestedPlayer, player, chat) {
   fetch('https://api.elitebot.dev/contests/at/now')
   .then(response => response.json())
   .then(data => {
-      let now = new Date();
-      let closestTime;
-      let closestContest;
-      for (let time in data.contests) {
-          let contestTime = new Date(time * 1000);
-          if (contestTime > now && (!closestTime || contestTime < closestTime)) {
-              closestTime = contestTime;
-              closestContest = data.contests[time];
-          }
+    let closestTime;
+    let closestContest;
+    for (const time in data.contests) {
+      if ((Date.now() / 1000) - 1200 < time) {
+        closestTime = new Date(time * 1000);
+        closestContest = data.contests[time];
+        break;
       }
-      let contestString = closestContest.join(", ");
-      let timeRemaining = getTimeRemaining(closestTime);
-      bot.chat(`/gc The next contest is ${contestString}. It will start in ${timeRemaining.minutes} minutes.`);
-      bot.lastMessage = (`/gc The next contest is ${contestString}. It will start in ${timeRemaining.minutes} minutes.`);
+    }
+
+    let contestString = closestContest.join(", ");
+    let timeRemaining = getTimeRemaining(closestTime);
+    if (timeRemaining.minutes < 0) {
+      bot.chat(`${chat}The current contest is ${contestString}. It will end in ${20 - timeRemaining.minutes * -1} minutes.`);
+      global.lastMessage = (`${chat}The current contest is ${contestString}. It will end in ${20 - timeRemaining.minutes * -1} minutes.`);
+    }
+    else {
+      bot.chat(`${chat}The next contest is ${contestString}. It will start in ${timeRemaining.minutes} minutes.`);
+      bot.lastMessage = (`${chat}The next contest is ${contestString}. It will start in ${timeRemaining.minutes} minutes.`);
+    }
   })
   .catch(error => console.error('Error:', error));
 }

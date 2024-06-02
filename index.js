@@ -11,6 +11,7 @@ const logWebhook = new WebhookClient({ id: process.env.logId, token: process.env
 const punishWebhook = new WebhookClient({ id: process.env.punishId, token: process.env.punishToken})
 
 global.lastMessage = '';
+global.messageCount = 0;
 
 export let bot;
 export let branch;

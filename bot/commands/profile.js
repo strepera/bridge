@@ -40,11 +40,13 @@ export default async function profileCommand(bot, requestedPlayer, player, chat)
     const profileName = profile.cute_name;
     const profileSelected = profile.selected;
     const profileData = profile.members[uuid];
+    const serum = profileData.experimentation.serums_drank? profileData.experimentation.serums_drank : 0;
+    const jyrre = profileData.winter_player_data? profileData.winter_player_data : 0;
     const profileCreated = profileData.profile.first_join? new Date(profileData.profile.first_join).toLocaleDateString('en-US', {day: 'numeric', month: 'long', year: 'numeric'}) : 'Unknown';
     const deathCount = profileData.player_data.death_count? profileData.player_data.death_count : 0;
     const soulflowCount = profileData.item_data? profileData.item_data.soulflow : 0;
     const fairySouls = profileData.fairy_soul? profileData.fairy_soul.total_collected : 0;
 
-    const message = `${requestedPlayer} on ${profileName} (${profileType}) Created ${profileCreated}, Selected: ${profileSelected}, Deaths: ${deathCount}, Soulflow: ${soulflowCount}, Fairy souls: ${fairySouls}`;
+    const message = `${requestedPlayer} on ${profileName} (${profileType}) Created ${profileCreated}, Selected: ${profileSelected}, Deaths: ${deathCount}, Soulflow: ${soulflowCount}, Serum: ${serum}, Jyrre: ${jyrre}, Fairy souls: ${fairySouls}`;
     msg(message);
 }

@@ -35,10 +35,11 @@ const aliases = {
     'pay': 'donate',
     'stocks': 'stock',
     'lb': 'leaderboard',
-    'skill': 'skills'
+    'skill': 'skills',
+    'rep': 'reputation'
 };
 
-export default async function commands(bot, jsonMsg, botUsername) {
+export default async function commands(bot, branch, jsonMsg) {
     let match;
     if (match = jsonMsg.match(/^Guild > (?:\[(\S+)\] )?(\S+) \[(\S+)\]: \.(\S+)( .*)?/)) {
         let command = match[4];
@@ -48,8 +49,10 @@ export default async function commands(bot, jsonMsg, botUsername) {
         if (executed) {
             executed(bot, requestedPlayer, match[2], '/gc ');
             bot.lastCommand = command + ' ' + requestedPlayer;
+            executed(branch, requestedPlayer, match[2], '/gc ');
+            branch.lastCommand = command + ' ' + requestedPlayer;
         }
-    } else if (match = jsonMsg.match(new RegExp("^Guild > (?:\\[(\\S+)\\] )?" + botUsername + " \\[(\\S+)\\]: (\\S+) \\S \\.(\\S+)( .*)?"))) {
+    } else if (match = jsonMsg.match(new RegExp("^Guild > (?:\\[(\\S+)\\] )?" + process.env.botUsername1 + " \\[(\\S+)\\]: (\\S+) \\S \\.(\\S+)( .*)?"))) {
         let command = match[4];
         let requestedPlayer = match[5] || match[3];
         if (requestedPlayer.split('')[0] == ' ') requestedPlayer = requestedPlayer.substring(1);
@@ -57,6 +60,8 @@ export default async function commands(bot, jsonMsg, botUsername) {
         if (executed) {
             executed(bot, requestedPlayer, match[3], '/gc ');
             bot.lastCommand = command + ' ' + requestedPlayer;
+            executed(branch, requestedPlayer, match[3], '/gc ');
+            branch.lastCommand = command + ' ' + requestedPlayer;
         }
     }
     if (match = jsonMsg.match(/^Party > (?:\[(\S+)\] )?(\S+): \.(\S+)( .*)?/)) {
@@ -67,6 +72,8 @@ export default async function commands(bot, jsonMsg, botUsername) {
         if (executed) {
             executed(bot, requestedPlayer, match[2], '/pc ');
             bot.lastCommand = command + ' ' + requestedPlayer;
+            executed(branch, requestedPlayer, match[2], '/gc ');
+            branch.lastCommand = command + ' ' + requestedPlayer;
         }
     }
 }

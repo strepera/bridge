@@ -7,6 +7,7 @@ export default function help(bot, request, player) {
   const messages = {
     "image": () => chat("/gc https://imgur.com/sTaVP3Z"),
     "8ball": () => chat("/gc Usage .8ball {question} | e.g. .8ball am i cool?"),
+    "bingo": () => chat("/gc Usage .bingo {player} | Shows player's bingo information"),
     "cata": () => chat("/gc Usage Use .cata 1 for cata info help, use .cata 2 for cata calc help."),
     "cata 1": () => chat("/gc Usage .cata {player} | e.g. .cata snailify"),
     "cata 2": () => chat("/gc Usage .cata {player} calc {level} {floor} {hecatomb/ring} | e.g. .cata snailify calc 50 m7 hecatomb ring"),
@@ -18,10 +19,14 @@ export default function help(bot, request, player) {
     "discord": () => chat("/gc Usage .discord | Output | The discord link is https://discord.com/invite/VeB4Z9C"),
     "pay": () => chat("/gc Usage .pay {player} {amount} | e.g. .pay snailify 1000"),
     "event": () => chat("/gc Usage .event {jerry/spooky} | e.g. .event jerry"),
+    "fetchur": () => chat("/gc Usage .fetchur | Fetchur's item"),
+    "firesale": () => chat("/gc Usage .firesale | Shows info about the current firesale"),
     "fish": () => chat("/gc Usage .fish | Gives random amount of coins"),
     "fps": () => chat("/gc Usage .fps | Output | https://www.youtube.com/watch?v=io4wESYYBwk&t=7s"),
     "gexp": () => chat("/gc Usage .gexp {player} | e.g. .gexp snailify"),
     "guild": () => chat("/gc Usage .guild {player/guild} | e.g. .guild Nope Ropes"),
+    "harp": () => chat("/gc Usage .harp {player} | Shows harp info for player"),
+    "hotm": () => chat("/gc Usage .hotm {player} | Shows mining and hotm info for player"),
     "info": () => chat("/gc Usage .info {player} | e.g. .info snailify"),
     "jacob": () => chat("/gc Usage .jacob {player} | e.g. .jacob snailify"),
     "joke": () => chat("/gc Usage .joke | Output | (random setup then punchline)"),
@@ -42,7 +47,7 @@ export default function help(bot, request, player) {
     "wiki": () => chat("/gc Usage .wiki {item/npc/location/anything} | e.g. .wiki plasmaflux power orb")
   }
   if (request == player) {
-    chat('Prefix "." | Commands | 8ball cata cf class coinflip contest dice discord pay event fish fps gexp guild help info jacob joke leaderboard math mayor mp networth online patchnotes players profile random skills slayer speeds uuid wiki')
+    chat('Prefix "." | Commands | 8ball bingo cata cf class coinflip contest dice discord pay event fetchur firesale fish fps gexp guild harp hotm help info jacob joke leaderboard math mayor mp networth online patchnotes players profile random skills slayer speeds uuid wiki')
   }
   else if (messages[request]) {
     messages[request]();
