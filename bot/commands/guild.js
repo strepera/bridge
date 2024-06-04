@@ -10,14 +10,10 @@ export default async function getGuildData(bot, requestedPlayer, playerExecuted,
         const response = await fetch(`https://api.hypixel.net/v2/guild?key=${process.env.apiKey}&player=${uuid}`);
         const json = await response.json();
         if (json.success != true) {
-            bot.chat(chat + 'Invalid guild/player');
-            bot.lastMessage = (chat + 'Invalid guild/player');
-            return;
+            return (chat + 'Invalid guild/player');
         }
         if (json.guild == null) {
-            bot.chat(chat + 'Player is not in a guild');
-            bot.lastMessage = (chat + 'Player is not in a guild');
-            return;
+            return (chat + 'Player is not in a guild');
         }
         const name = json.guild.name;
         const tag = json.guild.tag;
@@ -44,9 +40,7 @@ export default async function getGuildData(bot, requestedPlayer, playerExecuted,
                 return acc;
             }) * 100) / 100;
         }
-        bot.chat(`${chat}${name} [${tag}] [${level}] created ${created} by ${leader} (${members}/125)`);
-        bot.lastMessage = (`${chat}${name} [${tag}] [${level}] created ${created} by ${leader} (${members}/125)`);
-        return;
+        return (`${chat}${name} [${tag}] [${level}] created ${created} by ${leader} (${members}/125)`);
     }
     else if (json.success == true) {
         const name = json.guild.name;
@@ -74,9 +68,7 @@ export default async function getGuildData(bot, requestedPlayer, playerExecuted,
                 return acc;
             }) * 100) / 100;
         }
-        bot.chat(`${chat}${name} [${tag}] [${level}] created ${created} by ${leader} (${members}/125)`);
-        bot.lastMessage = (`${chat}${name} [${tag}] [${level}] created ${created} by ${leader} (${members}/125)`);
-        return;
+        return (`${chat}${name} [${tag}] [${level}] created ${created} by ${leader} (${members}/125)`);
     }
 }
 

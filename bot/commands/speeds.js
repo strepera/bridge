@@ -1,4 +1,4 @@
-export default function speeds(bot, requestedCategory) {
+export default function speeds(bot, requestedCategory, player, chat) {
   let message;
   const aliases = {
     "crops": ["crops", "nether wart", "wart", "carrot", "potato", "wheat"],
@@ -14,30 +14,29 @@ export default function speeds(bot, requestedCategory) {
 
   switch (category) {
     case "crops":
-      message = "/gc " + requestedCategory + " (✦93) (⇄90/180) (⇅0/3)";
+      message = requestedCategory + " (✦93) (⇄90/180) (⇅0/3)";
       break;
     case "sugarcane":
-      message = "/gc Sugar Cane (✦328) (⇄135/45) (⇅0)";
+      message = "Sugar Cane (✦328) (⇄135/45) (⇅0)";
       break;
     case "cocoa":
-      message = "/gc Cocoa Beans (✦155 ✖Sprint) (⇄90/180) (⇅45)";
+      message = "Cocoa Beans (✦155 ✖Sprint) (⇄90/180) (⇅45)";
       break;
     case "cactus":
-      message = "/gc Cactus (✦478) (⇄90/180) (⇅0)";
+      message = "Cactus (✦478) (⇄90/180) (⇅0)";
       break;
     case "mushroom":
-      message = "/gc Mushroom (✦233) (⇄120/60) (⇅0)";
+      message = "Mushroom (✦233) (⇄120/60) (⇅0)";
       break;
     case "melon":
-      message = "/gc Melon (✦290) (⇄90/180) (⇅58/-58)";
+      message = "Melon (✦290) (⇄90/180) (⇅58/-58)";
       break;
     case "pumpkin":
-      message = "/gc Pumpkin (✦290) (⇄90/180) (⇅58/-58)";
+      message = "Pumpkin (✦290) (⇄90/180) (⇅58/-58)";
       break;
     default:
-      message = "/gc Invalid category. Use .speeds {crops/cane/cocoa/cactus/mushroom/melon/pumpkin}.";
+      message = "Invalid category. Use .speeds {crops/cane/cocoa/cactus/mushroom/melon/pumpkin}.";
       break;
   }
-  bot.chat(message);
-  bot.lastMessage = message;
+  return (chat + message);
 }

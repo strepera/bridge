@@ -1,9 +1,4 @@
 export default async function(bot, requestedPlayer, player, chat) {
-    function msg(message) {
-        bot.chat(chat + message);
-        bot.lastMessage = chat + message;
-    }
-
     requestedPlayer = requestedPlayer.split(' ')[0];
     const uuidResponse = await fetch(`https://api.mojang.com/users/profiles/minecraft/${requestedPlayer}`);
     const uuidJson = await uuidResponse.json();
@@ -11,7 +6,7 @@ export default async function(bot, requestedPlayer, player, chat) {
     requestedPlayer = uuidJson.name;
     const dataResponse = await fetch(`https://api.hypixel.net/v2/skyblock/profiles?key=${process.env.apiKey}&uuid=${uuid}`);
     const dataJson = await dataResponse.json();
-    if (!dataJson.success || !dataJson.profiles) return msg("Invalid player.");
+    if (!dataJson.success || !dataJson.profiles) return (chat + "Invalid player.");
     let profileData;
     for (const profile of dataJson.profiles) {
       if (profile.selected) profileData = profile.members[uuid];
@@ -47,5 +42,5 @@ export default async function(bot, requestedPlayer, player, chat) {
     }
     wlr /= wlrs.length;
 
-    msg(`${requestedPlayer}'s harp | Songs [${songs}/13] Average WLR [${wlr.toFixed(2)}] Completions [${total}] Talisman ${talisman}`);
+    return (`${chat}${requestedPlayer}'s harp | Songs [${songs}/13] Average WLR [${wlr.toFixed(2)}] Completions [${total}] Talisman ${talisman}`);
 }

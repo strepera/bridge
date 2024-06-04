@@ -4,27 +4,25 @@ import { gameHandler, checkAnswer } from './gameHandler.js';
 import { onlineHandler } from './onlineHandler.js';
 import { levelHandler } from './levelHandler.js';
 import updateRanks from './updateRanks.js';
+import checkPatchNotes from './checkPatchNotes.js';
+
+function generateRandomNonNumericString(length) {
+  let result = '';
+  const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
+  const charactersLength = characters.length;
+  for (let i = 0; i < length; i++) {
+      result += characters.charAt(Math.floor(Math.random() * charactersLength));
+  }
+  return result;
+}
 
 export async function minecraft(bot, client, bridgeWebhook, logWebhook, punishWebhook, branch) {
-
   //initialize game handler
   gameHandler(bot, branch);
 
   //check for patch notes
-  let lastPatchNotes = '';
   setInterval(async () => {
-    const response = await fetch(`https://api.hypixel.net/v2/skyblock/news?key=${process.env.apiKey}`);
-    const json = await response.json();
-    if (json.success == true) {
-      if (lastPatchNotes == '') {
-        lastPatchNotes = json.items[0].link;
-      }
-      else if (lastPatchNotes != json.items[0].link) {
-        bot.chat('/gc NEW UPDATE! ' + json.items[0].link);
-        branch.chat('/gc NEW UPDATE! ' + json.items[0].link);
-        lastPatchNotes = json.items[0].link;
-      }
-    }
+    checkPatchNotes(bot, branch)
   }, 5 * 60 * 1000);
 
   // check guild ranks
@@ -43,11 +41,11 @@ export async function minecraft(bot, client, bridgeWebhook, logWebhook, punishWe
   }, 7000);
 
   bot.on('message', (message) => {
-    console.log('NR: ' + message.toAnsi()); //make message colourful!!!
+    console.log('NR: ' + message.toAnsi()); //make message colourful
   })
 
   branch.on('message', (message) => {
-    console.log('DN: ' + message.toAnsi()); //make message colourful!!!
+    console.log('DN: ' + message.toAnsi()); //make message colourful
   })
 
   bot.on('messagestr', async (jsonMsg) => {
@@ -97,7 +95,7 @@ export async function minecraft(bot, client, bridgeWebhook, logWebhook, punishWe
       bot.chat(process.env.guild2prefix + match[2] + ' left the guild!');
       bot.lastMessage = (process.env.guild2prefix + match[2] + ' left the guild!');
     }
-    commands(bot, branch, jsonMsg);
+    commands(branch, bot, jsonMsg);
     checkAnswer(bot, branch, jsonMsg, process.env.botUsername2);
     messagestr(jsonMsg, branch, process.env.botUsername2);
   })
@@ -161,14 +159,4 @@ export async function minecraft(bot, client, bridgeWebhook, logWebhook, punishWe
       }
     };
   }
-}
-
-function generateRandomNonNumericString(length) {
-  let result = '';
-  const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
-  const charactersLength = characters.length;
-  for (let i = 0; i < length; i++) {
-      result += characters.charAt(Math.floor(Math.random() * charactersLength));
-  }
-  return result;
 }

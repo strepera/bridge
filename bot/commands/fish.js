@@ -33,14 +33,12 @@ export default async function fish(bot, request, player, chat) {
 
     if (cooldown < 10 * 60 * 1000) {
         const remainingSeconds = Math.ceil((10 * 60 * 1000 - cooldown) / 1000);
-        msg(`Sorry ${player}, the pond is empty! Please wait ${remainingSeconds} seconds to fish again.`);
-        return;
+        return (`${chat}Sorry ${player}, the pond is empty! Please wait ${remainingSeconds} seconds to fish again.`);
     }
 
     cooldowns[player] = Date.now();
 
     const fishAmount = ranRange(5, 7);
-    msg("Fishing " + fishAmount + ' times...');
     let results = [];
 
     for (let i = 0; i < fishAmount; i++) {
@@ -85,4 +83,5 @@ export default async function fish(bot, request, player, chat) {
 
     fs.writeFileSync('bot/playerData.json', JSON.stringify(json, null, 2));
 
+    return (chat + "Fished " + fishAmount + ' times!');
 }

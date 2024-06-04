@@ -1,58 +1,56 @@
-export default function help(bot, request, player) {
-  async function chat(message) {
-    bot.chat(message);
-    bot.lastMessage = (message);
-  }
-
+export default function help(bot, request, player, chatType) {
+  request = request.split(' ')[0];
   const messages = {
-    "image": () => chat("/gc https://imgur.com/sTaVP3Z"),
-    "8ball": () => chat("/gc Usage .8ball {question} | e.g. .8ball am i cool?"),
-    "bingo": () => chat("/gc Usage .bingo {player} | Shows player's bingo information"),
-    "cata": () => chat("/gc Usage Use .cata 1 for cata info help, use .cata 2 for cata calc help."),
-    "cata 1": () => chat("/gc Usage .cata {player} | e.g. .cata snailify"),
-    "cata 2": () => chat("/gc Usage .cata {player} calc {level} {floor} {hecatomb/ring} | e.g. .cata snailify calc 50 m7 hecatomb ring"),
-    "cf": () => chat("/gc Usage .cf {player} | Shows cf info for player"),
-    "class": () => chat("/gc Usage .class {player} | e.g. .class snailify"),
-    "coinflip": () => chat("/gc Usage .coinflip {amount} {heads/tails} | e.g. .coinflip 100 tails"),
-    "contest": () => chat("/gc Usage .contest | Output | The next contest is {crop}, {crop}, {crop}. It will start in {minutes} minutes."),
-    "dice": () => chat("/gc Usage .dice {amount} | e.g. .dice 100"),
-    "discord": () => chat("/gc Usage .discord | Output | The discord link is https://discord.com/invite/VeB4Z9C"),
-    "pay": () => chat("/gc Usage .pay {player} {amount} | e.g. .pay snailify 1000"),
-    "event": () => chat("/gc Usage .event {jerry/spooky} | e.g. .event jerry"),
-    "fetchur": () => chat("/gc Usage .fetchur | Fetchur's item"),
-    "firesale": () => chat("/gc Usage .firesale | Shows info about the current firesale"),
-    "fish": () => chat("/gc Usage .fish | Gives random amount of coins"),
-    "fps": () => chat("/gc Usage .fps | Output | https://www.youtube.com/watch?v=io4wESYYBwk&t=7s"),
-    "gexp": () => chat("/gc Usage .gexp {player} | e.g. .gexp snailify"),
-    "guild": () => chat("/gc Usage .guild {player/guild} | e.g. .guild Nope Ropes"),
-    "harp": () => chat("/gc Usage .harp {player} | Shows harp info for player"),
-    "hotm": () => chat("/gc Usage .hotm {player} | Shows mining and hotm info for player"),
-    "info": () => chat("/gc Usage .info {player} | e.g. .info snailify"),
-    "jacob": () => chat("/gc Usage .jacob {player} | e.g. .jacob snailify"),
-    "joke": () => chat("/gc Usage .joke | Output | (random setup then punchline)"),
-    "leaderboard": () => chat("/gc Usage .lb {player in guild} {leaderboard type} | Types | gexp, nw, level"),
-    "math": () => chat("/gc Usage .math {question} | e.g. .math 5 x 6"),
-    "mayor": () => chat("/gc Usage .mayor | Output | Current mayor and next mayor with perks"),
-    "mp": () => chat("/gc Usage .mp {player} | e.g. .mp snailify"),
-    "networth": () => chat("/gc Usage .networth {player} | e.g. .networth snailify"),
-    "online": () => chat("/gc Usage .online {player} or .online | Output | {player} is in SKYBLOCK - {island} or the people online in the other guild."),
-    "patchnotes": () => chat("/gc Usage .patchnotes | Output | (most recent patchnotes)"),
-    "players": () => chat("/gc Usage .players | Output | (amount of players in each skyblock island)"),
-    "profile": () => chat("/gc Usage .profile {player} {profile} | e.g. .profile snailify peach"),
-    "random": () => chat("/gc Usage .random {number 1-15} | Output | (that many guild users)"),
-    "skills": () => chat("/gc Usage .skills {player} {profile} | e.g. .skills snailify peach"),
-    "slayer": () => chat("/gc Usage .slayer {player} {profile} | e.g. .slayer snailify peach"),
-    "speeds": () => chat("/gc Usage .speeds {crop} | e.g. | .speeds wart"),
-    "uuid": () => chat("/gc Usage .uuid {player} | Output | {player}'s uuid is {uuid}"),
-    "wiki": () => chat("/gc Usage .wiki {item/npc/location/anything} | e.g. .wiki plasmaflux power orb")
+    "1": (chatType + "8ball bingo cata cf class coinflip contest coop dice discord pay essence event fetchur firesale fish fps gexp guild harp hotm help"),
+    "2": (chatType + "info jacob joke leaderboard lbin math mayor mp networth online patchnotes players profile random skills slayer speeds uuid wiki"),
+    "image": (chatType + "https://imgur.com/sTaVP3Z"),
+    "8ball": (chatType + "Usage .8ball {question} | e.g. .8ball am i cool?"),
+    "bingo": (chatType + "Usage .bingo {player} | Shows player's bingo information"),
+    "cata": (chatType + "Usage Use .help cata1 for cata info help, use .help cata2 for cata calc help."),
+    "cata1": (chatType + "Usage .cata {player} | e.g. .cata snailify"),
+    "cata2": (chatType + "Usage .cata {player} calc {level} {floor} {hecatomb/ring} | e.g. .cata snailify calc 50 m7 hecatomb ring"),
+    "cf": (chatType + "Usage .cf {player} | Shows cf info for player"),
+    "class": (chatType + "Usage .class {player} | e.g. .class snailify"),
+    "coinflip": (chatType + "Usage .coinflip {amount} {heads/tails} | e.g. .coinflip 100 tails"),
+    "contest": (chatType + "Usage .contest | Output | The next contest is {crop}, {crop}, {crop}. It will start in {minutes} minutes."),
+    "coop": (chatType + "Usage .coop {player} | Shows coop members for player"),
+    "dice": (chatType + "Usage .dice {amount} | e.g. .dice 100"),
+    "discord": (chatType + "Usage .discord | Output | The discord link is https://discord.com/invite/VeB4Z9C"),
+    "pay": (chatType + "Usage .pay {player} {amount} | e.g. .pay snailify 1000"),
+    "essence": (chatType + "Usage. essence {player} | Shows essence types for player"),
+    "event": (chatType + "Usage .event {jerry/spooky} | e.g. .event jerry"),
+    "fetchur": (chatType + "Usage .fetchur | Fetchur's item"),
+    "firesale": (chatType + "Usage .firesale | Shows info about the current firesale"),
+    "fish": (chatType + "Usage .fish | Gives random amount of coins"),
+    "fps": (chatType + "Usage .fps | Output | https://www.youtube.com/watch?v=io4wESYYBwk&t=7s"),
+    "gexp": (chatType + "Usage .gexp {player} | e.g. .gexp snailify"),
+    "guild": (chatType + "Usage .guild {player/guild} | e.g. .guild Nope Ropes"),
+    "harp": (chatType + "Usage .harp {player} | Shows harp info for player"),
+    "hotm": (chatType + "Usage .hotm {player} | Shows mining and hotm info for player"),
+    "info": (chatType + "Usage .info {player} | e.g. .info snailify"),
+    "jacob": (chatType + "Usage .jacob {player} | e.g. .jacob snailify"),
+    "joke": (chatType + "Usage .joke | Output | (random setup then punchline)"),
+    "leaderboard": (chatType + "Usage .lb {player in guild} {leaderboard type} | Types | gexp, nw, level"),
+    "lbin": (chatType + "Usage .lbin {item} | Shows lowest bin for the item"),
+    "math": (chatType + "Usage .math {question} | e.g. .math 5 x 6"),
+    "mayor": (chatType + "Usage .mayor | Output | Current mayor and next mayor with perks"),
+    "mp": (chatType + "Usage .mp {player} | e.g. .mp snailify"),
+    "networth": (chatType + "Usage .networth {player} | e.g. .networth snailify"),
+    "online": (chatType + "Usage .online {player} or .online | Output | {player} is in SKYBLOCK - {island} or the people online in the other guild."),
+    "patchnotes": (chatType + "Usage .patchnotes | Output | (most recent patchnotes)"),
+    "players": (chatType + "Usage .players | Output | (amount of players in each skyblock island)"),
+    "profile": (chatType + "Usage .profile {player} {profile} | e.g. .profile snailify peach"),
+    "random": (chatType + "Usage .random {number 1-15} | Output | (that many guild users)"),
+    "skills": (chatType + "Usage .skills {player} {profile} | e.g. .skills snailify peach"),
+    "slayer": (chatType + "Usage .slayer {player} {profile} | e.g. .slayer snailify peach"),
+    "speeds": (chatType + "Usage .speeds {crop} | e.g. | .speeds wart"),
+    "uuid": (chatType + "Usage .uuid {player} | Output | {player}'s uuid is {uuid}"),
+    "wiki": (chatType + "Usage .wiki {item/npc/location/anything} | e.g. .wiki plasmaflux power orb")
   }
-  if (request == player) {
-    chat('Prefix "." | Commands | 8ball bingo cata cf class coinflip contest dice discord pay event fetchur firesale fish fps gexp guild harp hotm help info jacob joke leaderboard math mayor mp networth online patchnotes players profile random skills slayer speeds uuid wiki')
-  }
-  else if (messages[request]) {
-    messages[request]();
+  if (messages[request]) {
+    return messages[request];
   }
   else {
-    chat('Invalid usage of .help, use without arguments to view all commands.');
+    return (chatType + 'Prefix "." | Use .help 1 or .help 2 to see command pages.');
   }
 }

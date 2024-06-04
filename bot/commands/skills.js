@@ -43,7 +43,7 @@ async function convertXPtoLevel(xpAmount, checkSkill) {
  }
 let skillStarted = false;
 
-export default async function(bot, requestedPlayer) {
+export default async function(bot, requestedPlayer, player, chat) {
   let requestedProfile;
   if (requestedPlayer.split(" ")[1]) requestedProfile = requestedPlayer.split(" ")[1];
   requestedPlayer = requestedPlayer.split(" ")[0];
@@ -104,22 +104,20 @@ export default async function(bot, requestedPlayer) {
               }
             }
             const skillAverage = Math.floor((skillSum / 9) * 100) / 100;
-            let message = ['/gc', `${requestedPlayer}'s skills ⚝ [` + Math.floor(members[member].leveling.experience / 100) + ']', '☯', skillAverage, '|'];
+            let message = [`${requestedPlayer}'s skills ⚝ [` + Math.floor(members[member].leveling.experience / 100) + ']', '☯', skillAverage, '|'];
             for (let skill in playerSkills) {
               message.push(skillIcons[skill]);
               message.push(playerSkills[skill].toString()); 
             }
             if (skillStarted == true) {
-              bot.chat(message.join(" "));
-              bot.lastMessage = (message.join(" "));
               skillStarted = false;
+              return (chat + message.join(" "));
             }
           }
         }
     }
   }
   else {
-    bot.chat('Invalid player.');
-    bot.lastMessage = ('Invalid player.');
+    return (chat + 'Invalid player.');
   }
 }

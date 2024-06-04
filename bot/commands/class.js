@@ -61,11 +61,6 @@ function average(object) {
 }
 
 export default async function(bot, requestedPlayer, player, chat) {
-    function msg(message) {
-        bot.chat(chat + message);
-        bot.lastMessage = chat + message;
-    }
-
     requestedPlayer = requestedPlayer.split(' ')[0];
     const uuidResponse = await fetch(`https://api.mojang.com/users/profiles/minecraft/${requestedPlayer}`);
     const uuidJson = await uuidResponse.json();
@@ -73,7 +68,7 @@ export default async function(bot, requestedPlayer, player, chat) {
     requestedPlayer = uuidJson.name;
     const dataResponse = await fetch(`https://api.hypixel.net/v2/skyblock/profiles?key=${process.env.apiKey}&uuid=${uuid}`);
     const dataJson = await dataResponse.json();
-    if (!dataJson.success || !dataJson.profiles) return msg("Invalid player.");
+    if (!dataJson.success || !dataJson.profiles) return (chat + "Invalid player.");
     let profileData;
     for (const profile of dataJson.profiles) {
       if (profile.selected) profileData = profile.members[uuid];
@@ -93,6 +88,6 @@ export default async function(bot, requestedPlayer, player, chat) {
 
     const classAverage = average(Object.values(classes));
 
-    msg(`${requestedPlayer}'s classes | Avg: ${classAverage} ⚚ ${classes.healer.experience} ⚡ ${classes.mage.experience} ☄ ${classes.berserk.experience} ➶ ${classes.archer.experience} ⚓ ${classes.tank.experience}`);
+    return (`${chat}${requestedPlayer}'s classes | Avg: ${classAverage} ⚚ ${classes.healer.experience} ⚡ ${classes.mage.experience} ☄ ${classes.berserk.experience} ➶ ${classes.archer.experience} ⚓ ${classes.tank.experience}`);
 }
   

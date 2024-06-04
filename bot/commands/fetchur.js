@@ -13,30 +13,22 @@ const items = [
     "50x Red Wool"
 ];
 
+function calculateCycleIndex(time) {
+    return Math.floor((time / 86400) % items.length);
+}
+
+function calculateTimeRemaining(time) {
+    const currentDay = time / 86400;
+    const nextDay = Math.floor(time / 86400) + 1;
+    return Math.floor(((nextDay - currentDay) * 86400))
+}
+
 export default async function(bot, requestedPlayer, player, chat) {
-    function msg(message) {
-        bot.chat(chat + message);
-        bot.lastMessage = chat + message;
-    }
+    const estNow = Date.now() / 1000 - 18000;
+    const cycleIndex = calculateCycleIndex(estNow);
+    const remaining = Math.floor(calculateTimeRemaining(estNow) / 3600);
 
-    function getCurrentTimeInEst() {
-        const now = new Date();
-        const utcOffset = -5;
-        return new Date(now.getTime() + (utcOffset * 60 * 60 * 1000));
-    }
+    const currentItem = items[cycleIndex - 3];
 
-    function calculateCycleIndex(time) {
-        const hoursSinceMidnight = Math.floor((time.getHours() % 24) / 24);
-        return hoursSinceMidnight;
-    }
-
-    const currentTimeInEst = getCurrentTimeInEst();
-
-    const cycleIndex = calculateCycleIndex(currentTimeInEst);
-
-    const currentIndex = cycleIndex % items.length;
-
-    const currentItem = items[currentIndex + 1];
-
-    msg(`Fetchur currently wants ${currentItem}.`);
+    return (`${chat}Fetchur currently wants ${currentItem}. Changes in ${remaining} hours.`);
 }

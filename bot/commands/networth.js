@@ -7,7 +7,7 @@ function formatNumber(num) {
   return num.toFixed(2);
 }
 
-async function getNetworth(bot, requestedPlayer) {
+async function getNetworth(bot, requestedPlayer, player, chat) {
   let uuid;
   try {
   const response1 = await fetch(`https://api.mojang.com/users/profiles/minecraft/${requestedPlayer}`);
@@ -48,30 +48,29 @@ async function getNetworth(bot, requestedPlayer) {
     const accessories = formatNumber(longNetworthObj.types.accessories.total);
     const museum = formatNumber(longNetworthObj.types.museum.total);
     const breakdown = `Purse: ${purse} Bank: ${bank} Essence: ${essence} Equipment: ${equipment} Items: ${items} Pets: ${pets} Accessories: ${accessories} Museum: ${museum}`;
-    bot.chat(`/gc ${requestedPlayer}'s networth${shortenedNetworth.replaceAll('NaN', '')} breakdown: ${breakdown}`);
-    bot.lastMessage = (`/gc ${requestedPlayer}'s networth ${shortenedNetworth.replaceAll('NaN', '')} breakdown: ${breakdown}`);
+    return (`${chat}${requestedPlayer}'s networth${shortenedNetworth.replaceAll('NaN', '')} breakdown: ${breakdown}`);
   }
   else {
-    bot.chat("/gc Invalid user " + requestedPlayer);
-    bot.lastMessage = ("/gc Invalid user " + requestedPlayer);
-    console.error("Invalid user");
+    return (chat + "Invalid user " + requestedPlayer);
   }
   } catch (error) {
   console.error('Error:', error);
   }
 }
 
-export default async function(bot, requestedPlayer) {
+export default async function(bot, requestedPlayer, player, chat) {
   requestedPlayer = requestedPlayer.split(" ")[0];
   requestedPlayer = requestedPlayer.replaceAll("\\", "");
+  let message = '';
   if (requestedPlayer.includes("/")) {
     let requestedPlayers = requestedPlayer.split("/");
     for (let requestedPlayer in requestedPlayers) {
       requestedPlayer = requestedPlayers[requestedPlayer];
-      getNetworth(bot, requestedPlayer);
+      message = await getNetworth(bot, requestedPlayer, player, chat);
     }
   }
   else {
-    getNetworth(bot, requestedPlayer);
+    message = await getNetworth(bot, requestedPlayer, player, chat);
   }
+  return message;
 }

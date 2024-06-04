@@ -1,9 +1,4 @@
 export default async function profileCommand(bot, requestedPlayer, player, chat) {
-    function msg(message) {
-        bot.chat(chat + message);
-        bot.lastMessage = chat + message;
-    }
-
     const args = requestedPlayer.split(" ")[1];
     requestedPlayer = requestedPlayer.split(" ")[0];
     const uuidResponse = await fetch(`https://api.mojang.com/users/profiles/minecraft/${requestedPlayer}`);
@@ -12,17 +7,17 @@ export default async function profileCommand(bot, requestedPlayer, player, chat)
     requestedPlayer = uuidJson.name;
     const dataResponse = await fetch(`https://api.hypixel.net/v2/skyblock/profiles?key=${process.env.apiKey}&uuid=${uuid}`);
     const dataJson = await dataResponse.json();
-    if (!dataJson.success || !dataJson.profiles) return msg("Invalid player.");
+    if (!dataJson.success || !dataJson.profiles) return (chat + "Invalid player.");
     if (!args) {
         let names = [];
         for (const profile in dataJson.profiles) {
             const text = dataJson.profiles[profile].selected? `${profile}. ${dataJson.profiles[profile].cute_name} (active)` : `${profile}. ${dataJson.profiles[profile].cute_name}`
             names.push(text);
         }
-        return msg(`${requestedPlayer}'s profiles: ${names.join(', ')}. Use .profile {player} {profile number} to see more.`);
+        return (`${chat}${requestedPlayer}'s profiles: ${names.join(', ')}. Use .profile {player} {profile number} to see more.`);
     }
 
-    if (!dataJson.profiles[Number(args)] && args.toLowerCase() != 'default') return msg("Invalid profile number.");
+    if (!dataJson.profiles[Number(args)] && args.toLowerCase() != 'default') return (chat + "Invalid profile number.");
 
     let profile;
     if (args.toLowerCase() == 'default') {
@@ -47,6 +42,6 @@ export default async function profileCommand(bot, requestedPlayer, player, chat)
     const soulflowCount = profileData.item_data? profileData.item_data.soulflow : 0;
     const fairySouls = profileData.fairy_soul? profileData.fairy_soul.total_collected : 0;
 
-    const message = `${requestedPlayer} on ${profileName} (${profileType}) Created ${profileCreated}, Selected: ${profileSelected}, Deaths: ${deathCount}, Soulflow: ${soulflowCount}, Serum: ${serum}, Jyrre: ${jyrre}, Fairy souls: ${fairySouls}`;
-    msg(message);
+    const message = `${chat}${requestedPlayer} on ${profileName} (${profileType}) Created ${profileCreated}, Selected: ${profileSelected}, Deaths: ${deathCount}, Soulflow: ${soulflowCount}, Serum: ${serum}, Jyrre: ${jyrre}, Fairy souls: ${fairySouls}`;
+    return (message);
 }

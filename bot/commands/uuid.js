@@ -1,9 +1,10 @@
-export default async function(bot, requestedPlayer) {
+export default async function(bot, requestedPlayer, player, chat) {
+  let message = "";
   await fetch(`https://api.mojang.com/users/profiles/minecraft/${requestedPlayer}`)
     .then((response) => response.json())
     .then((json) => {
-      let uuid = json.id;
-      bot.chat(`/gc ${requestedPlayer}'s uuid is ${uuid}`);
-      bot.lastMessage = (`/gc ${requestedPlayer}'s uuid is ${uuid}`);
+      const uuid = json.id;
+      message = (`${chat}${requestedPlayer}'s uuid is ${uuid}`);
   })
+  return message;
 }

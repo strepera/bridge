@@ -79,7 +79,7 @@ function formatNumber(num) {
   return num;
 }
 
-export default async function(bot, requestedPlayer) {
+export default async function(bot, requestedPlayer, player, chat) {
   let slayerStarted = false;
   let requestedProfile;
   if (requestedPlayer.split(" ")[1]) requestedProfile = requestedPlayer.split(" ")[1];
@@ -109,7 +109,7 @@ export default async function(bot, requestedPlayer) {
             let sortOrder = ['zombie', 'spider', 'wolf', 'enderman', 'blaze', 'vampire'];
             const memberData = members[member];
             const slayerData = memberData.slayer.slayer_bosses;
-            let slayerArray = ['/gc', `${requestedPlayer}'s slayer |`];
+            let slayerArray = [`${requestedPlayer}'s slayer |`];
             for (let i in memberData.slayer.slayer_bosses) {
               for (let slayerType in slayerData) {
                  if (slayerType == sortOrder[0]) {
@@ -139,9 +139,8 @@ export default async function(bot, requestedPlayer) {
               }
             }    
             if (slayerStarted == true) {        
-              bot.chat(slayerArray.join(" "));
-              bot.lastMessage = (slayerArray.join(" "));
               slayerStarted = false;
+              return (chat + slayerArray.join(" "));
             }
           }
         }

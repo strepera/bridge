@@ -12,7 +12,8 @@ async function getTopCandidate() {
   return topCandidate;
 }
 
-export default async function(bot) {
+export default async function(bot, requestedPlayer, player, chat) {
+  let message = "";
   await fetch(`https://api.hypixel.net/v2/resources/skyblock/election`)
   .then((response) => response.json())
   .then(async (json) => {
@@ -23,8 +24,7 @@ export default async function(bot) {
     perks = perks.replace(/EZPZ/g, 'E ZPZ');
     if (!json.current) {
       nextMayorYear = "Not available";
-      bot.chat(`/gc Current mayor is ${mayorname} | Perks are ${perks}`)
-      bot.lastMessage = (`/gc Current mayor is ${mayorname} | Perks are ${perks}`)
+      message = (`${chat}Current mayor is ${mayorname} | Perks are ${perks}`);
     }
     else {
       nextMayorYear = json.current.year;
@@ -38,8 +38,8 @@ export default async function(bot) {
       const topCandidate = await getTopCandidate();
       let topCandidatePerks = topCandidate.perks.map(perk => perk.name).join(', ');
       topCandidatePerks = topCandidatePerks.replace(/EZPZ/g, 'E ZPZ');
-      bot.chat(`/gc Current mayor is ${mayorname} | Perks are ${perks} | Next Mayor is ${topCandidate.name} | Perks are ${topCandidatePerks}. They are elected in ${days} days and ${hours} hours.`);
-      bot.lastMessage = (`/gc Current mayor is ${mayorname} | Perks are ${perks} | Next Mayor is ${topCandidate.name} | Perks are ${topCandidatePerks}. They are elected in ${days} days and ${hours} hours.`);
+      message = (`${chat}Current mayor is ${mayorname} | Perks are ${perks} | Next Mayor is ${topCandidate.name} | Perks are ${topCandidatePerks}. They are elected in ${days} days and ${hours} hours.`);
     }
-});
+  });
+  return message;
 }

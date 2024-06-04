@@ -58,6 +58,7 @@ const regexes = [
       const message = match[0];
       const player = match[2];
       if (match = message.match(new RegExp("^Guild > (?:\\[\\S+\\] )?" + process.env.botUsername1 + " \\[(\\S+)\\]: (.+)"))) {
+        const username = process.env.guild1.replaceAll('%20', ' ');
         const output = match[2];
         if (output.match(/^(\S+) \S (.+)/)) return;
         if (output.includes(' ⤷ ')) return;
@@ -69,8 +70,8 @@ const regexes = [
           .setColor('#00ff00')
           bridgeWebhook.send({
             embeds: [embed],
-            username: 'Danger Noodles',
-            avatarURL: 'https://cdn.discordapp.com/avatars/1232984080740515853/e0416e61f64c3d1659a271228e398fdd.png?size=256?size=512'
+            username: username,
+            avatarURL: 'https://cdn.discordapp.com/avatars/1183752068490612796/f127b318f4429579fa0082e287c901fd.png?size=256?size=512'
           })
           return;
         }
@@ -82,8 +83,8 @@ const regexes = [
           .setThumbnail(`https://minotar.net/helm/${match[1]}/32`)
           bridgeWebhook.send({
             embeds: [embed],
-            username: 'Danger Noodles',
-            avatarURL: 'https://cdn.discordapp.com/avatars/1232984080740515853/e0416e61f64c3d1659a271228e398fdd.png?size=256?size=512'
+            username: username,
+            avatarURL: 'https://cdn.discordapp.com/avatars/1183752068490612796/f127b318f4429579fa0082e287c901fd.png?size=256?size=512'
           })
           return;
         }
@@ -94,12 +95,12 @@ const regexes = [
           .setDescription('The answer was ' + match[1] + '!')
           bridgeWebhook.send({
             embeds: [embed],
-            username: 'Danger Noodles',
-            avatarURL: 'https://cdn.discordapp.com/avatars/1232984080740515853/e0416e61f64c3d1659a271228e398fdd.png?size=256?size=512'
+            username: username,
+            avatarURL: 'https://cdn.discordapp.com/avatars/1183752068490612796/f127b318f4429579fa0082e287c901fd.png?size=256?size=512'
           })
           return;
         }
-        if (output.startsWith(process.env.guild2prefix)) { // make configurable
+        if (output.startsWith(process.env.guild2prefix)) { 
           const status = output.split(' ')[2];
           if (status == 'joined.') {
             const player = output.split(' ')[1].replaceAll('_', '\\_');
@@ -138,8 +139,8 @@ const regexes = [
         .setColor('#00ff00')
         bridgeWebhook.send({
           embeds: [embed],
-          username: 'Danger Noodles',
-          avatarURL: 'https://cdn.discordapp.com/avatars/1232984080740515853/e0416e61f64c3d1659a271228e398fdd.png?size=256?size=512'
+          username: username,
+          avatarURL: 'https://cdn.discordapp.com/avatars/1183752068490612796/f127b318f4429579fa0082e287c901fd.png?size=256?size=512'
         })
         return;
       }

@@ -3,15 +3,11 @@ import fs from 'fs';
 export default async function(bot, requestedPlayer, player, chat) {
     const payment = Number(requestedPlayer.split(' ')[1]);
     if (!payment) {
-        bot.chat(chat + 'You need to pick an amount to donate! e.g. ".donate snailify 100"');
-        bot.lastMessage = (chat + 'You need to pick an amount to donate! e.g. ".donate snailify 100"');
-        return;
+        return (chat + 'You need to pick an amount to donate! e.g. ".donate snailify 100"');
     }
     requestedPlayer = requestedPlayer.split(' ')[0];
     if (requestedPlayer.trim() == '') {
-      bot.chat(chat + 'You need to pick a player to donate to! e.g. ".donate snailify 100"');
-      bot.lastMessage = (chat + 'You need to pick a player to donate to! e.g. ".donate snailify 100"');
-      return;
+      return (chat + 'You need to pick a player to donate to! e.g. ".donate snailify 100"');
     }
     const data = await fs.promises.readFile('bot/playerData.json', 'utf8');
     let json = JSON.parse(data);
@@ -20,14 +16,10 @@ export default async function(bot, requestedPlayer, player, chat) {
         var requestedPlayerObj = json[requestedPlayer.toLowerCase()];
     }
     else {
-        bot.chat(chat + 'Invalid player.');
-        bot.lastMessage = (chat + 'Invalid player.');
-        return;
+        return (chat + 'Invalid player.');
     }
     if (payment > playerObj.coins) {
-      bot.chat(chat + 'You cannot donate more coins than you have!');
-      bot.lastMessage = (chat + 'You cannot donate more coins than you have!');
-      return;
+      return (chat + 'You cannot donate more coins than you have!');
     }
   
     playerObj.coins -= Math.floor(payment);
@@ -36,6 +28,5 @@ export default async function(bot, requestedPlayer, player, chat) {
     json[requestedPlayer.toLowerCase()] = requestedPlayerObj;
     fs.writeFileSync('bot/playerData.json', JSON.stringify(json, null, 2));
   
-    bot.chat(chat + 'You donated $' + payment + ' to ' + requestedPlayerObj.username + '.');
-    bot.lastMessage = (chat + 'You donated $' + payment + ' to ' + requestedPlayerObj.username + '.');
+    return (chat + 'You donated $' + payment + ' to ' + requestedPlayerObj.username + '.');
 }

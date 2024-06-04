@@ -116,11 +116,6 @@ function check(value) {
 }
 
 export default async function cfCommand(bot, requestedPlayer, player, chat) {
-    function msg(message) {
-        bot.chat(chat + message);
-        bot.lastMessage = chat + message;
-    }
-
     requestedPlayer = requestedPlayer.split(' ')[0];
     const uuidResponse = await fetch(`https://api.mojang.com/users/profiles/minecraft/${requestedPlayer}`);
     const uuidJson = await uuidResponse.json();
@@ -128,7 +123,7 @@ export default async function cfCommand(bot, requestedPlayer, player, chat) {
     requestedPlayer = uuidJson.name;
     const dataResponse = await fetch(`https://api.hypixel.net/v2/skyblock/profiles?key=${process.env.apiKey}&uuid=${uuid}`);
     const dataJson = await dataResponse.json();
-    if (!dataJson.success || !dataJson.profiles) return msg("Invalid player.");
+    if (!dataJson.success || !dataJson.profiles) return (chat + "Invalid player.");
 
     let profileData;
     for (const profile of dataJson.profiles) {
@@ -156,7 +151,7 @@ export default async function cfCommand(bot, requestedPlayer, player, chat) {
     const cps = await getCps(cfData, profileData.profile.cookie_buff_active);
 	const timeLeft = ((prestigeRequirements[prestige] - chocolateSincePrestige) / cps / 60 / 60).toFixed(2);
 
-    msg(`${requestedPlayer}'s cf: CPS (with tt) [${cps.toLocaleString()}] Prestige [${prestige}/6] (${timeLeft} hrs for prestige ${prestige + 1}) Timetower ${timeTower}/15 Shrine ${shrine}/20 Coach ${coach}/20 All-time ${chocolate} Current ${currentChocolate} Rabbits ${rabbits}/457 Duplicates: ${duplicates}`);
+    return (`${chat}${requestedPlayer}'s cf: CPS (with tt) [${cps.toLocaleString()}] Prestige [${prestige}/6] (${timeLeft} hrs for prestige ${prestige + 1}) Gained (${chocolateSincePrestige}/${prestigeRequirements[prestige]}) Timetower ${timeTower}/15 Shrine ${shrine}/20 Coach ${coach}/20 All-time ${chocolate} Current ${currentChocolate} Rabbits ${rabbits}/457 Duplicates: ${duplicates}`);
 }
 
 const rabbits = {

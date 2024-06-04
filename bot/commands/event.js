@@ -1,41 +1,33 @@
-export default async function(bot, requestedPlayer) {
-  if (requestedPlayer !== "jerry" && requestedPlayer !== "spooky") {
-     bot.chat("/gc Invalid usage. Use !event {jerry/spooky}.");
-     bot.lastMessage = ("/gc Invalid usage. Use !event {jerry/spooky}.");
-     return;
+export default async function(bot, requestedPlayer, player, chat) {
+  requestedPlayer = requestedPlayer.split(' ')[0];
+  switch(requestedPlayer) {
+    case "jerry":
+      return chat + getTimeLeft(440400);
+    case "spooky":
+      return chat + getTimeLeft(297600);
+    case "hoppity":
+      return chat + getTimeLeft(3600);
   }
-  await fetch(`https://api.hypixel.net/v2/resources/skyblock/election`)
-  .then((response) => response.json())
-  .then(async (json) => {
-     const now = new Date();
-     let timeRemaining;
-     if (requestedPlayer === "jerry") {
-       let currentYear = json.mayor.election.year + 1;
-       const multipliedTime = currentYear * 446400; // 446400 = 5 days 4 hours
-       const addedTime = multipliedTime + 1560275700 - 7600;
-       const date = new Date(addedTime * 1000);
-       timeRemaining = date.getTime() - now.getTime();
-       if (timeRemaining < 0) {
-         timeRemaining += 446400 * 1000; // Add 5 days and 4 hours to ensure it's in the future
-       }
-       const jerryDays = Math.floor(timeRemaining / (1000 * 60 * 60 * 24));
-       const jerryHours = Math.floor((timeRemaining % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)) - 2;
-       bot.chat(`/gc Next jerry event is in ${jerryDays} days and ${jerryHours} hours.`)
-       bot.lastMessage = (`/gc Next jerry event is in ${jerryDays} days and ${jerryHours} hours.`)
-     }
-     else if (requestedPlayer === "spooky") {
-       let currentYear = json.mayor.election.year + 1;
-       const multipliedTime = currentYear * 446400; // 446400 = 5 days
-       const addedTime = multipliedTime + 1560275700 - 151200;
-       const date = new Date(addedTime * 1000);
-       timeRemaining = date.getTime() - now.getTime();
-       if (timeRemaining < 0) {
-         timeRemaining += 446400 * 1000; // Add 5 days to ensure it's in the future
-       }
-       const spookyDays = Math.floor(timeRemaining / (1000 * 60 * 60 * 24));
-       const spookyHours = Math.floor((timeRemaining % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-       bot.chat(`/gc Next spooky festival is in ${spookyDays} days and ${spookyHours} hours.`);
-       bot.lastMessage = (`/gc Next spooky festival is in ${spookyDays} days and ${spookyHours} hours.`);
-     }
-  });
 }; 
+
+function formatDuration(milliseconds) {
+  const days = Math.floor(milliseconds / (1000 * 60 * 60 * 24));
+  const hours = Math.floor((milliseconds % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+
+  return `Event starts in ${days} days ${hours} hours`;
+}
+
+function getTimeLeft(offset) {
+  const now = Math.floor(Date.now() / 1000);
+  const timeSinceStart = now - 1560275700 // start of years for sb
+  const year = Math.floor(timeSinceStart / 446400 /*5 days 4 hours*/);
+  const unixYear = 1560275700 + year * 446400;
+  let timeLeft = unixYear + offset - now;
+  
+  if (timeLeft < 0) {
+    const elapsedYears = Math.ceil((-timeLeft) / 446400);
+    timeLeft = (unixYear + elapsedYears * 446400) + offset - now;
+  }
+  
+  return formatDuration(timeLeft * 1000);
+}

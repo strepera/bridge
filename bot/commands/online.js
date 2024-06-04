@@ -59,17 +59,14 @@ export default async function(bot, requestedPlayer, player, chat) {
               modeParts[part] = modeParts[part][0].toUpperCase() + modeParts[part].slice(1);
           }
           mode = modeParts.join(' ');
-          bot.chat(`${chat}${requestedPlayer} is in ${gameType} - ${mode}`);
-          bot.lastMessage = (`${chat}${requestedPlayer} is in ${gameType} - ${mode}`);
+          return (`${chat}${requestedPlayer} is in ${gameType} - ${mode}`);
         }
         else {
-            bot.chat(`${chat}${requestedPlayer} is offline.`);
-            bot.lastMessage = (`${chat}${requestedPlayer} is offline.`);
+            return (`${chat}${requestedPlayer} is offline.`);
         }
       }
       else {
-        bot.chat(chat + 'Invalid player.');
-        bot.lastMessage = (chat + 'Invalid player.');
+        return (chat + 'Invalid player.');
       }
   } catch (error) {
       console.error('Error:', error);

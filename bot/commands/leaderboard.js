@@ -16,8 +16,7 @@ export default async function(bot, requestedPlayer, player, chatType) {
     const type = requestedPlayer.split(' ')[1];
     requestedPlayer = requestedPlayer.split(' ')[0];
     if (!type) {
-        chat("Invalid usage. .lb {player} {stat}");
-        return;
+        return (chatType + "Invalid usage. .lb {player} {stat}");
     }
 
     const mojangResponse = await fetch(`https://api.mojang.com/users/profiles/minecraft/${requestedPlayer}`);
@@ -29,8 +28,7 @@ export default async function(bot, requestedPlayer, player, chatType) {
     const guild = await guildResponse.json();
 
     if (!guild.success || !guild.guild) {
-        chat("Invalid player.");
-        return;
+        return (chatType + "Invalid player.");
     }
 
     const guildName = guild.guild.name;
@@ -91,12 +89,11 @@ export default async function(bot, requestedPlayer, player, chatType) {
 
             message += `, ${selectedPlayerPosition}. ${selectedPlayer} ${formatNumber(selectedExp.exp)}`;
 
-            chat(message);
-            break;
+            return (chatType + message);
         case "level":
             if (!guildData[guildName].levels) {
                 guildData[guildName].levels = {};
-                chat("Please wait... Initializing level data for the first time.");
+                chat(chatType + "Please wait... Initializing level data for the first time.");
                 for (const member of guildData[guildName].members) {
                     const response = await fetch(`https://api.hypixel.net/v2/skyblock/profiles?key=${process.env.apiKey}&uuid=${member.uuid}`);
                     const data = await response.json();
@@ -134,11 +131,8 @@ export default async function(bot, requestedPlayer, player, chatType) {
             const player2 = `2. ${firstThreeEntries[1][0]} [${firstThreeEntries[1][1]}]`;
             const player3 = `3. ${firstThreeEntries[2][0]} [${firstThreeEntries[2][1]}]`;
 
-            chat(`${player1}, ${player2}, ${player3}, ${player4}`);
-
-            break;
+            return (`${chatType}${player1}, ${player2}, ${player3}, ${player4}`);
         default:
-            chat("Invalid usage. .lb {player} {stat}");
-            return;
+            return (chatType + "Invalid usage. .lb {player} {stat}");
     }
 }

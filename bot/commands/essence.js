@@ -1,4 +1,4 @@
-export default async function reputationCommand(bot, requestedPlayer, player, chat) {
+export default async function(bot, requestedPlayer, player, chat) {
     requestedPlayer = requestedPlayer.split(' ')[0];
     const uuidResponse = await fetch(`https://api.mojang.com/users/profiles/minecraft/${requestedPlayer}`);
     const uuidJson = await uuidResponse.json();
@@ -11,13 +11,15 @@ export default async function reputationCommand(bot, requestedPlayer, player, ch
     for (const profile of dataJson.profiles) {
       if (profile.selected) profileData = profile.members[uuid];
     }
+    
+    const essence = profileData.currencies.essence;
+    if (!essence) {
+        return chat + requestedPlayer + ' has no essence.';
+    }
+    let essenceArr = [];
+    for (const ess in essence) {
+        essenceArr.push(`${ess} [${essence[ess].current}]`);
+    }
 
-    const data = profileData.nether_island_player_data;
-    const mageRep = data.mages_reputation;
-    const barbRep = data.barbarians_reputation;
-    const lastMatriarch = new Date(data.matriarch.last_attempt).toLocaleDateString({});
-    const kuudra = Object.keys(data.kuudra_completed_tiers);
-    const highestTier = kuudra[kuudra.length - 2].replaceAll('none', 'basic');
-
-    return (`${chat}${requestedPlayer}'s reputation: [ቾ ${mageRep.toLocaleString()}] [⚒ ${barbRep.toLocaleString()}] Last Heavy Pearls: ${lastMatriarch}, Highest: ${highestTier}`);
+    return chat + requestedPlayer + "'s " + essenceArr.join(', ');
 }

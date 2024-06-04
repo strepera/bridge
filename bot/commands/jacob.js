@@ -45,6 +45,5 @@ export default async function(bot, requestedPlayer, player, chat) {
     console.error(e);
   }
 
-  bot.chat(`${chat}Stats for ${requestedPlayer} | Weight ${totalWeight} | Unique Golds ${golds}/10`)
-  bot.lastMessage = (`${chat}Stats for ${requestedPlayer} | Weight ${totalWeight} | Unique Golds ${golds}/10`);
+  return (`${chat}Stats for ${requestedPlayer} | Weight ${totalWeight} | Unique Golds ${golds}/10`);
 }

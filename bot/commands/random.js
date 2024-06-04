@@ -1,8 +1,6 @@
-export default async function(bot, requestedPlayer) {
+export default async function(bot, requestedPlayer, player, chat) {
   if (requestedPlayer > 15) {
-    bot.chat('/gc Request exceeds maximum limit of 15 users.');
-    bot.lastMessage = ('/gc Request exceeds maximum limit of 15 users.');
-    return;
+    return (chat + 'Request exceeds maximum limit of 15 users.');
   }
   const response = await fetch(`https://api.hypixel.net/guild?key=${process.env.apiKey}&id=5d072c6b77ce842c1e4df9ea`); // nope ropes guild id
   const guildResponse = await response.json();
@@ -15,6 +13,5 @@ export default async function(bot, requestedPlayer) {
     const userResponse = await response.json();
     randomMembers.push(userResponse.name);
   }
-  bot.chat(`/gc Random users are ${randomMembers.join(', ')}`);
-  bot.lastMessage = (`/gc Random users are ${randomMembers.join(', ')}`);
+  return (`${chat}Random users are ${randomMembers.join(', ')}`);
 }

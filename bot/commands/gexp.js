@@ -1,20 +1,18 @@
 const ranks = ['Member', 'Snek', 'Danger Noodle', 'Nope Rope', 'Bot', 'Guild Master'];
 
-export default async function(bot, requestedPlayer) {
+export default async function(bot, requestedPlayer, player, chat) {
   requestedPlayer = requestedPlayer.split(" ")[0];
   const response0 = await fetch(`https://api.mojang.com/users/profiles/minecraft/${requestedPlayer}`);
   const json0 = await response0.json();
   let uuid = json0.id;
   requestedPlayer = json0.name;
   if (!uuid) {
-    bot.chat("Invalid player.");
-    global.lastMessage = ("Invalid player.");
+    return (chat + "Invalid player.");
   }
   const response = await fetch(`https://api.hypixel.net/v2/guild?key=${process.env.apiKey}&player=${uuid}`);
   const json = await response.json();
   if (!json.success || !json.guild) {
-    bot.chat("/gc Invalid player.");
-    bot.lastMessage = ("/gc Invalid player.");
+    return (chat + "Invalid player.");
   }
   let members = json.guild.members;
   let totalGEXP = 0;
@@ -52,8 +50,5 @@ export default async function(bot, requestedPlayer) {
    if (newRank != rank) {
     bot.chat(`/g setrank ${requestedPlayer} ${newRank}`);
   }
-  setTimeout(() => {
-    bot.chat(`/gc  ${requestedPlayer} joined ${joinDate}. Their gexp this week is ${totalGEXP.toLocaleString()}. (${guildName})`);
-    bot.lastMessage = (`/gc  ${requestedPlayer} joined ${joinDate}. Their gexp this week is ${totalGEXP.toLocaleString()}. (${guildName})`);
-  }, 250);
+  return (`${chat}${requestedPlayer} joined ${joinDate}. Their gexp this week is ${totalGEXP.toLocaleString()}. (${guildName})`);
 }

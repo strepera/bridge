@@ -15,15 +15,10 @@ function getTimeRemaining(endtime){
 }
 
 export default async function(bot, requestedPlayer, player, chat) {
-    function msg(message) {
-        bot.chat(chat + message);
-        bot.lastMessage = chat + message;
-    }
-
     const response = await fetch(`https://api.hypixel.net/v2/skyblock/firesales`);
     const data = await response.json();
 
-    if (!data.success || !data.sales) return msg("No firesale data available.");
+    if (!data.success || !data.sales) return (chat + "No firesale data available.");
 
     const itemResponse = await fetch(`https://api.hypixel.net/v2/resources/skyblock/items`);
     const itemData = await itemResponse.json();
@@ -43,5 +38,5 @@ export default async function(bot, requestedPlayer, player, chat) {
         }
     }
 
-    msg(items.join(', '));
+    return (chat + items.join(', '));
 }

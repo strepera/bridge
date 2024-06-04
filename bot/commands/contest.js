@@ -31,12 +31,10 @@ export default async function(bot, requestedPlayer, player, chat) {
     let contestString = closestContest.join(", ");
     let timeRemaining = getTimeRemaining(closestTime);
     if (timeRemaining.minutes < 0) {
-      bot.chat(`${chat}The current contest is ${contestString}. It will end in ${20 - timeRemaining.minutes * -1} minutes.`);
-      global.lastMessage = (`${chat}The current contest is ${contestString}. It will end in ${20 - timeRemaining.minutes * -1} minutes.`);
+      return (`${chat}The current contest is ${contestString}. It will end in ${20 - timeRemaining.minutes * -1} minutes.`);
     }
     else {
-      bot.chat(`${chat}The next contest is ${contestString}. It will start in ${timeRemaining.minutes} minutes.`);
-      bot.lastMessage = (`${chat}The next contest is ${contestString}. It will start in ${timeRemaining.minutes} minutes.`);
+      return (`${chat}The next contest is ${contestString}. It will start in ${timeRemaining.minutes} minutes.`);
     }
   })
   .catch(error => console.error('Error:', error));

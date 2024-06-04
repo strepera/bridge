@@ -36,7 +36,8 @@ const aliases = {
     'stocks': 'stock',
     'lb': 'leaderboard',
     'skill': 'skills',
-    'rep': 'reputation'
+    'rep': 'reputation',
+    'lbin': 'lowestbin'
 };
 
 export default async function commands(bot, branch, jsonMsg) {
@@ -47,10 +48,15 @@ export default async function commands(bot, branch, jsonMsg) {
         if (requestedPlayer.split('')[0] == ' ') requestedPlayer = requestedPlayer.substring(1);
         const executed = await getCommandAliases(command) || await importCommand(command);
         if (executed) {
-            executed(bot, requestedPlayer, match[2], '/gc ');
+            const response = await executed(bot, requestedPlayer, match[2], '/gc ');
             bot.lastCommand = command + ' ' + requestedPlayer;
-            executed(branch, requestedPlayer, match[2], '/gc ');
             branch.lastCommand = command + ' ' + requestedPlayer;
+            if (response) {
+                bot.chat(response);
+                bot.lastMessage = response;
+                branch.chat(response);
+                branch.lastMessage = response;
+            }
         }
     } else if (match = jsonMsg.match(new RegExp("^Guild > (?:\\[(\\S+)\\] )?" + process.env.botUsername1 + " \\[(\\S+)\\]: (\\S+) \\S \\.(\\S+)( .*)?"))) {
         let command = match[4];
@@ -58,10 +64,15 @@ export default async function commands(bot, branch, jsonMsg) {
         if (requestedPlayer.split('')[0] == ' ') requestedPlayer = requestedPlayer.substring(1);
         const executed = await getCommandAliases(command) || await importCommand(command);
         if (executed) {
-            executed(bot, requestedPlayer, match[3], '/gc ');
+            const response = await executed(bot, requestedPlayer, match[3], '/gc ');
             bot.lastCommand = command + ' ' + requestedPlayer;
-            executed(branch, requestedPlayer, match[3], '/gc ');
             branch.lastCommand = command + ' ' + requestedPlayer;
+            if (response) {
+                bot.chat(response);
+                bot.lastMessage = response;
+                branch.chat(response);
+                branch.lastMessage = response;
+            }
         }
     }
     if (match = jsonMsg.match(/^Party > (?:\[(\S+)\] )?(\S+): \.(\S+)( .*)?/)) {
@@ -70,10 +81,13 @@ export default async function commands(bot, branch, jsonMsg) {
         if (requestedPlayer.split('')[0] == ' ') requestedPlayer = requestedPlayer.substring(1);
         const executed = await getCommandAliases(command) || await importCommand(command);
         if (executed) {
-            executed(bot, requestedPlayer, match[2], '/pc ');
+            const response = await executed(bot, requestedPlayer, match[2], '/pc ');
             bot.lastCommand = command + ' ' + requestedPlayer;
-            executed(branch, requestedPlayer, match[2], '/gc ');
             branch.lastCommand = command + ' ' + requestedPlayer;
+            if (response) {
+                bot.chat(response);
+                bot.lastMessage = response;
+            }
         }
     }
 }

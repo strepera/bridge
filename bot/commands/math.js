@@ -18,10 +18,8 @@ export default function(bot, requestedPlayer, player, chat) {
       const answerpreludeindex = Math.floor(Math.random() * preludes.length);
       const answerprelude = preludes[answerpreludeindex];
       const answer = math.evaluate(requestedPlayer);
-      bot.chat(`${chat}${answerprelude} ${answer}`);
-      bot.lastMessage = (`${chat}${answerprelude} ${answer}`);
+      return (`${chat}${answerprelude} ${answer}`);
     } catch (err) {
-      bot.chat(chat + 'Sorry, I could not understand the math question.');
-      bot.lastMessage = (chat + 'Sorry, I could not understand the math question.');
+      return (chat + 'Sorry, I could not understand the math question.');
     }
 }
