@@ -6,6 +6,7 @@ const givenRoles = [
   'VIP+',
   'MVP',
   'MVP+',
+  'MVP++',
   'Verified',
   'Member',
   'Snek',
@@ -143,9 +144,16 @@ export async function checkVerification(member, bot, branch) {
   const playerData = await playerResponse.json();
   const rank = playerData.player.newPackageRank;
   if (rank) {
-    const rankRole = await member.guild.roles.cache.find(r => r.name === rank.replaceAll('_PLUS', '+'));
-    await member.roles.add(rankRole).catch(() => console.error(member.user.username + ' has elevated permissions. Cannot set role.'));
-    checkedRoles.push(rank.replaceAll('_PLUS', '+'));
+    if (playerData.player.monthlyPackageRank != 'NONE') {
+      const rankRole = await member.guild.roles.cache.find(r => r.name === 'MVP++');
+      await member.roles.add(rankRole).catch(() => console.error(member.user.username + ' has elevated permissions. Cannot set role.'));
+      checkedRoles.push('MVP++');
+    }
+    else {
+      const rankRole = await member.guild.roles.cache.find(r => r.name === rank.replaceAll('_PLUS', '+'));
+      await member.roles.add(rankRole).catch(() => console.error(member.user.username + ' has elevated permissions. Cannot set role.'));
+      checkedRoles.push(rank.replaceAll('_PLUS', '+'));
+    }
   }
 
   member.roles.cache.forEach(role => {

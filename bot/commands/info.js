@@ -2,6 +2,7 @@ import fs from 'fs';
 
 export default async function info(bot, player, placeholder, chat) {
     try {
+        player = player.split(' ')[0];
         const stat = await fs.promises.stat(`bot/playerData/${player.toLowerCase()}.json`);
         if (!stat.isFile()) {
             throw new Error('File does not exist');

@@ -65,8 +65,8 @@ export async function minecraft(bot, client, bridgeWebhook, logWebhook, punishWe
             if (data[user].prefix) separator = data[user].prefix;
           }
         }
-        branch.chat(process.env.guild1prefix + match[2] + ' ' + separator + ' ' + match[4]);
-        branch.lastMessage = (process.env.guild1prefix + match[2] + ' ' + separator + ' ' + match[4]);
+        branch.chat('/gc ' + process.env.guild1prefix + match[2] + ' ' + separator + ' ' + match[4]);
+        branch.lastMessage = ('/gc ' + process.env.guild1prefix + match[2] + ' ' + separator + ' ' + match[4]);
       }
     }
 
@@ -80,13 +80,13 @@ export async function minecraft(bot, client, bridgeWebhook, logWebhook, punishWe
     }
 
     if (match = jsonMsg.match(/^(?:\[(\S+)\] )?(\S+) joined the guild!/)) {
-      branch.chat(process.env.guild1prefix + match[2] + ' joined the guild! ------------');
-      branch.lastMessage = ( process.env.guild1prefix + match[2] + ' joined the guild! ------------');
+      branch.chat('/gc ' + process.env.guild1prefix + match[2] + ' joined the guild! ------------');
+      branch.lastMessage = ('/gc ' + process.env.guild1prefix + match[2] + ' joined the guild! ------------');
     }
 
     if (match = jsonMsg.match(/^(?:\[(\S+)\] )?(\S+) left the guild!/)) {
-      branch.chat(process.env.guild1prefix + match[2] + ' left the guild! ------------');
-      branch.lastMessage = (process.env.guild1prefix + match[2] + ' left the guild! ------------');
+      branch.chat('/gc ' + process.env.guild1prefix + match[2] + ' left the guild! ------------');
+      branch.lastMessage = ('/gc ' + process.env.guild1prefix + match[2] + ' left the guild! ------------');
     }
 
     commands(bot, branch, jsonMsg);
@@ -105,8 +105,8 @@ export async function minecraft(bot, client, bridgeWebhook, logWebhook, punishWe
             if (data[user].prefix) separator = data[user].prefix;
           }
         }
-        bot.chat(process.env.guild2prefix + match[2] + ' ' + separator + ' ' + match[4]);
-        bot.lastMessage = (process.env.guild2prefix + match[2] + ' ' + separator + ' ' + match[4]);
+        bot.chat('/gc ' + process.env.guild2prefix + match[2] + ' ' + separator + ' ' + match[4]);
+        bot.lastMessage = ('/gc ' + process.env.guild2prefix + match[2] + ' ' + separator + ' ' + match[4]);
       }
     }
 
@@ -120,13 +120,13 @@ export async function minecraft(bot, client, bridgeWebhook, logWebhook, punishWe
     }
 
     if (match = jsonMsg.match(/^(?:\[(\S+)\] )?(\S+) joined the guild!/)) {
-      bot.chat(process.env.guild2prefix + match[2] + ' joined the guild! ------------');
-      bot.lastMessage = (process.env.guild2prefix + match[2] + ' joined the guild! ------------');
+      bot.chat('/gc ' + process.env.guild2prefix + match[2] + ' joined the guild! ------------');
+      bot.lastMessage = ('/gc ' + process.env.guild2prefix + match[2] + ' joined the guild! ------------');
     }
 
     if (match = jsonMsg.match(/^(?:\[(\S+)\] )?(\S+) left the guild!/)) {
-      bot.chat(process.env.guild2prefix + match[2] + ' left the guild! ------------');
-      bot.lastMessage = (process.env.guild2prefix + match[2] + ' left the guild! ------------');
+      bot.chat('/gc ' + process.env.guild2prefix + match[2] + ' left the guild! ------------');
+      bot.lastMessage = ('/gc ' + process.env.guild2prefix + match[2] + ' left the guild! ------------');
     }
 
     commands(branch, bot, jsonMsg);

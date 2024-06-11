@@ -1,10 +1,11 @@
 export default function help(bot, request, player, chatType) {
   request = request.split(' ')[0];
   const messages = {
-    "1": (chatType + "8ball bingo cata cf class coinflip contest coop dice discord pay essence event fetchur firesale fish fps gexp guild harp hotm help"),
+    "1": (chatType + "8ball bedtime bingo cata cf class coinflip contest coop dice discord pay essence event fetchur firesale fish fps gexp guild harp hotm help"),
     "2": (chatType + "info jacob joke leaderboard lbin math mayor mp networth online patchnotes players profile random skills slayer speeds uuid wiki"),
     "image": (chatType + "https://imgur.com/sTaVP3Z"),
     "8ball": (chatType + "Usage .8ball {question} | e.g. .8ball am i cool?"),
+    "bedtime": (chatType + "bedtime story..."),
     "bingo": (chatType + "Usage .bingo {player} | Shows player's bingo information"),
     "cata": (chatType + "Usage Use .help cata1 for cata info help, use .help cata2 for cata calc help."),
     "cata1": (chatType + "Usage .cata {player} | e.g. .cata snailify"),
