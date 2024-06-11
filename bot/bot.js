@@ -5,6 +5,7 @@ import { onlineHandler } from './onlineHandler.js';
 import { levelHandler } from './levelHandler.js';
 import updateRanks from './updateRanks.js';
 import checkPatchNotes from './checkPatchNotes.js';
+import fs from 'fs';
 
 function generateRandomNonNumericString(length) {
   let result = '';
@@ -16,7 +17,11 @@ function generateRandomNonNumericString(length) {
   return result;
 }
 
+export const leaves = {};
+export const joins = {};
+
 export async function minecraft(bot, client, bridgeWebhook, logWebhook, punishWebhook, branch) {
+
   //initialize game handler
   gameHandler(bot, branch);
 
@@ -49,55 +54,83 @@ export async function minecraft(bot, client, bridgeWebhook, logWebhook, punishWe
   })
 
   bot.on('messagestr', async (jsonMsg) => {
+    messagestr(jsonMsg, bot, process.env.botUsername1);
     let match;
     if (match = jsonMsg.match(/^Guild > (?:\[(\S+)\] )?(\S+) \[(\S+)\]: (.+)/)) {
       if (match[2] != process.env.botUsername1) {
-        branch.chat(process.env.guild1prefix + match[2] + ' : ' + match[4]);
-        branch.lastMessage = (process.env.guild1prefix + match[2] + ' : ' + match[4]);
+        let separator = ':';
+        const data = global.usersData;
+        for (const user in data) {
+          if (data[user].username == match[2]) {
+            if (data[user].prefix) separator = data[user].prefix;
+          }
+        }
+        branch.chat(process.env.guild1prefix + match[2] + ' ' + separator + ' ' + match[4]);
+        branch.lastMessage = (process.env.guild1prefix + match[2] + ' ' + separator + ' ' + match[4]);
       }
     }
+
     if (match = jsonMsg.match(/^Guild > (\S+) (joined.|left.)/)) {
-      global.onlinePlayers = match[2] == 'joined.' ? global.onlinePlayers += 1 : global.onlinePlayers -= 1;
-      branch.chat(process.env.guild1prefix + match[1] + ' ' + match[2] + ' (' + global.onlinePlayers + '/' + global.totalPlayers + ')');
-      branch.lastMessage = (process.env.guild1prefix + match[1] + ' ' + match[2] + ' (' + global.onlinePlayers + '/' + global.totalPlayers + ')');
+      if (match[2] == 'joined.') {
+        sendJoined(branch, match, process.env.guild1prefix);
+      }
+      else {
+        sendLeft(branch, match, process.env.guild1prefix);
+      }
     }
+
     if (match = jsonMsg.match(/^(?:\[(\S+)\] )?(\S+) joined the guild!/)) {
-      branch.chat(process.env.guild1prefix + match[2] + ' joined the guild!');
-      branch.lastMessage = (process.env.guild1prefix + match[2] + ' joined the guild!');
+      branch.chat(process.env.guild1prefix + match[2] + ' joined the guild! ------------');
+      branch.lastMessage = ( process.env.guild1prefix + match[2] + ' joined the guild! ------------');
     }
+
     if (match = jsonMsg.match(/^(?:\[(\S+)\] )?(\S+) left the guild!/)) {
-      branch.chat(process.env.guild1prefix + match[2] + ' left the guild!');
-      branch.lastMessage = (process.env.guild1prefix + match[2] + ' left the guild!');
+      branch.chat(process.env.guild1prefix + match[2] + ' left the guild! ------------');
+      branch.lastMessage = (process.env.guild1prefix + match[2] + ' left the guild! ------------');
     }
+
     commands(bot, branch, jsonMsg);
     checkAnswer(bot, branch, jsonMsg, process.env.botUsername1);
-    messagestr(jsonMsg, bot, process.env.botUsername1);
   })
 
   branch.on('messagestr', async (jsonMsg) => {
+    messagestr(jsonMsg, branch, process.env.botUsername2);
     let match;
     if (match = jsonMsg.match(/^Guild > (?:\[(\S+)\] )?(\S+) \[(\S+)\]: (.+)/)) {
       if (match[2] != process.env.botUsername2) {
-        bot.chat(process.env.guild2prefix + match[2] + ' : ' + match[4]);
-        bot.lastMessage = (process.env.guild2prefix + match[2] + ' : ' + match[4]);
+        let separator = ':';
+        const data = global.usersData;
+        for (const user in data) {
+          if (data[user].username == match[2]) {
+            if (data[user].prefix) separator = data[user].prefix;
+          }
+        }
+        bot.chat(process.env.guild2prefix + match[2] + ' ' + separator + ' ' + match[4]);
+        bot.lastMessage = (process.env.guild2prefix + match[2] + ' ' + separator + ' ' + match[4]);
       }
     }
+
     if (match = jsonMsg.match(/^Guild > (\S+) (joined.|left.)/)) {
-      global.onlinePlayers = match[2] == 'joined.' ? global.onlinePlayers += 1 : global.onlinePlayers -= 1;
-      bot.chat(process.env.guild2prefix + match[1] + ' '+ match[2] + ' (' + global.onlinePlayers + '/' + global.totalPlayers + ')');
-      bot.lastMessage = (process.env.guild2prefix + match[1] + ' ' + match[2] + ' (' + global.onlinePlayers + '/' + global.totalPlayers + ')');
+      if (match[2] == 'joined.') {
+        sendJoined(bot, match, process.env.guild2prefix);
+      }
+      else {
+        sendLeft(bot, match, process.env.guild2prefix);
+      }
     }
+
     if (match = jsonMsg.match(/^(?:\[(\S+)\] )?(\S+) joined the guild!/)) {
-      bot.chat(process.env.guild2prefix + match[2] + ' joined the guild!');
-      bot.lastMessage = (process.env.guild2prefix + match[2] + ' joined the guild!');
+      bot.chat(process.env.guild2prefix + match[2] + ' joined the guild! ------------');
+      bot.lastMessage = (process.env.guild2prefix + match[2] + ' joined the guild! ------------');
     }
+
     if (match = jsonMsg.match(/^(?:\[(\S+)\] )?(\S+) left the guild!/)) {
-      bot.chat(process.env.guild2prefix + match[2] + ' left the guild!');
-      bot.lastMessage = (process.env.guild2prefix + match[2] + ' left the guild!');
+      bot.chat(process.env.guild2prefix + match[2] + ' left the guild! ------------');
+      bot.lastMessage = (process.env.guild2prefix + match[2] + ' left the guild! ------------');
     }
+
     commands(branch, bot, jsonMsg);
     checkAnswer(bot, branch, jsonMsg, process.env.botUsername2);
-    messagestr(jsonMsg, branch, process.env.botUsername2);
   })
 
   async function messagestr(jsonMsg, bot, botUsername) {
@@ -158,5 +191,50 @@ export async function minecraft(bot, client, bridgeWebhook, logWebhook, punishWe
         break;
       }
     };
+  }
+}
+
+async function sendJoined(bot, match, prefix) {
+  global.onlinePlayers += 1;
+  if (!joins[match[1]]) {
+    bot.chat(`/gc ${prefix}${match[1]} ${match[2]} (${global.onlinePlayers}/${global.totalPlayers})`);
+    bot.lastMessage = (`/gc ${prefix}${match[1]} ${match[2]} (${global.onlinePlayers}/${global.totalPlayers})`);
+    joins[match[1]] = Date.now();
+    return;
+  }
+  if (Date.now() - joins[match[1]] > 60000) {
+    bot.chat(`/gc ${prefix}${match[1]} ${match[2]} (${global.onlinePlayers}/${global.totalPlayers})`);
+    bot.lastMessage = (`/gc ${prefix}${match[1]} ${match[2]} (${global.onlinePlayers}/${global.totalPlayers})`);
+    joins[match[1]] = Date.now();
+    return;
+  }
+}
+
+async function sendLeft(bot, match, prefix) {
+  global.onlinePlayers -= 1;
+  if (joins[match[1]]) {
+    const data = await fs.promises.readFile(`bot/playerData/${match[1].toLowerCase()}.json`, 'utf8');
+    if (data) {
+      const json = JSON.parse(data);
+      let playerObj = json[match[1].toLowerCase()];
+      if (!playerObj.playtime) {
+        playerObj.playtime = 0;
+      }
+      playerObj.playtime += Date.now() - leaves[match[1]];
+      json[match[1].toLowerCase()] = playerObj;
+      await fs.promises.writeFile(`bot/playerData/${match[1].toLowerCase()}.json`, JSON.stringify(json, null, 2));
+    }
+  }
+  if (!leaves[match[1]]) {
+    bot.chat(`/gc ${prefix}${match[1]} ${match[2]} (${global.onlinePlayers}/${global.totalPlayers})`);
+    bot.lastMessage = (`/gc ${prefix}${match[1]} ${match[2]} (${global.onlinePlayers}/${global.totalPlayers})`);
+    leaves[match[1]] = Date.now();
+    return;
+  }
+  if (Date.now() - leaves[match[1]] > 60000) {
+    bot.chat(`/gc ${prefix}${match[1]} ${match[2]} (${global.onlinePlayers}/${global.totalPlayers})`);
+    bot.lastMessage = (`/gc ${prefix}${match[1]} ${match[2]} (${global.onlinePlayers}/${global.totalPlayers})`);
+    leaves[match[1]] = Date.now();
+    return;
   }
 }

@@ -25,9 +25,12 @@ function calculateTimeRemaining(time) {
 
 export default async function(bot, requestedPlayer, player, chat) {
     const estNow = Date.now() / 1000 - 18000;
-    const cycleIndex = calculateCycleIndex(estNow);
+    let cycleIndex = calculateCycleIndex(estNow);
     const remaining = Math.floor(calculateTimeRemaining(estNow) / 3600);
 
+    if (cycleIndex > items.length) {
+        cycleIndex = cycleIndex - items.length + 1;
+    }
     const currentItem = items[cycleIndex - 3];
 
     return (`${chat}Fetchur currently wants ${currentItem}. Changes in ${remaining} hours.`);

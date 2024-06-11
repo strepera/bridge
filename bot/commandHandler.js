@@ -4,7 +4,8 @@ async function importCommand(commandName) {
         import (`./commands/${commandName}.js`);
         return commandModule.default || commandModule;
     } catch (error) {
-        console.error(`Invalid command: ${commandName}`);
+        console.error(error);
+        //console.error(`Invalid command: ${commandName}`);
         return null;
     }
 }

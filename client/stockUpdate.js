@@ -22,13 +22,13 @@ export default async function(stockChannel) {
             for (const stock in stocks) {
                 stockValues.push(stocks[stock].name + ': ' + stocks[stock].value)
             }
-            stockChannel.send({
+            /*stockChannel({
                 embeds: [new MessageEmbed()
                     .setTitle('Stock Prices Updated')
                     .setDescription(stockValues.join('\n'))
                 ]
             });
-            updateStockPrices();
+            updateStockPrices();*/
         }, difference);
     }
     updateStockPrices();

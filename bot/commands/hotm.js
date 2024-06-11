@@ -39,6 +39,7 @@ const crystals = [
 
 function getRuns(data) {
     let lowest = 0;
+    if (!data) return 0;
     for (const crystal in data) {
         if (crystals.includes(crystal)) {
             if (lowest > data[crystal].total_placed) {
@@ -93,5 +94,5 @@ export default async function(bot, requestedPlayer, player, chat) {
     const gemstone = `(${formatNumber(gemstoneUsed)}/${formatNumber(gemstoneUsed + gemstoneTotal)})`;
     const glacite = `(${formatNumber(glaciteUsed)}/${formatNumber(glaciteUsed + glaciteTotal)})`;
 
-    return (`${chat}${requestedPlayer}'s mining | HOTM ${hotm} Runs ${runs.toLocaleString()} Commissions ${commissions.toLocaleString()} Mithril ${mithril} Gemstone ${gemstone} Glacite ${glacite}`);
+    return (`${chat}${requestedPlayer}'s mining | HOTM ${hotm} Runs ${runs} Commissions ${commissions.toLocaleString()} Mithril ${mithril} Gemstone ${gemstone} Glacite ${glacite}`);
 }

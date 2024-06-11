@@ -38,14 +38,14 @@ export async function check(answer, player, bot) {
     bot.chat(`/gc ${player} got it correct in ${elapsedTime} ms!`);
     bot.lastMessage = (`/gc ${player} got it correct in ${elapsedTime} ms!`);
     let playerObj;
-    const data = await fs.promises.readFile('bot/playerData.json', 'utf8');
+    const data = await fs.promises.readFile(`bot/playerData/${player.toLowerCase()}.json`, 'utf8');
     let json = JSON.parse(data);
     playerObj = json[player.toLowerCase()];
     if (playerObj) {
       playerObj.coins += 2500 * Math.floor(elapsedTime / 30000);
     } else playerObj = { "coins": 2500 * Math.floor(elapsedTime / 30000), "messageCount": 1, "username": player }
     json[player.toLowerCase()] = playerObj;
-    fs.writeFileSync('bot/playerData.json', JSON.stringify(json, null, 2));
+    await fs.promises.writeFile(`bot/playerData/${player.toLowerCase()}.json`, JSON.stringify(json, null, 2));
     delete global.randomItemName;
   }
 }

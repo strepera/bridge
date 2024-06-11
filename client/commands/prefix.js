@@ -32,7 +32,7 @@ export async function func(interaction) {
     }
   }
   else {
-    interaction.reply({embeds: [failedEmbed]});
+    interaction.reply({embeds: [failedEmbed], ephemeral: true});
     return;
   }
   const prefixEmbed = new MessageEmbed()
@@ -40,7 +40,7 @@ export async function func(interaction) {
     .setTitle('Prefixes')
     .setDescription('You can select your prefix for discord to minecraft chat messages with this command.\nSelect a prefix from the dropdown below to view its info!\n**Prefixes: ' + prefixes + '\nSelected Prefix: ' + selectedPrefix + '**')
     .setThumbnail('https://cdn.discordapp.com/avatars/1183752068490612796/f127b318f4429579fa0082e287c901fd.png?size=256?size=512')
-  interaction.reply({embeds: [prefixEmbed], components: [row]});
+  interaction.reply({embeds: [prefixEmbed], components: [row], ephemeral: true});
   return;
 }
 
@@ -208,7 +208,7 @@ export async function prefixBuy(interaction) {
           users[user].prefixes.push(prefix);
           users[user].prefix = prefix;
         }
-        const data = await fs.promises.readFile('bot/playerData.json', 'utf8');
+        const data = await fs.promises.readFile(`bot/playerData/${player.toLowerCase()}.json`, 'utf8');
         let json = JSON.parse(data);
         const playerObj = json[player.toLowerCase()];
         if (playerObj.coins >= prices[prefix]) {
@@ -230,7 +230,7 @@ export async function prefixBuy(interaction) {
           return;
         }
         json[player.toLowerCase()] = playerObj;
-        fs.writeFileSync('bot/playerData.json', JSON.stringify(json, null, 2));
+        fs.writeFileSync(`bot/playerData/${player.toLowerCase()}.json`, JSON.stringify(json, null, 2));
         const embed = new MessageEmbed()
         .setTitle('Bought the prefix ' + prefix + '!')
         .setDescription('Deducted $' + prices[prefix].toLocaleString())

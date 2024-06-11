@@ -9,6 +9,7 @@ const regexes = [
     func: (match, bridgeWebhook, punishWebhook) => {
       const player = match[2].replaceAll('_', '\\_');
       global.totalPlayers += 1;
+      global.onlinePlayers += 1;
       const embed = new MessageEmbed()
       .setColor('#00ff00')
       .setTitle('New Guild Member!')
@@ -32,6 +33,7 @@ const regexes = [
     func: (match, bridgeWebhook, punishWebhook) => {
       const player = match[2].replaceAll('_', '\\_');
       global.totalPlayers -= 1;
+      global.onlinePlayers -= 1;
       const embed = new MessageEmbed()
       .setColor('#ff0000')
       .setTitle('Guild Member Left.')

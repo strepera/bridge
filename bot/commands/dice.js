@@ -1,7 +1,7 @@
 import fs from 'fs';
 
 export default async function(bot, bet, player, chat) {
-    const data = await fs.promises.readFile('bot/playerData.json', 'utf8');
+    const data = await fs.promises.readFile(`bot/playerData/${player.toLowerCase()}.json`, 'utf8');
     const json = JSON.parse(data);
     const playerObj = json[player.toLowerCase()];
 
@@ -29,7 +29,7 @@ export default async function(bot, bet, player, chat) {
 
     playerObj.coins += reward;
     json[player.toLowerCase()] = playerObj;
-    fs.writeFileSync('bot/playerData.json', JSON.stringify(json, null, 2));
+    await fs.promises.writeFile(`bot/playerData/${player.toLowerCase()}.json`, JSON.stringify(json, null, 2));
 
     if (reward > 0) reward = '+' + reward;
     return (chat + 'The dice rolled ' + dice1 + ' + ' + dice2 + '. (' + reward + ')');

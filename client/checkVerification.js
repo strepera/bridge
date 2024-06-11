@@ -2,8 +2,6 @@ import getGist from './getGist.js';
 import fs from 'fs';
 
 const givenRoles = [
-  'Nope Ropes',
-  'Danger Noodles',
   'VIP',
   'VIP+',
   'MVP',
@@ -74,7 +72,7 @@ function toSuperscript(input) {
   return result;
 } 
 
-async function setNickname(member, guild, uuid, username, guildRoleId, checkedRoles) {
+async function setNickname(member, guild, uuid, username, checkedRoles) {
   const guildResponse = await fetch(`https://api.hypixel.net/v2/guild?key=${process.env.apiKey}&name=${guild}`);
   const guildData = await guildResponse.json();
   if (!guildData.guild || !guildData.guild.members) return;
@@ -83,8 +81,6 @@ async function setNickname(member, guild, uuid, username, guildRoleId, checkedRo
     if (guildMember.uuid == uuid) {
       memberFound = true;
       await member.setNickname(username + ' ' + toSuperscript(guildMember.rank.toLowerCase())).catch(() => console.error(member.username + ' has elevated permissions. Cannot set nickname.'));
-      await member.roles.add(guildRoleId).catch(() => console.error(member.user.username + ' has elevated permissions. Cannot set role.'));
-      checkedRoles.push(guild.replaceAll('%20', ' '));
       const role = await member.guild.roles.cache.find(r => r.name === 'Verified');
       await member.roles.add(role).catch(() => console.error(member.username + ' has elevated permissions. Cannot set role.'));
       checkedRoles.push('Verified');
@@ -119,6 +115,7 @@ export async function checkVerification(member, bot, branch) {
   const mojangResponse = await fetch('https://api.mojang.com/user/profile/' + user.uuid);
   const mojangData = await mojangResponse.json();
   const username = mojangData.name;
+  if (!username) return console.error(user);
 
   if (mojangData.id == user.uuid && mojangData.name != user.username) {
     const oldName = user.username;
@@ -127,7 +124,7 @@ export async function checkVerification(member, bot, branch) {
 
     const lowerName = mojangData.name.toLowerCase();
 
-    const playerData = JSON.parse(await fs.promises.readFile('bot/playerData.json', 'utf8'));
+    const playerData = JSON.parse(await fs.promises.readFile(`bot/playerData/${oldName.toLowerCase()}.json`, 'utf8'));
     if (playerData[oldName.toLowerCase()]) {
       playerData[oldName.toLowerCase()].username = lowerName;
     }
@@ -135,11 +132,12 @@ export async function checkVerification(member, bot, branch) {
     if (playerData[oldName.toLowerCase()]) {
       delete playerData[oldName.toLowerCase()];
     }
-    fs.writeFileSync('bot/playerData.json', JSON.stringify(playerData, null, 2));
+    fs.writeFileSync(`bot/playerData/${lowerName.toLowerCase()}.json`, JSON.stringify(playerData, null, 2));
+    fs.unlinkSync(`bot/playerData/${oldName.toLowerCase()}.json`);
   }
 
-  checkedRoles = await setNickname(member, process.env.guild1, user.uuid, username, process.env.guild1role, checkedRoles);
-  checkedRoles = await setNickname(member, process.env.guild2, user.uuid, username, process.env.guild2role, checkedRoles);
+  checkedRoles = await setNickname(member, process.env.guild1, user.uuid, username, checkedRoles);
+  checkedRoles = await setNickname(member, process.env.guild2, user.uuid, username, checkedRoles);
 
   const playerResponse = await fetch('https://api.hypixel.net/v2/player?key=' + process.env.apiKey + '&uuid=' + user.uuid);
   const playerData = await playerResponse.json();

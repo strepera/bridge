@@ -27,14 +27,14 @@ export default async function(bot, requestedPlayer, player, chat) {
     for (const item of data.sales) {
         for (const itemObj of itemData.items) {
             if (itemObj.id == item.item_id) {
-                items.push(`${itemObj.name} [${item.price}] (${item.amount} quantity) ends in ${getTimeRemaining(new Date(item.end)).hours} hours`);
+                items.push(`${itemObj.name} [${item.price}] (${item.amount} quantity) ends in ${getTimeRemaining(new Date(item.end)).days} days`);
             }
         }
     }
     if (items.length != data.sales.length) {
         items = [];
         for (const item of data.sales) {
-            items.push(`${item.item_id} [${item.price}] (${item.amount} quantity) ends in ${getTimeRemaining(new Date(item.end)).hours} hours`);
+            items.push(`${item.item_id} [${item.price}] (${item.amount} quantity) ends in ${getTimeRemaining(new Date(item.end)).days} days`);
         }
     }
 

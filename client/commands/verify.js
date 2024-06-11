@@ -122,14 +122,27 @@ export async function func(interaction, options) {
     });
   }
 
-  if (!hypixelData.player.socialMedia || dcuser != hypixelData.player.socialMedia.links.DISCORD) {
+  if (!hypixelData.player.socialMedia || dcuser.toLowerCase() != hypixelData.player.socialMedia.links.DISCORD.toLowerCase()) {
+    let current = "";
+    if (hypixelData.player.socialMedia) {
+      if (hypixelData.player.socialMedia.links.DISCORD) {
+        current = `Current linked discord username: \`\`${hypixelData.player.socialMedia.links.DISCORD}\`\``;
+      }
+      else {
+        current = `Current linked discord username: \`\`None\`\``;
+      }
+    }
+    else {
+      current = `Current linked discord username: \`\`None\`\``;
+    }
     return interaction.editReply({ embeds: [new MessageEmbed()
       .setColor('#FF0000')
       .setTitle('Error Linking')
       .setThumbnail('https://cdn.discordapp.com/avatars/1183752068490612796/f127b318f4429579fa0082e287c901fd.png?size=256?size=512')
-      .setDescription(`Your minecraft linked discord username did not match.
+      .setDescription(`Your minecraft linked discord username did not match. Try following the embedded gif in the main lobby.
+      ${current}
       Type this in minecraft: \`\`${interaction.user.username}\`\`
-      Minecraft username: \`\`${username}\`\``)
+      Your input username: \`\`${username}\`\``)
       .setImage('https://imgur.com/vvegsn6.gif')
       ]});
   }
@@ -153,7 +166,7 @@ async function updateGist(uuid, interaction, username) {
     const dcuser = interaction.user.username
     const users = await getGist();
     for (let user in users) {
-        if (users[user].dcuser == dcuser) {
+        if (users[user].dcuser.toLowerCase() == dcuser.toLowerCase()) {
             const embed =
             new MessageEmbed()
             .setColor('FF0000')

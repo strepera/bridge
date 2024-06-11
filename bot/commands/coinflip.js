@@ -9,13 +9,12 @@ export default async function(bot, bet, player, chat) {
     if (bet.trim() == '') {
       return (chat + 'You need to bet an amount! e.g. ".cf 100 tails"');
     }
-    if (Number(bet) < 100) {
+    if (Number(bet) < 100 || Number(bet) < 0) {
       return (chat + 'You need to bet at least 100 coins!');
     }
-    let playerObj;
-    const data = await fs.promises.readFile('bot/playerData.json', 'utf8');
+    const data = await fs.promises.readFile(`bot/playerData/${player.toLowerCase()}.json`, 'utf8');
     let json = JSON.parse(data);
-    playerObj = json[player.toLowerCase()];
+    const playerObj = json[player.toLowerCase()];
     if (Number(bet) > playerObj.coins) {
       return (chat + 'You cannot bet more coins than you have!');
     }
@@ -36,7 +35,7 @@ export default async function(bot, bet, player, chat) {
   
     playerObj.coins += Math.floor(reward);
     json[player.toLowerCase()] = playerObj;
-    fs.writeFileSync('bot/playerData.json', JSON.stringify(json, null, 2));
+    await fs.promises.writeFile(`bot/playerData/${player.toLowerCase()}.json`, JSON.stringify(json, null, 2));
   
     if (reward > 0) reward = '+' + reward;
     return (chat + 'The coin flipped ' + coin + '. You chose ' + side + ' (' + reward + ')');

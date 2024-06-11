@@ -71,17 +71,14 @@ export default async function fish(bot, request, player, chat) {
     setTimeout(() => {
         bot.chat("/t " + player + " You caught: " + message.join(' '));
         bot.lastMessage = ("/t " + player + " You caught: " + message.join(' '));
-        setTimeout(() => {
-            msg("Total: $" + total);
-        }, 500);
     }, 1000);
 
-    const data = await fs.promises.readFile('bot/playerData.json', 'utf8');
+    const data = await fs.promises.readFile(`bot/playerData/${player.toLowerCase()}.json`, 'utf8');
     const json = JSON.parse(data);
     const playerObj = json[player.toLowerCase()];
     playerObj.coins += total;
 
-    fs.writeFileSync('bot/playerData.json', JSON.stringify(json, null, 2));
+    await fs.promises.writeFile(`bot/playerData/${player.toLowerCase()}.json`, JSON.stringify(json, null, 2));
 
     return (chat + "Fished " + fishAmount + ' times!');
 }

@@ -21,5 +21,5 @@ export default async function(bot, requestedPlayer, player, chat) {
         essenceArr.push(`${ess} [${essence[ess].current}]`);
     }
 
-    return chat + requestedPlayer + "'s " + essenceArr.join(', ');
+    return chat + requestedPlayer + "'s Essence | " + essenceArr.join(', ');
 }

@@ -1,3 +1,10 @@
+function check(input) {
+  if (!input) {
+    return 0;
+  }
+  return input;
+}
+
 export default async function reputationCommand(bot, requestedPlayer, player, chat) {
     requestedPlayer = requestedPlayer.split(' ')[0];
     const uuidResponse = await fetch(`https://api.mojang.com/users/profiles/minecraft/${requestedPlayer}`);
@@ -13,11 +20,11 @@ export default async function reputationCommand(bot, requestedPlayer, player, ch
     }
 
     const data = profileData.nether_island_player_data;
-    const mageRep = data.mages_reputation;
-    const barbRep = data.barbarians_reputation;
-    const lastMatriarch = new Date(data.matriarch.last_attempt).toLocaleDateString({});
+    const mageRep = check(data.mages_reputation);
+    const barbRep = check(data.barbarians_reputation);
+    const lastMatriarch = check(new Date(data.matriarch.last_attempt).toLocaleDateString({}));
     const kuudra = Object.keys(data.kuudra_completed_tiers);
-    const highestTier = kuudra[kuudra.length - 2].replaceAll('none', 'basic');
+    const highestTier = check(kuudra[kuudra.length - 2].replaceAll('none', 'basic'));
 
     return (`${chat}${requestedPlayer}'s reputation: [ቾ ${mageRep.toLocaleString()}] [⚒ ${barbRep.toLocaleString()}] Last Heavy Pearls: ${lastMatriarch}, Highest: ${highestTier}`);
 }

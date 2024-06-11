@@ -53,6 +53,8 @@ async function formatMessage(message) {
   }).replace(/\n/g, ' ').replace(/\bez\b/g, "e.z");
  
   newMsg = replaceEmojisWithNames(newMsg);
+
+  newMsg = newMsg.replace(/(https?:\/\/(?:www\.)?(?!youtube\.com|hypixel\.net)[^\s]+)/g, '(Link)');
  
   if (message.attachments) {
     message.attachments.forEach(attachment => {

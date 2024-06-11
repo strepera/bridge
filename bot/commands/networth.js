@@ -48,7 +48,7 @@ async function getNetworth(bot, requestedPlayer, player, chat) {
     const accessories = formatNumber(longNetworthObj.types.accessories.total);
     const museum = formatNumber(longNetworthObj.types.museum.total);
     const breakdown = `Purse: ${purse} Bank: ${bank} Essence: ${essence} Equipment: ${equipment} Items: ${items} Pets: ${pets} Accessories: ${accessories} Museum: ${museum}`;
-    return (`${chat}${requestedPlayer}'s networth${shortenedNetworth.replaceAll('NaN', '')} breakdown: ${breakdown}`);
+    return (`${chat}${requestedPlayer}'s networth${shortenedNetworth.replaceAll('NaN', '')} ${breakdown}`);
   }
   else {
     return (chat + "Invalid user " + requestedPlayer);

@@ -93,7 +93,7 @@ export default async function(bot, requestedPlayer, player, chatType) {
         case "level":
             if (!guildData[guildName].levels) {
                 guildData[guildName].levels = {};
-                chat(chatType + "Please wait... Initializing level data for the first time.");
+                chat("Please wait... Initializing level data for the first time.");
                 for (const member of guildData[guildName].members) {
                     const response = await fetch(`https://api.hypixel.net/v2/skyblock/profiles?key=${process.env.apiKey}&uuid=${member.uuid}`);
                     const data = await response.json();

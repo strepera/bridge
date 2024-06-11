@@ -151,7 +151,7 @@ export default async function cfCommand(bot, requestedPlayer, player, chat) {
     const cps = await getCps(cfData, profileData.profile.cookie_buff_active);
 	const timeLeft = ((prestigeRequirements[prestige] - chocolateSincePrestige) / cps / 60 / 60).toFixed(2);
 
-    return (`${chat}${requestedPlayer}'s cf: CPS (with tt) [${cps.toLocaleString()}] Prestige [${prestige}/6] (${timeLeft} hrs for prestige ${prestige + 1}) Gained (${chocolateSincePrestige}/${prestigeRequirements[prestige]}) Timetower ${timeTower}/15 Shrine ${shrine}/20 Coach ${coach}/20 All-time ${chocolate} Current ${currentChocolate} Rabbits ${rabbits}/457 Duplicates: ${duplicates}`);
+    return (`${chat}${requestedPlayer}'s cf: CPS (with tt) [${cps.toLocaleString()}] Prestige [${prestige}/6] (${timeLeft} hrs for prestige ${prestige + 1}) Gained (${formatNumber(chocolateSincePrestige)}/${formatNumber(prestigeRequirements[prestige])}) Timetower ${timeTower}/15 Shrine ${shrine}/20 Coach ${coach}/20 All-time ${chocolate} Current ${currentChocolate} Rabbits ${rabbits}/457 Duplicates: ${duplicates}`);
 }
 
 const rabbits = {
