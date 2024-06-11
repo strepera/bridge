@@ -45,7 +45,7 @@ export async function check(answer, player, bot) {
       playerObj.coins += 2500 * Math.floor(elapsedTime / 30000);
     } else playerObj = { "coins": 2500 * Math.floor(elapsedTime / 30000), "messageCount": 1, "username": player }
     json[player.toLowerCase()] = playerObj;
-    await fs.promises.writeFile(`bot/playerData/${player.toLowerCase()}.json`, JSON.stringify(json, null, 2));
+    fs.writeFileSync(`bot/playerData/${player.toLowerCase()}.json`, JSON.stringify(json, null, 2));
     delete global.randomItemName;
   }
 }

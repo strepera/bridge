@@ -12,7 +12,7 @@ export default async function info(bot, player, placeholder, chat) {
     
         player = player.split(' ')[0];
     
-        if (player == 'top') {
+        /*if (player == 'top') {
             const entries = Object.entries(json);
             const sortedEntries = entries.sort((a, b) => b[1].coins - a[1].coins);
             const top3Users = sortedEntries.slice(0, 3);
@@ -22,7 +22,7 @@ export default async function info(bot, player, placeholder, chat) {
                 message.push(`${Number(i) + 1}. ${top3Users[i][1].username} $${top3Users[i][1].coins}, ${top3Users[i][1].messageCount} msgs`);
             }
             return (chat + message.join(', '));
-        }
+        }*/
     
         if (!json[player.toLowerCase()]) { 
             return (chat + 'Invalid player.');

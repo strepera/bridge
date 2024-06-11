@@ -54,7 +54,7 @@ export async function minecraft(bot, client, bridgeWebhook, logWebhook, punishWe
   })
 
   bot.on('messagestr', async (jsonMsg) => {
-    messagestr(jsonMsg, bot, process.env.botUsername1);
+    await  messagestr(jsonMsg, bot, process.env.botUsername1);
     let match;
     if (match = jsonMsg.match(/^Guild > (?:\[(\S+)\] )?(\S+) \[(\S+)\]: (.+)/)) {
       if (match[2] != process.env.botUsername1) {
@@ -89,12 +89,12 @@ export async function minecraft(bot, client, bridgeWebhook, logWebhook, punishWe
       branch.lastMessage = ('/gc ' + process.env.guild1prefix + match[2] + ' left the guild! ------------');
     }
 
-    commands(bot, branch, jsonMsg);
-    checkAnswer(bot, branch, jsonMsg, process.env.botUsername1);
+    await commands(bot, branch, jsonMsg);
+    await checkAnswer(bot, branch, jsonMsg, process.env.botUsername1);
   })
 
   branch.on('messagestr', async (jsonMsg) => {
-    messagestr(jsonMsg, branch, process.env.botUsername2);
+    await messagestr(jsonMsg, branch, process.env.botUsername2);
     let match;
     if (match = jsonMsg.match(/^Guild > (?:\[(\S+)\] )?(\S+) \[(\S+)\]: (.+)/)) {
       if (match[2] != process.env.botUsername2) {
@@ -129,8 +129,8 @@ export async function minecraft(bot, client, bridgeWebhook, logWebhook, punishWe
       bot.lastMessage = ('/gc ' + process.env.guild2prefix + match[2] + ' left the guild! ------------');
     }
 
-    commands(branch, bot, jsonMsg);
-    checkAnswer(bot, branch, jsonMsg, process.env.botUsername2);
+    await commands(branch, bot, jsonMsg);
+    await checkAnswer(bot, branch, jsonMsg, process.env.botUsername2);
   })
 
   async function messagestr(jsonMsg, bot, botUsername) {
@@ -222,7 +222,7 @@ async function sendLeft(bot, match, prefix) {
       }
       playerObj.playtime += Date.now() - leaves[match[1]];
       json[match[1].toLowerCase()] = playerObj;
-      await fs.promises.writeFile(`bot/playerData/${match[1].toLowerCase()}.json`, JSON.stringify(json, null, 2));
+      fs.writeFileSync(`bot/playerData/${match[1].toLowerCase()}.json`, JSON.stringify(json, null, 2));
     }
   }
   if (!leaves[match[1]]) {

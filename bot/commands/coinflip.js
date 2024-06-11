@@ -35,7 +35,7 @@ export default async function(bot, bet, player, chat) {
   
     playerObj.coins += Math.floor(reward);
     json[player.toLowerCase()] = playerObj;
-    await fs.promises.writeFile(`bot/playerData/${player.toLowerCase()}.json`, JSON.stringify(json, null, 2));
+    fs.writeFileSync(`bot/playerData/${player.toLowerCase()}.json`, JSON.stringify(json, null, 2));
   
     if (reward > 0) reward = '+' + reward;
     return (chat + 'The coin flipped ' + coin + '. You chose ' + side + ' (' + reward + ')');

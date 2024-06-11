@@ -25,8 +25,8 @@ export default async function stock(bot, request, player, chat) {
             if (!stocks[stockType].ownership[player.toLowerCase()]) stocks[stockType].ownership[player.toLowerCase()] = buyAmount;
             else stocks[stockType].ownership[player.toLowerCase()] += buyAmount;
             playerData[player.toLowerCase()].coins -= stocks[stockType].value * buyAmount;
-            await fs.promises.writeFile(`bot/playerData/${player.toLowerCase()}.json`, JSON.stringify(playerData, null, 2));
-            await fs.promises.writeFile(`bot/playerData/${player.toLowerCase()}.json`, JSON.stringify(stocks, null, 2));
+            fs.writeFileSync(`bot/playerData/${player.toLowerCase()}.json`, JSON.stringify(playerData, null, 2));
+            fs.writeFileSync(`bot/playerData/${player.toLowerCase()}.json`, JSON.stringify(stocks, null, 2));
             return (chat + "Bought [" + buyAmount + '] ' + stocks[stockType].name + ' stocks for $' + stocks[stockType].value * buyAmount);
         case "sell":
             const sellAmount = Number(request.split(' ')[2]);
@@ -41,8 +41,8 @@ export default async function stock(bot, request, player, chat) {
             stocks[stockType].ownership[player.toLowerCase()] -= sellAmount;
             if (stocks[stockType].ownership[player.toLowerCase()] == 0) delete stocks[stockType].ownership[player];
             playerData[player.toLowerCase()].coins += stocks[stockType].value * sellAmount;
-            await fs.promises.writeFile(`bot/playerData/${player.toLowerCase()}.json`, JSON.stringify(playerData, null, 2));
-            await fs.promises.writeFile(`bot/playerData/${player.toLowerCase()}.json`, JSON.stringify(stocks, null, 2));
+            fs.writeFileSync(`bot/playerData/${player.toLowerCase()}.json`, JSON.stringify(playerData, null, 2));
+            fs.writeFileSync(`bot/playerData/${player.toLowerCase()}.json`, JSON.stringify(stocks, null, 2));
             return (chat + "Sold [" + sellAmount + '] ' + stocks[stockType].name + ' stocks and gained $' + stocks[stockType].value * sellAmount);
         case "price":
             let stock = request.split(' ')[1];

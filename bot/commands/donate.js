@@ -31,8 +31,8 @@ export default async function(bot, requestedPlayer, player, chat) {
     playerJson[player.toLowerCase()] = playerObj;
     requestedJson[requestedPlayer.toLowerCase()] = requestedPlayerObj;
 
-    await fs.promises.writeFile(`bot/playerData/${player.toLowerCase()}.json`, JSON.stringify(playerJson, null, 2));
-    await fs.promises.writeFile(`bot/playerData/${requestedPlayer.toLowerCase()}.json`, JSON.stringify(requestedJson, null, 2));
+    fs.writeFileSync(`bot/playerData/${player.toLowerCase()}.json`, JSON.stringify(playerJson, null, 2));
+    fs.writeFileSync(`bot/playerData/${requestedPlayer.toLowerCase()}.json`, JSON.stringify(requestedJson, null, 2));
   
     return (chat + 'You donated $' + payment + ' to ' + requestedPlayerObj.username + '.');
 }

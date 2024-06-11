@@ -78,7 +78,7 @@ export default async function fish(bot, request, player, chat) {
     const playerObj = json[player.toLowerCase()];
     playerObj.coins += total;
 
-    await fs.promises.writeFile(`bot/playerData/${player.toLowerCase()}.json`, JSON.stringify(json, null, 2));
+    fs.writeFileSync(`bot/playerData/${player.toLowerCase()}.json`, JSON.stringify(json, null, 2));
 
     return (chat + "Fished " + fishAmount + ' times!');
 }

@@ -17,12 +17,12 @@ export async function levelHandler(bot, player) {
         json[lowerPlayer].coins += 15;
         json[lowerPlayer].messageCount += 1;
 
-        await fs.promises.writeFile(filePath, JSON.stringify(json, null, 2));
+        fs.writeFileSync(filePath, JSON.stringify(json, null, 2));
 
     } catch (error) {
         const json = {};
         json[player.toLowerCase()] = { "coins": 15, "messageCount": 1, "username": player };
 
-        await fs.promises.writeFile(filePath, JSON.stringify(json, null, 2));
+        fs.writeFileSync(filePath, JSON.stringify(json, null, 2));
     }
 }
