@@ -1,5 +1,8 @@
 import fs from 'fs';
 
+const messages = {};
+
+const time = 6;
 
 export async function levelHandler(bot, player) {
     const lowerPlayer = player.toLowerCase();
@@ -24,5 +27,25 @@ export async function levelHandler(bot, player) {
         json[player.toLowerCase()] = { "coins": 15, "messageCount": 1, "username": player };
 
         fs.writeFileSync(filePath, JSON.stringify(json, null, 2));
+    }
+
+    if (!messages[player]) {
+        messages[player] = {
+            time: Date.now(),
+            count: 1
+        }
+    }
+    else {
+        messages[player].count += 1;
+        if (Date.now() - messages[player].time > time * 1000) {
+            messages[player] = {
+                time: Date.now(),
+                count: 0
+            }
+        }
+        else if (messages[player].count >= 4 && Date.now() - messages[player].time < time * 1000) {
+            bot.chat(`/g mute ${player} ${(time - Math.floor((Date.now() - messages[player].time) / 1000)) * 5 + 5}m`);
+            bot.lastMessage = (`/g mute ${player} ${(time - Math.floor((Date.now() - messages[player].time) / 1000)) * 5 + 5}m`);
+        }
     }
 }

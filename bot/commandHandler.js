@@ -25,6 +25,16 @@ async function getCommandAliases(command) {
     }
 }
 
+function generateRandomNonNumericString(length) {
+    let result = '';
+    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
+    const charactersLength = characters.length;
+    for (let i = 0; i < length; i++) {
+        result += characters.charAt(Math.floor(Math.random() * charactersLength));
+    }
+    return result;
+}
+
 const aliases = {
     'nw': 'networth',
     'speed': 'speeds',
@@ -53,10 +63,10 @@ export default async function commands(bot, branch, jsonMsg) {
             bot.lastCommand = command + ' ' + requestedPlayer;
             branch.lastCommand = command + ' ' + requestedPlayer;
             if (response) {
-                bot.chat(response);
-                bot.lastMessage = response;
-                branch.chat(response);
-                branch.lastMessage = response;
+                bot.chat(response + ' #' + generateRandomNonNumericString(8));
+                bot.lastMessage = response + ' #' + generateRandomNonNumericString(8);
+                branch.chat(response + ' #' + generateRandomNonNumericString(8));
+                branch.lastMessage = response + ' #' + generateRandomNonNumericString(8);
             }
         }
     } else if (match = jsonMsg.match(new RegExp("^Guild > (?:\\[(\\S+)\\] )?" + process.env.botUsername1 + " \\[(\\S+)\\]: (\\S+) \\S \\.(\\S+)( .*)?"))) {
@@ -69,10 +79,10 @@ export default async function commands(bot, branch, jsonMsg) {
             bot.lastCommand = command + ' ' + requestedPlayer;
             branch.lastCommand = command + ' ' + requestedPlayer;
             if (response) {
-                bot.chat(response);
-                bot.lastMessage = response;
-                branch.chat(response);
-                branch.lastMessage = response;
+                bot.chat(response + ' #' + generateRandomNonNumericString(8));
+                bot.lastMessage = response + ' #' + generateRandomNonNumericString(8);
+                branch.chat(response + ' #' + generateRandomNonNumericString(8));
+                branch.lastMessage = response + ' #' + generateRandomNonNumericString(8);
             }
         }
     }

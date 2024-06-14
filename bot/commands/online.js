@@ -33,9 +33,11 @@ export default async function(bot, requestedPlayer, player, chat) {
   if (requestedPlayer == player) {
     if (bot.username == process.env.botUsername1) {
       branch.chat('/g online');
+      branch.lastMessage = '/g online';
     }
     else {
       main.chat('/g online');
+      main.lastMessage = '/g online';
     }
     async function checkOnlineEmbed() {
       if (global.onlineEmbed != undefined) {

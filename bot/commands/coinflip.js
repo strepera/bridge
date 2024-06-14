@@ -1,6 +1,7 @@
 import fs from 'fs';
 
 export default async function(bot, bet, player, chat) {
+  if (chat != '/pc ') return 'Use .coinflip in party chat!';
     const side = bet.split(' ')[1];
     if (!side) {
         return (chat + 'You need to pick a side! e.g. ".cf 100 tails"');

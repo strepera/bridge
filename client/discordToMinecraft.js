@@ -1,12 +1,37 @@
 import * as emoji from 'node-emoji';
 import emojiRegex from 'emoji-regex';
 
+const messages = {};
+
+const time = 6;
+
 export default async function discordToMinecraft(bot, client, message, bridgeChannelId) {
     if (message.author.bot) return;
     if (message.channelId != bridgeChannelId) return;
     let user = '';
     const member = await message.guild.members.fetch(message.author.id);
     const nickname = member.displayName.split(' ')[0];
+
+    if (!messages[nickname]) {
+      messages[nickname] = {
+          time: Date.now(),
+          count: 1
+      }
+    }
+    else {
+      messages[nickname].count += 1;
+      if (Date.now() - messages[nickname].time > time * 1000) {
+          messages[nickname] = {
+              time: Date.now(),
+              count: 0
+          }
+      }
+      else if (messages[nickname].count >= 8 && Date.now() - messages[nickname].time < time * 1000) {
+        const duration = ((time - Math.floor((Date.now() - messages[nickname].time) / 1000)) * 5 + 5) * 60000;
+        member.timeout(duration, "Spam");
+      }
+    }
+
     let separator = ':';
     const data = global.usersData;
     for (const user in data) {
@@ -43,7 +68,7 @@ function replaceEmojisWithNames(str) {
 
 async function formatMessage(message) {
   if (message.stickers.size > 0) {
-    const newMsg = `:${message.stickers.first().name}:`;
+    const newMsg = `Sent a sticker: ${message.stickers.first().name}`;
     return newMsg
   }
  

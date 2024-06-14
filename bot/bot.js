@@ -54,7 +54,6 @@ export async function minecraft(bot, client, bridgeWebhook, logWebhook, punishWe
   })
 
   bot.on('messagestr', async (jsonMsg) => {
-    await  messagestr(jsonMsg, bot, process.env.botUsername1);
     let match;
     if (match = jsonMsg.match(/^Guild > (?:\[(\S+)\] )?(\S+) \[(\S+)\]: (.+)/)) {
       if (match[2] != process.env.botUsername1) {
@@ -65,8 +64,8 @@ export async function minecraft(bot, client, bridgeWebhook, logWebhook, punishWe
             if (data[user].prefix) separator = data[user].prefix;
           }
         }
-        branch.chat('/gc ' + process.env.guild1prefix + match[2] + ' ' + separator + ' ' + match[4]);
-        branch.lastMessage = ('/gc ' + process.env.guild1prefix + match[2] + ' ' + separator + ' ' + match[4]);
+        branch.chat(('/gc ' + process.env.guild1prefix + match[2] + ' ' + separator + ' ' + match[4]).substring(0, 240));
+        branch.lastMessage = ('/gc ' + process.env.guild1prefix + match[2] + ' ' + separator + ' ' + match[4]).substring(0, 240);
       }
     }
 
@@ -89,12 +88,12 @@ export async function minecraft(bot, client, bridgeWebhook, logWebhook, punishWe
       branch.lastMessage = ('/gc ' + process.env.guild1prefix + match[2] + ' left the guild! ------------');
     }
 
-    await commands(bot, branch, jsonMsg);
-    await checkAnswer(bot, branch, jsonMsg, process.env.botUsername1);
+    messagestr(jsonMsg, bot, process.env.botUsername1);
+    commands(bot, branch, jsonMsg);
+    checkAnswer(bot, branch, jsonMsg, process.env.botUsername1);
   })
 
   branch.on('messagestr', async (jsonMsg) => {
-    await messagestr(jsonMsg, branch, process.env.botUsername2);
     let match;
     if (match = jsonMsg.match(/^Guild > (?:\[(\S+)\] )?(\S+) \[(\S+)\]: (.+)/)) {
       if (match[2] != process.env.botUsername2) {
@@ -105,8 +104,8 @@ export async function minecraft(bot, client, bridgeWebhook, logWebhook, punishWe
             if (data[user].prefix) separator = data[user].prefix;
           }
         }
-        bot.chat('/gc ' + process.env.guild2prefix + match[2] + ' ' + separator + ' ' + match[4]);
-        bot.lastMessage = ('/gc ' + process.env.guild2prefix + match[2] + ' ' + separator + ' ' + match[4]);
+        bot.chat(('/gc ' + process.env.guild2prefix + match[2] + ' ' + separator + ' ' + match[4]).substring(0, 240));
+        bot.lastMessage = ('/gc ' + process.env.guild2prefix + match[2] + ' ' + separator + ' ' + match[4]).substring(0, 240);
       }
     }
 
@@ -129,8 +128,9 @@ export async function minecraft(bot, client, bridgeWebhook, logWebhook, punishWe
       bot.lastMessage = ('/gc ' + process.env.guild2prefix + match[2] + ' left the guild! ------------');
     }
 
-    await commands(branch, bot, jsonMsg);
-    await checkAnswer(bot, branch, jsonMsg, process.env.botUsername2);
+    messagestr(jsonMsg, branch, process.env.botUsername2);
+    commands(branch, bot, jsonMsg);
+    checkAnswer(bot, branch, jsonMsg, process.env.botUsername2);
   })
 
   async function messagestr(jsonMsg, bot, botUsername) {
@@ -144,7 +144,7 @@ export async function minecraft(bot, client, bridgeWebhook, logWebhook, punishWe
     }
   
     //levels
-    if (match = jsonMsg.match(new RegExp("^Guild > (?:\\[(\\S+)\\] )?" + botUsername + " \\[\\S+\\]: \\b(\\w+)\\b \\S (.+)"))) {
+    if (match = jsonMsg.match(new RegExp("^Guild > (?:\\[(\\S+)\\] )?" + process.env.botUsername1 + " \\[\\S+\\]: \\b(\\w+)\\b \\S (.+)"))) {
       const player = match[2];
       for (const user of global.usersData) {
         if (user.username == player) {
@@ -163,9 +163,9 @@ export async function minecraft(bot, client, bridgeWebhook, logWebhook, punishWe
     if (jsonMsg.match(new RegExp("^Guild > (?:\\[(\\S+)\\] )?" + botUsername + " \\[\\S+\\]: \\[\\S+\\] \\b(\\w+)\\b \\S (.+)"))) return;
   
     //check if the message was blocked
-    if (jsonMsg == 'You cannot say the same message twice!' || jsonMsg == 'You are sending commands too fast! Please slow down.') {
-      bot.chat(bot.lastMessage + ' @' + generateRandomNonNumericString(8));
-      bot.lastMessage = (bot.lastMessage + ' @' + generateRandomNonNumericString(8));
+    if (jsonMsg == 'You cannot say the same message twice!' || jsonMsg == 'You are sending commands too fast! Please slow down.' || jsonMsg == 'You can only send a message once every half second!') {
+      bot.chat(bot.lastMessage + ' #' + generateRandomNonNumericString(8));
+      bot.lastMessage = (bot.lastMessage + ' #' + generateRandomNonNumericString(8));
       return;
     }
     if (jsonMsg == 'Advertising is against the rules. You will receive a punishment on the server if you attempt to advertise.') {
@@ -214,16 +214,12 @@ async function sendLeft(bot, match, prefix) {
   global.onlinePlayers -= 1;
   if (joins[match[1]]) {
     const data = await fs.promises.readFile(`bot/playerData/${match[1].toLowerCase()}.json`, 'utf8');
-    if (data) {
-      const json = JSON.parse(data);
-      let playerObj = json[match[1].toLowerCase()];
-      if (!playerObj.playtime) {
-        playerObj.playtime = 0;
-      }
-      playerObj.playtime += Date.now() - leaves[match[1]];
-      json[match[1].toLowerCase()] = playerObj;
-      fs.writeFileSync(`bot/playerData/${match[1].toLowerCase()}.json`, JSON.stringify(json, null, 2));
+    const json = JSON.parse(data);
+    if (!json[match[1].toLowerCase()].playtime) {
+      json[match[1].toLowerCase()].playtime = 0;
     }
+    json[match[1].toLowerCase()].playtime += Date.now() - leaves[match[1]];
+    fs.writeFileSync(`bot/playerData/${match[1].toLowerCase()}.json`, JSON.stringify(json, null, 2));
   }
   if (!leaves[match[1]]) {
     bot.chat(`/gc ${prefix}${match[1]} ${match[2]} (${global.onlinePlayers}/${global.totalPlayers})`);
