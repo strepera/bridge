@@ -66,21 +66,26 @@ export default async function(bot, requestedPlayer, player, chat) {
   const response2 = await fetch(`https://api.hypixel.net/status?key=${process.env.apiKey}&uuid=${uuid}`);
   const json2 = await response2.json();
   if (!json2.success) return (chat + 'Invalid player.');
-  let lastOnline = "";
-  if (leaves[requestedPlayer]) {
-    lastOnline = ', last online ' + ((Date.now() - leaves[requestedPlayer]) / 3600000).toFixed(2) + ' hours ago';
-  }
-  if (!json2.session.gameType) return (`${chat}${requestedPlayer} is offline${lastOnline}`);
-  let gameType = json2.session.gameType;
-  let mode = json2.session.mode;
-  if (readability[mode]) {
+  try {
+    let lastOnline = "";
+    if (leaves[requestedPlayer]) {
+      lastOnline = ', last online ' + ((Date.now() - leaves[requestedPlayer]) / 3600000).toFixed(2) + ' hours ago';
+    }
+    if (!json2.session.gameType) return (`${chat}${requestedPlayer} is offline${lastOnline}`);
+    let gameType = json2.session.gameType;
+    let mode = json2.session.mode;
+    if (readability[mode]) {
       mode = readability[mode];
+    }
+    mode = mode.replaceAll('_', ' ');
+    let modeParts = mode.split(' ');
+    for (let part in modeParts) {
+        modeParts[part] = modeParts[part][0].toUpperCase() + modeParts[part].slice(1);
+    }
+    mode = modeParts.join(' ');
+    return (`${chat}${requestedPlayer} is in ${gameType} - ${mode}`);
   }
-  mode = mode.replaceAll('_', ' ');
-  let modeParts = mode.split(' ');
-  for (let part in modeParts) {
-      modeParts[part] = modeParts[part][0].toUpperCase() + modeParts[part].slice(1);
+  catch(e) {
+    console.error(e);
   }
-  mode = modeParts.join(' ');
-  return (`${chat}${requestedPlayer} is in ${gameType} - ${mode}`);
 }

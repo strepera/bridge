@@ -6,7 +6,7 @@ export default async function(bot, requestedPlayer, player, chat) {
   const data = await response.json();
   for (let item of data.items) {
       if (item.name.toLowerCase() === requestedPlayer) {
-        return (`${chat}https://wiki.hypixel.net/${item.id}`);
+        return (`${chat}Wiki link: https://wiki.hypixel.net/${item.id}`);
       }
   }
   const lowercaseWikiPage = requestedPlayer.replaceAll(' ', '_');
@@ -17,10 +17,10 @@ export default async function(bot, requestedPlayer, player, chat) {
   const wikiPage = words.join("_");
   const wikiResponse = await fetch(`https://wiki.hypixel.net/${wikiPage}`, { signal });
   if (wikiResponse.status == 200) {
-    return (`${chat}https://wiki.hypixel.net/${wikiPage}`);
+    return (`${chat}Wiki link: https://wiki.hypixel.net/${wikiPage}`);
   }
   else {
     const search = requestedPlayer.replaceAll(' ', '%20');
-    return (`${chat}https://wiki.hypixel.net/?search=${search}`);
+    return (`${chat}Wiki link: https://wiki.hypixel.net/?search=${search}`);
   }
 }

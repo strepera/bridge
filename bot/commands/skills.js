@@ -27,7 +27,7 @@ async function convertXPtoLevel(xpAmount, checkSkill) {
      return null;
   }
  
-  let levels = json.skills[skill].levels.reverse();
+  let levels = json.skills[skill].levels.slice().reverse();
   for (let level of levels) {
      if (xpAmount >= level.totalExpRequired) {
         if (level.level == json.skills[skill].maxLevel) {

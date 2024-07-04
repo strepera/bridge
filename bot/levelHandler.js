@@ -40,7 +40,7 @@ export async function levelHandler(bot, player) {
         if (Date.now() - messages[player].time > time * 1000) {
             messages[player] = {
                 time: Date.now(),
-                count: 0
+                count: 1
             }
         }
         else if (messages[player].count >= 4 && Date.now() - messages[player].time < time * 1000) {

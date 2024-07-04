@@ -32,7 +32,7 @@ export default async function stock(bot, request, player, chat) {
             const sellAmount = Number(request.split(' ')[2]);
             if (stockType) stockType = stockType.toLowerCase();
             if (!stocks[stockType]) return (chat + "Invalid stock " + stockType);
-            if (!stockType || !sellAmount) return (chat + "Invalid syntax. Usage: .stock buy stock amount");
+            if (!stockType || !sellAmount) return (chat + "Invalid syntax. Usage: .stock sell stock amount");
 
             playerData = JSON.parse(await fs.promises.readFile(`bot/playerData/${player.toLowerCase()}.json`, 'utf8'));
             if (!stocks[stockType].ownership[player.toLowerCase()]) return (chat +"You do not own any of this stock!");

@@ -1,12 +1,19 @@
 import { MessageEmbed } from "discord.js";
+import fs from 'fs';
 
 let onlinePlayersCount = 0;
 let totalPlayersCount = 0;
 
+const blacklisted = JSON.parse(fs.readFileSync("./bot/blacklisted.json", "utf8")).blacklisted;
+
 const regexes = [
   {
     regex: /^(?:\[(\S+)\] )?(\S+) joined the guild!/,
-    func: (match, bridgeWebhook, punishWebhook) => {
+    func: (match, bridgeWebhook, punishWebhook, bot) => {
+      if (blacklisted.includes(match[2])) {
+        bot.chat("/g kick " + match[2] + " .");
+        bot.lastMessage = "/g kick " + match[2] + " .";
+      }
       const player = match[2].replaceAll('_', '\\_');
       global.totalPlayers += 1;
       global.onlinePlayers += 1;

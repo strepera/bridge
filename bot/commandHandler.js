@@ -65,8 +65,10 @@ export default async function commands(bot, branch, jsonMsg) {
             if (response) {
                 bot.chat(response + ' #' + generateRandomNonNumericString(8));
                 bot.lastMessage = response + ' #' + generateRandomNonNumericString(8);
-                branch.chat(response + ' #' + generateRandomNonNumericString(8));
-                branch.lastMessage = response + ' #' + generateRandomNonNumericString(8);
+                setTimeout(() => {
+                    branch.chat(response + ' #' + generateRandomNonNumericString(8));
+                    branch.lastMessage = response + ' #' + generateRandomNonNumericString(8);
+                }, 500);
             }
         }
     } else if (match = jsonMsg.match(new RegExp("^Guild > (?:\\[(\\S+)\\] )?" + process.env.botUsername1 + " \\[(\\S+)\\]: (\\S+) \\S \\.(\\S+)( .*)?"))) {
@@ -81,8 +83,10 @@ export default async function commands(bot, branch, jsonMsg) {
             if (response) {
                 bot.chat(response + ' #' + generateRandomNonNumericString(8));
                 bot.lastMessage = response + ' #' + generateRandomNonNumericString(8);
-                branch.chat(response + ' #' + generateRandomNonNumericString(8));
-                branch.lastMessage = response + ' #' + generateRandomNonNumericString(8);
+                setTimeout(() => {
+                    branch.chat(response + ' #' + generateRandomNonNumericString(8));
+                    branch.lastMessage = response + ' #' + generateRandomNonNumericString(8);
+                }, 500);
             }
         }
     }

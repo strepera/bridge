@@ -213,13 +213,26 @@ async function sendJoined(bot, match, prefix) {
 async function sendLeft(bot, match, prefix) {
   global.onlinePlayers -= 1;
   if (joins[match[1]]) {
-    const data = await fs.promises.readFile(`bot/playerData/${match[1].toLowerCase()}.json`, 'utf8');
-    const json = JSON.parse(data);
-    if (!json[match[1].toLowerCase()].playtime) {
-      json[match[1].toLowerCase()].playtime = 0;
+    const filePath = `bot/playerData/${match[1].toLowerCase()}.json`;
+    try {
+      const stat = await fs.promises.stat(filePath);
+      if (!stat.isFile()) {
+        throw new Error("File does not exist");
+      }
+      const data = await fs.promises.readFile(filePath, 'utf8');
+      const json = JSON.parse(data);
+      if (!json[match[1].toLowerCase()].playtime) {
+        json[match[1].toLowerCase()].playtime = 0;
+      }
+      json[match[1].toLowerCase()].playtime += Date.now() - leaves[match[1]];
+      fs.writeFileSync(`bot/playerData/${match[1].toLowerCase()}.json`, JSON.stringify(json, null, 2));
     }
-    json[match[1].toLowerCase()].playtime += Date.now() - leaves[match[1]];
-    fs.writeFileSync(`bot/playerData/${match[1].toLowerCase()}.json`, JSON.stringify(json, null, 2));
+    catch (e) {
+      const json = {};
+      json[player.toLowerCase()] = { "coins": 15, "messageCount": 1, "username": player };
+
+      fs.writeFileSync(filePath, JSON.stringify(json, null, 2));
+    }
   }
   if (!leaves[match[1]]) {
     bot.chat(`/gc ${prefix}${match[1]} ${match[2]} (${global.onlinePlayers}/${global.totalPlayers})`);
