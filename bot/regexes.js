@@ -142,6 +142,32 @@ const regexes = [
           else if (status == 'joined') return; // guild join
           else if (status == 'left') return; // guild leave
         }
+        if (match = output.match(/(\S+) joined '(.+)'/)) { // vc join
+          const player = match[1].replaceAll('_', '\\_');
+          const embed = new MessageEmbed()
+          .setColor('#00ff00')
+          .setTitle('Player joined VC')
+          .setDescription(`${player} joined ${match[2]}`)
+          bridgeWebhook.send({
+            embeds: [embed],
+            username: match[1],
+            avatarURL: `https://minotar.net/helm/${match[1]}/32`
+          })
+          return;
+        }
+        if (match = output.match(/(\S+) left '(.+)'/)) { // vc leave
+          const player = match[1].replaceAll('_', '\\_');
+          const embed = new MessageEmbed()
+          .setColor('#ff0000')
+          .setTitle('Player left VC')
+          .setDescription(`${player} left ${match[2]}`)
+          bridgeWebhook.send({
+            embeds: [embed],
+            username: match[1],
+            avatarURL: `https://minotar.net/helm/${match[1]}/32`
+          })
+          return;
+        }
         const embed = new MessageEmbed()
         .setTitle('Command: .' + bot.lastCommand)
         .setDescription(output)

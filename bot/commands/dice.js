@@ -2,7 +2,7 @@ import fs from 'fs';
 
 export default async function(bot, bet, player, chat) {
     const data = await fs.promises.readFile(`bot/playerData/${player.toLowerCase()}.json`, 'utf8');
-    const json = JSON.parse(data);
+    let json = JSON.parse(data);
     const playerObj = json[player.toLowerCase()];
 
     if (bet.trim() == '') {
@@ -27,7 +27,7 @@ export default async function(bot, bet, player, chat) {
     const dice2 = Math.round(Math.random() * (6 - 1) + 1);
     let reward = Math.round((dice1 + dice2 - 8) * Number(bet) / 60);
 
-    playerObj.coins += reward;
+    playerObj.coins += Math.floor(reward);
     json[player.toLowerCase()] = playerObj;
     fs.writeFileSync(`bot/playerData/${player.toLowerCase()}.json`, JSON.stringify(json, null, 2));
 

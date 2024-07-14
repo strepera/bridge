@@ -122,10 +122,10 @@ export async function func(interaction, options) {
     });
   }
 
-  if (!hypixelData.player.socialMedia || dcuser.toLowerCase() != hypixelData.player.socialMedia.links.DISCORD.toLowerCase()) {
+  if (!hypixelData.player.socialMedia || dcuser.toLowerCase() != (hypixelData.player.socialMedia.links?.DISCORD?? "").toLowerCase()) {
     let current = "";
     if (hypixelData.player.socialMedia) {
-      if (hypixelData.player.socialMedia.links.DISCORD) {
+      if (hypixelData.player.socialMedia.links && hypixelData.player.socialMedia.links.DISCORD) {
         current = `Current linked discord username: \`\`${hypixelData.player.socialMedia.links.DISCORD}\`\``;
       }
       else {

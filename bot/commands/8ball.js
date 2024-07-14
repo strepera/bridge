@@ -3,5 +3,5 @@ const answers = ["It is certain", "Reply hazy, try again", "Don’t count on it"
 export default async function ball(bot, requestedPlayer, player, chat) {
   let answerIndex = Math.floor(Math.random() * answers.length);
   let ballmessage = answers[answerIndex];
-  return (`${chat}${ballmessage}`);
+  return (`${chat}8ball> ${ballmessage}`);
 }

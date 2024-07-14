@@ -26,7 +26,7 @@ export default async function discordToMinecraft(bot, client, message, bridgeCha
               count: 1
           }
       }
-      else if (messages[nickname].count >= 6 && Date.now() - messages[nickname].time < time * 1000) {
+      else if (messages[nickname].count >= 8 && Date.now() - messages[nickname].time < time * 1000) {
         const duration = ((time - Math.floor((Date.now() - messages[nickname].time) / 1000)) * 5 + 5) * 60000;
         member.timeout(duration, "Spam");
       }

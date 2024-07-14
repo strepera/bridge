@@ -20,6 +20,20 @@ function generateRandomNonNumericString(length) {
 export const leaves = {};
 export const joins = {};
 
+function getTimeLeft(time) {
+  let weeks = Math.floor(time / 604800);
+  let days = Math.floor((time % 604800) / 86400);
+  let hours = Math.floor(((time % 604800) % 86400) / 3600);
+  let minutes = Math.floor((((time % 604800) % 86400) % 3600) / 60);
+  let seconds = Math.floor((((time % 604800) % 86400) % 3600) % 60);
+
+  if (weeks >= 1) return `${weeks} weeks ${days} days`;
+  if (days >= 1) return `${days} days ${hours} hours`;
+  if (hours >= 1) return `${hours} hours ${minutes} minutes`;
+  if (minutes >= 1) return `${minutes} minutes ${seconds} seconds`
+  return `${seconds} seconds`
+}
+
 export async function minecraft(bot, client, bridgeWebhook, logWebhook, punishWebhook, branch) {
 
   //initialize game handler
@@ -29,6 +43,24 @@ export async function minecraft(bot, client, bridgeWebhook, logWebhook, punishWe
   setInterval(async () => {
     checkPatchNotes(bot, branch)
   }, 5 * 60 * 1000);
+
+  //firesales
+  let sales = [];
+  setInterval(async () => {
+    const firesaleResponse = await fetch("https://api.hypixel.net/v2/skyblock/firesales");
+    const firesaleData = await firesaleResponse.json();
+    for (const item of firesaleData?.sales?? []) {
+      if (!sales.includes(item.item_id)) {
+        sales.push(item.item_id);
+        setTimeout(() => {
+          bot.chat("/gc Fire Sale for " + item.item_id + " starts in 15 minutes!");
+          bot.lastMessage = ("/gc Fire Sale for " + item.item_id + " starts in 15 minutes!");
+          branch.chat("/gc Fire Sale for " + item.item_id + " starts in 15 minutes!");
+          branch.lastMessage = ("/gc Fire Sale for " + item.item_id + " starts in 15 minutes!");
+        }, item.start - Date.now() - 15 * 60 * 1000);
+      }
+    }
+  }, 60 * 60 * 1000);
 
   // check guild ranks
   setInterval(() => {
@@ -64,8 +96,8 @@ export async function minecraft(bot, client, bridgeWebhook, logWebhook, punishWe
             if (data[user].prefix) separator = data[user].prefix;
           }
         }
-        branch.chat(('/gc ' + process.env.guild1prefix + match[2] + ' ' + separator + ' ' + match[4]).substring(0, 240));
-        branch.lastMessage = ('/gc ' + process.env.guild1prefix + match[2] + ' ' + separator + ' ' + match[4]).substring(0, 240);
+        branch.chat(('/gc ' + process.env.guild1prefix + match[2] + ' ' + separator + ' ' + match[4]).substring(0, 235));
+        branch.lastMessage = ('/gc ' + process.env.guild1prefix + match[2] + ' ' + separator + ' ' + match[4]).substring(0, 235);
       }
     }
 
@@ -88,9 +120,9 @@ export async function minecraft(bot, client, bridgeWebhook, logWebhook, punishWe
       branch.lastMessage = ('/gc ' + process.env.guild1prefix + match[2] + ' left the guild! ------------');
     }
 
+    checkAnswer(bot, branch, jsonMsg, process.env.botUsername1);
     messagestr(jsonMsg, bot, process.env.botUsername1);
     commands(bot, branch, jsonMsg);
-    checkAnswer(bot, branch, jsonMsg, process.env.botUsername1);
   })
 
   branch.on('messagestr', async (jsonMsg) => {
@@ -104,8 +136,8 @@ export async function minecraft(bot, client, bridgeWebhook, logWebhook, punishWe
             if (data[user].prefix) separator = data[user].prefix;
           }
         }
-        bot.chat(('/gc ' + process.env.guild2prefix + match[2] + ' ' + separator + ' ' + match[4]).substring(0, 240));
-        bot.lastMessage = ('/gc ' + process.env.guild2prefix + match[2] + ' ' + separator + ' ' + match[4]).substring(0, 240);
+        bot.chat(('/gc ' + process.env.guild2prefix + match[2] + ' ' + separator + ' ' + match[4]).substring(0, 235));
+        bot.lastMessage = ('/gc ' + process.env.guild2prefix + match[2] + ' ' + separator + ' ' + match[4]).substring(0, 235);
       }
     }
 
@@ -128,9 +160,9 @@ export async function minecraft(bot, client, bridgeWebhook, logWebhook, punishWe
       bot.lastMessage = ('/gc ' + process.env.guild2prefix + match[2] + ' left the guild! ------------');
     }
 
+    checkAnswer(bot, branch, jsonMsg, process.env.botUsername2);
     messagestr(jsonMsg, branch, process.env.botUsername2);
     commands(branch, bot, jsonMsg);
-    checkAnswer(bot, branch, jsonMsg, process.env.botUsername2);
   })
 
   async function messagestr(jsonMsg, bot, botUsername) {

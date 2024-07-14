@@ -69,7 +69,12 @@ export default async function(bot, requestedPlayer, player, chat) {
   try {
     let lastOnline = "";
     if (leaves[requestedPlayer]) {
-      lastOnline = ', last online ' + ((Date.now() - leaves[requestedPlayer]) / 3600000).toFixed(2) + ' hours ago';
+      if (joins[requestedPlayer] > leaves[requestedPlayer]) {
+        lastOnline = '(offline mode)';
+      }
+      else {
+        lastOnline = ', last online ' + ((Date.now() - leaves[requestedPlayer]) / 3600000).toFixed(2) + ' hours ago';
+      }
     }
     if (!json2.session.gameType) return (`${chat}${requestedPlayer} is offline${lastOnline}`);
     let gameType = json2.session.gameType;

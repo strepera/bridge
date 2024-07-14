@@ -157,4 +157,50 @@ export async function discord(bot, client, branch, welcomeChannel, bridgeChannel
     client.on('guildMemberRemove', async(member) => {
         await welcomeChannel.send('Goodbye ' + member.user.username);
     });
+
+    let joins = {};
+    let leaves = {};
+
+    client.on('voiceStateUpdate', (oldState, newState) => {
+        if (!oldState.channel && newState.channel) { //join
+            const username = newState.member.displayName.split(" ")[0];
+            const channel = newState.channel.name;
+            if (!joins[username]) {
+                bot.chat(`${username} joined '${channel}'`);
+                bot.lastMessage = (`${username} joined '${channel}'`);
+                branch.chat(`${username} joined '${channel}'`);
+                branch.lastMessage = (`${username} joined '${channel}'`);
+                joins[username] = Date.now();
+                return;
+            }
+            if (Date.now() - joins[username] > 60000) {
+                bot.chat(`${username} joined '${channel}'`);
+                bot.lastMessage = (`${username} joined '${channel}'`);
+                branch.chat(`${username} joined '${channel}'`);
+                branch.lastMessage = (`${username} joined '${channel}'`);
+                joins[username] = Date.now();
+                return;
+            }
+        }
+        else if (oldState.channel && !newState.channel) { //leave
+            const username = newState.member.displayName.split(" ")[0];
+            const channel = oldState.channel.name;
+            if (!leaves[username]) {
+                bot.chat(`${username} left '${channel}'`);
+                bot.lastMessage = (`${username} left '${channel}'`);
+                branch.chat(`${username} left '${channel}'`);
+                branch.lastMessage = (`${username} left '${channel}'`);
+                leaves[username] = Date.now();
+                return;
+            }
+            if (Date.now() - leaves[username] > 60000) {
+                bot.chat(`${username} left '${channel}'`);
+                bot.lastMessage = (`${username} left '${channel}'`);
+                branch.chat(`${username} left '${channel}'`);
+                branch.lastMessage = (`${username} left '${channel}'`);
+                leaves[username] = Date.now();
+                return;
+            }
+        }
+    });
 }

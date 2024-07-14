@@ -73,14 +73,16 @@ function toSuperscript(input) {
   return result;
 } 
 
+let lastNickNameReset = {name: "", found: false};
+
 async function setNickname(member, guild, uuid, username, checkedRoles) {
+  if (lastNickNameReset.name != username) lastNickNameReset = {name: username, found: false};
   const guildResponse = await fetch(`https://api.hypixel.net/v2/guild?key=${process.env.apiKey}&name=${guild}`);
   const guildData = await guildResponse.json();
   if (!guildData.guild || !guildData.guild.members) return;
-  let memberFound = false;
   for (const guildMember of guildData.guild.members) {
     if (guildMember.uuid == uuid) {
-      memberFound = true;
+      lastNickNameReset.found = true;
       await member.setNickname(username + ' ' + toSuperscript(guildMember.rank.toLowerCase())).catch(() => console.error(member.username + ' has elevated permissions. Cannot set nickname.'));
       const role = await member.guild.roles.cache.find(r => r.name === 'Verified');
       await member.roles.add(role).catch(() => console.error(member.username + ' has elevated permissions. Cannot set role.'));
@@ -97,9 +99,7 @@ async function setNickname(member, guild, uuid, username, checkedRoles) {
       return checkedRoles;
     }
   }
-  if (memberFound) {
-    await member.setNickname(username).catch(() => console.error(member.username + ' has elevated permissions. Cannot set nickname.'));
-  }
+  if (!lastNickNameReset.found) await member.setNickname(username).catch(() => console.error(member.username + ' has elevated permissions. Cannot set nickname.'));
   const role = await member.guild.roles.cache.find(r => r.name === 'Verified');
   await member.roles.add(role).catch(() => console.error(member.username + ' has elevated permissions. Cannot set role.'));
   checkedRoles.push('Verified');
