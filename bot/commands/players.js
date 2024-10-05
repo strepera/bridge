@@ -28,5 +28,5 @@ export default async function(bot, requestedPlayer, player, chat) {
         entry = entryParts.join(' ');
         message.push(entry, data[name]);
     }
-    return (chat + message.join(' '));
+    return (chat + message.join(' ').substring(0, 230));
 }

@@ -50,12 +50,9 @@ export default async function discordToMinecraft(bot, client, message, bridgeCha
     }
     user += nickname;
     const msg = await formatMessage(message);
-    let combined = `${user} ${separator} ${msg}`;
-    if (combined.length > 240) {
-      combined = combined.substring(0,240);
-    }
-    bot.chat(`/gc ${combined}`);
-    bot.lastMessage = (`/gc ${combined}`);
+    let combined = `/gc ${user} ${separator} ${msg}`;
+    bot.chat(combined.substring(0, 250));
+    bot.lastMessage = (combined.substring(0, 250));
 }
 
 function replaceEmojisWithNames(str) {

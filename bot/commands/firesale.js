@@ -36,5 +36,5 @@ export default async function(bot, requestedPlayer, player, chat) {
         }
     }
 
-    return (chat + items.join(', '));
+    return (chat + items.join(', ').substring(0, 240));
 }

@@ -406,6 +406,8 @@ const regexes = [
   {
     regex: /^(?:\[(\S+)\] )?(\S+) was kicked from the guild by (?:\[(\S+)\] )?(\S+)/,
     func: (match, bridgeWebhook, punishWebhook) => {
+      global.onlinePlayers -= 1;
+      global.totalPlayers -= 1;
       const player1 = match[2].replaceAll('_', '\\_');
       const player2 = match[4].replaceAll('_', '\\_');
       const embed = new MessageEmbed()

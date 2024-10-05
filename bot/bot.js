@@ -34,6 +34,8 @@ function getTimeLeft(time) {
   return `${seconds} seconds`
 }
 
+const blacklisted = JSON.parse(fs.readFileSync("./bot/blacklisted.json", "utf8")).blacklisted;
+
 export async function minecraft(bot, client, bridgeWebhook, logWebhook, punishWebhook, branch) {
 
   //initialize game handler
@@ -51,6 +53,7 @@ export async function minecraft(bot, client, bridgeWebhook, logWebhook, punishWe
     const firesaleData = await firesaleResponse.json();
     for (const item of firesaleData?.sales?? []) {
       if (!sales.includes(item.item_id)) {
+        if (item.start - Date.now() < 0) continue;
         sales.push(item.item_id);
         setTimeout(() => {
           bot.chat("/gc Fire Sale for " + item.item_id + " starts in 15 minutes!");
@@ -70,10 +73,32 @@ export async function minecraft(bot, client, bridgeWebhook, logWebhook, punishWe
 
   setTimeout(() => {
     console.log('Joined as ' + bot.username);
-    bot.chat("§"); // send self to limbo
+    bot.chat("/"); // send self to limbo
+    bot.chat("/"); // send self to limbo
+    bot.chat("/"); // send self to limbo
+    bot.chat("/"); // send self to limbo
+    bot.chat("/"); // send self to limbo
+    bot.chat("/"); // send self to limbo
+    bot.chat("/"); // send self to limbo
+    bot.chat("/"); // send self to limbo
+    bot.chat("/"); // send self to limbo
+    bot.chat("/"); // send self to limbo
+    bot.chat("/"); // send self to limbo
+    bot.chat("/"); // send self to limbo
     bot.chat('/g online');
     console.log('Joined as ' + branch.username);
-    branch.chat("§"); // send self to limbo
+    branch.chat("/"); // send self to limbo
+    branch.chat("/"); // send self to limbo
+    branch.chat("/"); // send self to limbo
+    branch.chat("/"); // send self to limbo
+    branch.chat("/"); // send self to limbo
+    branch.chat("/"); // send self to limbo
+    branch.chat("/"); // send self to limbo
+    branch.chat("/"); // send self to limbo
+    branch.chat("/"); // send self to limbo
+    branch.chat("/"); // send self to limbo
+    branch.chat("/"); // send self to limbo
+    branch.chat("/"); // send self to limbo
     branch.chat('/g online');
   }, 7000);
 
@@ -96,8 +121,9 @@ export async function minecraft(bot, client, bridgeWebhook, logWebhook, punishWe
             if (data[user].prefix) separator = data[user].prefix;
           }
         }
-        branch.chat(('/gc ' + process.env.guild1prefix + match[2] + ' ' + separator + ' ' + match[4]).substring(0, 235));
-        branch.lastMessage = ('/gc ' + process.env.guild1prefix + match[2] + ' ' + separator + ' ' + match[4]).substring(0, 235);
+        let msg = '/gc ' + process.env.guild1prefix + match[2] + ' ' + separator + ' ' + match[4];
+        branch.chat(msg.substring(0, 255));
+        branch.lastMessage = msg.substring(0, 255);
       }
     }
 
@@ -120,9 +146,9 @@ export async function minecraft(bot, client, bridgeWebhook, logWebhook, punishWe
       branch.lastMessage = ('/gc ' + process.env.guild1prefix + match[2] + ' left the guild! ------------');
     }
 
-    checkAnswer(bot, branch, jsonMsg, process.env.botUsername1);
     messagestr(jsonMsg, bot, process.env.botUsername1);
     commands(bot, branch, jsonMsg);
+    checkAnswer(bot, branch, jsonMsg, process.env.botUsername1);
   })
 
   branch.on('messagestr', async (jsonMsg) => {
@@ -136,8 +162,9 @@ export async function minecraft(bot, client, bridgeWebhook, logWebhook, punishWe
             if (data[user].prefix) separator = data[user].prefix;
           }
         }
-        bot.chat(('/gc ' + process.env.guild2prefix + match[2] + ' ' + separator + ' ' + match[4]).substring(0, 235));
-        bot.lastMessage = ('/gc ' + process.env.guild2prefix + match[2] + ' ' + separator + ' ' + match[4]).substring(0, 235);
+        let msg = '/gc ' + process.env.guild2prefix + match[2] + ' ' + separator + ' ' + match[4];
+        bot.chat(msg.substring(0, 255));
+        bot.lastMessage = msg.substring(0, 255);
       }
     }
 
@@ -160,9 +187,9 @@ export async function minecraft(bot, client, bridgeWebhook, logWebhook, punishWe
       bot.lastMessage = ('/gc ' + process.env.guild2prefix + match[2] + ' left the guild! ------------');
     }
 
-    checkAnswer(bot, branch, jsonMsg, process.env.botUsername2);
     messagestr(jsonMsg, branch, process.env.botUsername2);
     commands(branch, bot, jsonMsg);
+    checkAnswer(bot, branch, jsonMsg, process.env.botUsername2);
   })
 
   async function messagestr(jsonMsg, bot, botUsername) {
@@ -172,7 +199,9 @@ export async function minecraft(bot, client, bridgeWebhook, logWebhook, punishWe
     let match;
 
     if (match = jsonMsg.match(/(?:\[(\S+)\] )?(\S+) has requested to join the Guild!/)) {
-      bot.chat('/g accept ' + match[2]);
+      if (!blacklisted.includes(match[2])) {
+        bot.chat('/g accept ' + match[2]);
+      }
     }
   
     //levels
@@ -196,8 +225,8 @@ export async function minecraft(bot, client, bridgeWebhook, logWebhook, punishWe
   
     //check if the message was blocked
     if (jsonMsg == 'You cannot say the same message twice!' || jsonMsg == 'You are sending commands too fast! Please slow down.' || jsonMsg == 'You can only send a message once every half second!') {
-      bot.chat(bot.lastMessage + ' #' + generateRandomNonNumericString(8));
-      bot.lastMessage = (bot.lastMessage + ' #' + generateRandomNonNumericString(8));
+      bot.chat((bot.lastMessage + ' #' + generateRandomNonNumericString(8)).substring(0, 250));
+      bot.lastMessage = (bot.lastMessage + ' #' + generateRandomNonNumericString(8)).substring(0, 250);
       return;
     }
     if (jsonMsg == 'Advertising is against the rules. You will receive a punishment on the server if you attempt to advertise.') {

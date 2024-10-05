@@ -5,7 +5,7 @@ async function importCommand(commandName) {
         return commandModule.default || commandModule;
     } catch (error) {
         console.error(error);
-        //console.error(`Invalid command: ${commandName}`);
+        console.error(`Invalid command: ${commandName}`);
         return null;
     }
 }
@@ -51,10 +51,13 @@ const aliases = {
     'lbin': 'lowestbin'
 };
 
+const guildDisabled = ["ai", "bedtime", "coinflip"];
+
 export default async function commands(bot, branch, jsonMsg) {
     let match;
     if (match = jsonMsg.match(/^Guild > (?:\[(\S+)\] )?(\S+) \[(\S+)\]: \.(\S+)( .*)?/)) {
         let command = match[4];
+        if (guildDisabled.includes(command)) return;
         let requestedPlayer = match[5] || match[2];
         if (requestedPlayer.split('')[0] == ' ') requestedPlayer = requestedPlayer.substring(1);
         const executed = await getCommandAliases(command) || await importCommand(command);
@@ -73,6 +76,7 @@ export default async function commands(bot, branch, jsonMsg) {
         }
     } else if (match = jsonMsg.match(new RegExp("^Guild > (?:\\[(\\S+)\\] )?" + process.env.botUsername1 + " \\[(\\S+)\\]: (\\S+) \\S \\.(\\S+)( .*)?"))) {
         let command = match[4];
+        if (guildDisabled.includes(command)) return;
         let requestedPlayer = match[5] || match[3];
         if (requestedPlayer.split('')[0] == ' ') requestedPlayer = requestedPlayer.substring(1);
         const executed = await getCommandAliases(command) || await importCommand(command);

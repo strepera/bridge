@@ -113,7 +113,7 @@ export default async function(bot, requestedPlayer, player, chat) {
             for (let i in memberData.slayer.slayer_bosses) {
               for (let slayerType in slayerData) {
                  if (slayerType == sortOrder[0]) {
-                   let levels = slayerXpToLevel[slayerType].reverse();
+                   let levels = slayerXpToLevel[slayerType].slice().reverse();
                    let slayerLevel = 0;
                    let isAboveHighestLevel = false;
                    for (let j in levels) {

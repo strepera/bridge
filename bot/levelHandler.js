@@ -3,6 +3,7 @@ import fs from 'fs';
 const messages = {};
 
 const time = 6;
+const messagesThreshold = 4;
 
 export async function levelHandler(bot, player) {
     const lowerPlayer = player.toLowerCase();
@@ -43,7 +44,7 @@ export async function levelHandler(bot, player) {
                 count: 1
             }
         }
-        else if (messages[player].count >= 4 && Date.now() - messages[player].time < time * 1000) {
+        else if (messages[player].count >= messagesThreshold && Date.now() - messages[player].time < time * 1000) {
             bot.chat(`/g mute ${player} ${(time - Math.floor((Date.now() - messages[player].time) / 1000)) * 5 + 5}m`);
             bot.lastMessage = (`/g mute ${player} ${(time - Math.floor((Date.now() - messages[player].time) / 1000)) * 5 + 5}m`);
         }

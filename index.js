@@ -21,7 +21,7 @@ function createBot() {
     username: process.env.username1,
     auth: "microsoft",
     port: "25565",
-    version: "1.20.1"
+    version: "1.20"
   });
 
   branch = mineflayer.createBot({
@@ -29,16 +29,21 @@ function createBot() {
     username: process.env.username2,
     auth: "microsoft",
     port: "25565",
-    version: "1.20.1"
+    version: "1.20"
   });
-
-  bot.on('end', createBot);
-  branch.on('end', createBot);
 
 }
 createBot();
 
-minecraft(bot, client, bridgeWebhook, logWebhook, punishWebhook, branch);
+bot.on('error', (err) => console.log(err));
+branch.on('error', (err) => console.log(err));
+bot.on('kick', (reason) => console.log(reason));
+branch.on('kick', (reason) => console.log(reason));
+
+bot.once('login', () => {
+  minecraft(bot, client, bridgeWebhook, logWebhook, punishWebhook, branch);
+})
+
 discord(bot, client, branch);
 
 client.login(process.env.token);
